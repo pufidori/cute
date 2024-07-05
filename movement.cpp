@@ -758,7 +758,7 @@ void Movement::AutoStop() {
 		return;
 
 	bool full_stop = !g_menu.main.aimbot.quick_stop_mode.get(0);
-	float max_speed = std::floor( 0.2f * (g_cl.m_local->m_bIsScoped() ? wpn_data->m_max_player_speed_alt : wpn_data->m_max_player_speed) );
+	float max_speed = std::floor( 0.15f * (g_cl.m_local->m_bIsScoped() ? wpn_data->m_max_player_speed_alt : wpn_data->m_max_player_speed) );
 
 	if( full_stop || g_cl.m_weapon_id == WEAPON_ZEUS || !( g_cl.m_flags & FL_ONGROUND ) )
 		max_speed = 25.f;
