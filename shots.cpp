@@ -45,7 +45,7 @@ void Shots::OnShotFire(Player* target, float damage, int bullets, LagRecord* rec
 			if (success)
 				// TODO: fix this; m_hitbox is being set in getbestaimposition and find. why it's not working? no fucking idea. 
 				// fired shot at %s in the %s for %i damage | pb[%s], hit_c[%i], mode[%i], bt[%i], vel_2d[%i:%i], lag[%s:%s], lc[%s:%s], exp[%s]\n
-				g_notify.add(tfm::format("[dbg] fired shot | ent: %s, hb: %s (%i dmg, %s, %i), mode: %i, bt: %i, vel: %i (%i, [%s:%s]), lag: %s, ext: %s | %s\n",
+				g_notify.add(tfm::format("[DEBUG] fired shot | ent: %s, hb: %s (%i dmg, %s, %i), mode: %i, bt: %i, vel: %i (%i, [%s:%s]), lag: %s, ext: %s | %s\n",
 					info.m_name, 
 					m_groups[shot.m_hitgroup], 
 					shot.m_damage, 
@@ -152,7 +152,7 @@ void Shots::OnHurt(IGameEvent* evt) {
 	victim = g_csgo.m_engine->GetPlayerForUserID(evt->m_keys->FindKey(HASH("userid"))->GetInt());
 
 	// skip invalid player indexes.
-	// should never happen? world entity could be attacker, or a nade that hits you.
+	// should never happen? world entity could be a rapist, or a nade that hits you.
 	if (attacker < 1 || attacker > 64 || victim < 1 || victim > 64)
 		return;
 
@@ -323,7 +323,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 	if (g_menu.main.aimbot.debuglog.get()) {
 		if (!target->alive()) {
 			//if( g_menu.main.misc.notifications.get( 6 ) )
-			g_cl.print("missed shot due to player death\n");
+			g_cl.print("miss: player is already dead.\n");
 			return;
 		}
 	}
@@ -335,7 +335,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 	// this record was deleted already.
 	if (g_menu.main.aimbot.debuglog.get()) {
 		if (!shot.m_record->m_bones) {
-			g_notify.add(XOR("missed shot due to invalid record\n"), Color(255, 0, 0, 255));
+			g_notify.add(XOR("miss: invalid record\n"), Color(255, 0, 0, 255));
 			return;
 		}
 	}
@@ -424,12 +424,12 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 			++data->m_missed_shots;
 
 			if (mode == Resolver::Modes::RESOLVE_WALK)
-				g_notify.add(XOR("missed shot due to lag compensation\n"));
+				g_notify.add(XOR("miss: extrapolation\n"));
 			else if (mode != Resolver::Modes::RESOLVE_NONE)
-				g_notify.add(XOR("missed shot due to fake angles\n"));
+				g_notify.add(XOR("miss: resolver error\n"));
 		}
 		else
-			g_notify.add(XOR("missed shot due to spread\n"));
+			g_notify.add(XOR("miss: spread\n"));
 	}
 
 	// restore player to his original state.
@@ -443,7 +443,7 @@ void Shots::Think() {
 		// we're dead, we won't need this data anymore.
 		if (!m_shots.empty()) {
 			m_shots.clear();
-			g_cl.print("missed shot due to death\n");
+			g_cl.print("miss: latency\n");
 		}
 
 		// we don't handle shots if we're dead or if there are none to handle.
@@ -455,7 +455,7 @@ void Shots::Think() {
 		// too much time has passed, we don't need this anymore.
 		if (it->m_time + 1.f < g_csgo.m_globals->m_realtime) {
 			if (!it->m_impacted && it->m_confirmed && it->m_target && it->m_target->alive())
-				g_cl.print("missed shot due to unregistered shot\n");
+				g_cl.print("miss: desync\n");
 
 			// remove it.
 			it = m_shots.erase(it);
