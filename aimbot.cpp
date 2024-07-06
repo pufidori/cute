@@ -823,7 +823,6 @@ void Aimbot::StartTargetSelection() {
 		// front record is invalid, skip this player
 		if (!front || front->dormant() || front->immune() || !front->m_setup)
 			continue;
-
 		// force whitelist
 		/*if (g_menu.main.misc.whitelist.get()) {
 
@@ -1643,7 +1642,7 @@ void Aimbot::apply() {
 	if (attack || attack2) {
 
 		// choke every shot.
-		if (!g_menu.main.antiaim.fakelag_silent_aim.get())
+		/*if (!g_menu.main.antiaim.fakelag_silent_aim.get())
 			*g_cl.m_packet = true;
 		else {
 
@@ -1653,7 +1652,9 @@ void Aimbot::apply() {
 				StripAttack();
 				return;
 			}
-		}
+		}*/
+
+		*g_cl.m_packet = false;
 
 		if (m_target) {
 			// make sure to aim at un-interpolated data->

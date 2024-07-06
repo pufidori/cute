@@ -175,13 +175,13 @@ bool callbacks::IsPFBOn() {
 	return g_menu.main.aimbot.prefer_baim.get();
 }
 
-
-
 bool callbacks::IsStandYawAlice() {
 	return g_menu.main.antiaim.yaw_stand.get() == 6;
 }
 
-
+bool callbacks::IsCustomLby() {
+	return g_menu.main.antiaim.body_fake_stand.get() == 5;
+}
 
 bool callbacks::IsAstopOn() {
 	return g_menu.main.aimbot.quick_stop.get();

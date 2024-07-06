@@ -210,6 +210,10 @@ public:
 	Slider	body_yaw_twist;
 	Slider	body_yaw_twist_double;
 
+	Dropdown base_angle_stand;
+	Dropdown body_fake_stand;
+	Slider	 body_fake_stand_custom;
+
 	Slider   alice_range_stand;
 	Slider   alice_speed_stand;
 
@@ -339,30 +343,16 @@ public:
 		dir_custom_stand.AddShowCallback(callbacks::IsStandDirCustom);
 		RegisterElement(&dir_custom_stand);
 
-		body_yaw.setup(XOR("body yaw"), XOR("body_fake_stnd"), { XOR("off"), XOR("static"), XOR("twist"), XOR("switch"), XOR("swap") });
-		body_yaw.AddShowCallback(callbacks::IsAntiAimModeStand);
-		body_yaw.AddShowCallback(callbacks::HasStandYaw);
-		RegisterElement(&body_yaw);
+		body_fake_stand.setup(XOR("fake body"), XOR("body_fake_stnd"), { XOR("off"), XOR("left"), XOR("right"), XOR("opposite"), XOR("z"), XOR("custom"), XOR("twist") });
+		body_fake_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
+		body_fake_stand.AddShowCallback(callbacks::HasStandYaw);
+		RegisterElement(&body_fake_stand);
 
-		body_yaw_twist.setup("", XOR("body_yaw_twist"), -180.f, 180.f, false, 0, 45.f, 1.f, XOR(L"°"));
-		body_yaw_twist.AddShowCallback(callbacks::IsAntiAimModeStand);
-		body_yaw_twist.AddShowCallback(callbacks::IsCustomTwist);
-		RegisterElement(&body_yaw_twist);
-
-		body_yaw_twist_double.setup("double flick angle", XOR("custom_twist_double"), -180.f, 180.f, true, 0, 45.f, 1.f, XOR(L"°"));
-		body_yaw_twist_double.AddShowCallback(callbacks::IsAntiAimModeStand);
-		body_yaw_twist_double.AddShowCallback(callbacks::IsCustomTwist);
-		RegisterElement(&body_yaw_twist_double);
-
-		body_yaw_angle.setup("", XOR("custom_static"), -180.f, 180.f, false, 0, 45.f, 1.f, XOR(L"°"));
-		body_yaw_angle.AddShowCallback(callbacks::IsAntiAimModeStand);
-		body_yaw_angle.AddShowCallback(callbacks::IsCustomBody);
-		RegisterElement(&body_yaw_angle);
-
-		body_yaw_switch.setup("", XOR("custom_switch"), -180.f, 180.f, false, 0, 45.f, 1.f, XOR(L"°"));
-		body_yaw_switch.AddShowCallback(callbacks::IsAntiAimModeStand);
-		body_yaw_switch.AddShowCallback(callbacks::IsSwitchFakeBody);
-		RegisterElement(&body_yaw_switch);
+		body_fake_stand_custom.setup(XOR("lby custom"), XOR("body_fake_stand_custom"), -70, 70, false, 0, 0, 1.f, XOR(L"°"));
+		body_fake_stand_custom.AddShowCallback(callbacks::IsAntiAimModeStand);
+		//body_fake_stand_custom.AddShowCallback(callbacks::HasStandYaw);
+		body_fake_stand_custom.AddShowCallback(callbacks::IsCustomLby);
+		RegisterElement(&body_fake_stand_custom);
 
 		// walk.
 		pitch_walk.setup(XOR("pitch"), XOR("pitch_walk"), { XOR("off"), XOR("down"), XOR("up"), XOR("random"), XOR("ideal"), XOR("zero") });
@@ -462,7 +452,7 @@ public:
 		RegisterElement(&body_yaw_fake);
 
 		// col2.
-		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("relative"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("nigga balls88") });
+		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("opposite"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("nigga balls88") });
 		RegisterElement(&fake_yaw, 1);
 
 		fake_relative.setup("", XOR("fake_relative"), -90.f, 90.f, false, 0, 0.f, 5.f, XOR(L"°"));

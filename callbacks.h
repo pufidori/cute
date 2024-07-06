@@ -86,6 +86,8 @@ namespace callbacks {
 	bool IsStandYawRotate( );
 
 	bool IsStandYawAlice();
+    bool IsCustomLby();
+
 
 	bool IsStandYawRnadom( );
 	bool IsStandDirAuto( );
