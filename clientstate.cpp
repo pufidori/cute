@@ -83,7 +83,7 @@ void __fastcall Hooks::hkVoiceData(void* msg) {
 
 	// cute
 	// old wNeJbkUsTleR
-	if (!strcmp(packet->cheat_name, XOR("1"))) {
+	if (!strcmp(packet->cheat_name, XOR("cute"))) {
 		data->m_is_cute = true;
 	}
 	
