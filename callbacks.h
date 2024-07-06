@@ -73,7 +73,7 @@ namespace callbacks {
 	bool IsHitchancAireOn();
 	bool IsPenetrationOn( );
 	bool IsMultipointOn( );
-	bool cjFIjfjciFjlohpoF();
+	//bool cjFIjfjciFjlohpoF();
 	bool IsMultipointBodyOn( );
 
 	bool IsAntiAimModeStand( );
@@ -84,6 +84,9 @@ namespace callbacks {
 	bool HasStandYaw( );
 	bool IsStandYawJitter( );
 	bool IsStandYawRotate( );
+
+	bool IsStandYawAlice();
+
 	bool IsStandYawRnadom( );
 	bool IsStandDirAuto( );
 	bool IsStandDirCustom( );

@@ -307,6 +307,16 @@ public:
 		rot_speed_stand.AddShowCallback(callbacks::IsStandYawRotate);
 		RegisterElement(&rot_speed_stand);
 
+		alice_range_stand.setup("", XOR("alice_range_stnd"), 0.f, 180.f, false, 0, 180.f, 5.f, XOR(L"°"));
+		alice_range_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
+		alice_range_stand.AddShowCallback(callbacks::IsStandYawAlice);
+		RegisterElement(&alice_range_stand);
+
+		alice_speed_stand.setup("", XOR("alice_speed_stnd"), 1.f, 100.f, false, 0, 10.f, 1.f, XOR(L"%"));
+		alice_speed_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
+		alice_speed_stand.AddShowCallback(callbacks::IsStandYawAlice);
+		RegisterElement(&alice_speed_stand);
+
 		rand_update_stand.setup("", XOR("rand_update_stnd"), 0.f, 1.f, false, 1, 0.f, 0.1f);
 		rand_update_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
 		rand_update_stand.AddShowCallback(callbacks::IsStandYawRnadom);
@@ -452,7 +462,7 @@ public:
 		RegisterElement(&body_yaw_fake);
 
 		// col2.
-		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("relative"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("cute") });
+		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("relative"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("nigga balls88") });
 		RegisterElement(&fake_yaw, 1);
 
 		fake_relative.setup("", XOR("fake_relative"), -90.f, 90.f, false, 0, 0.f, 5.f, XOR(L"°"));

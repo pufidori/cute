@@ -177,6 +177,10 @@ bool callbacks::IsPFBOn() {
 
 
 
+bool callbacks::IsStandYawAlice() {
+	return g_menu.main.antiaim.yaw_stand.get() == 6;
+}
+
 
 
 bool callbacks::IsAstopOn() {

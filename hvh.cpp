@@ -674,6 +674,8 @@ void HVH::DoRealAntiAim() {
 
 				break;
 			}*/
+
+			//alicespin. 
 			case 6: {
 				static bool rotate_right = true; // direction flag, true for right, false for left
 				static float current_angle = 0.0f; // initialize the angle
