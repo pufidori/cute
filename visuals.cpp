@@ -487,7 +487,7 @@ void Visuals::StatusIndicators() {
 		if (g_aimbot.m_damage_toggle) {
 			Indicator_t ind{ };
 			ind.color = Color(255, 255, 255);
-			ind.text = tfm::format(XOR("%i"), g_menu.main.aimbot.override_dmg_value.get());
+			ind.text = tfm::format(XOR("MD: %i"), g_menu.main.aimbot.override_dmg_value.get());
 			indicators.push_back(ind);
 		}
 
@@ -495,7 +495,7 @@ void Visuals::StatusIndicators() {
 		if (g_aimbot.m_force_body) {
 			Indicator_t ind{ };
 			ind.color = Color(150, 200, 60);
-			ind.text = XOR("BAIM");
+			ind.text = XOR("BODY");
 			indicators.push_back(ind);
 		}
 
@@ -1229,6 +1229,27 @@ void Visuals::DrawPlayer( Player* player ) {
 		
 	}
 
+	//For name esp, a potential fix.
+	/*
+		// draw name.
+	if (name_esp) {
+		// fix retards with their namechange meme 
+		// the point of this is overflowing unicode compares with hardcoded buffers, good hvh strat
+		std::string name{ std::string(info.m_name).substr(0, 24) };
+
+		Color clr = g_menu.main.players.name_color.get();
+		if (dormant) {
+			clr.r() = 130;
+			clr.g() = 130;
+			clr.b() = 130;
+		}
+		// override alpha.
+		clr.a() = low_alpha;
+
+		render::esp.string(box.x + box.w / 2, box.y - render::esp.m_size.m_height, clr, name, render::ALIGN_CENTER);
+	}
+	*/
+
 	const // is health esp enabled for this player.
 	bool health_esp = ( enemy && g_menu.main.players.health.get(  ) ) || ( !enemy && g_menu.main.players.teammates.get(  ) );
 
@@ -1310,23 +1331,23 @@ void Visuals::DrawPlayer( Player* player ) {
 				if (player->m_ArmorValue() > 0) {
 					if (player->m_bHasHelmet())
 						if (dormant)
-						flags.push_back({ XOR("hk"), {  210, 210, 210, low_alpha } });
+						flags.push_back({ XOR("H"), {  210, 210, 210, low_alpha } });
 						else
-						flags.push_back({ XOR("HK"), {  255, 255, 255, low_alpha } });
+						flags.push_back({ XOR("H"), {  255, 255, 255, low_alpha } });
 					else
 				if (dormant)
-					flags.push_back({ XOR("k"), {  210, 210, 210, low_alpha } });
+					flags.push_back({ XOR("K"), {  210, 210, 210, low_alpha } });
 				else
-					flags.push_back({ XOR("k"), {  255, 255, 255, low_alpha } });
+					flags.push_back({ XOR("K"), {  255, 255, 255, low_alpha } });
 				}
 			}
 
 			// scoped.
 			if( *it == 2 && player->m_bIsScoped( ) )
 				if (dormant)
-				flags.push_back( { XOR( "scoped" ), { 210, 210, 210, low_alpha } } );
+				flags.push_back( { XOR( "zoom" ), { 210, 210, 210, low_alpha } } );
 				else
-				flags.push_back({ XOR("scoped"), {  0, 175, 255, low_alpha } });
+				flags.push_back({ XOR("zoom"), {  0, 175, 255, low_alpha } });
 
 			// flashed.
 			if( *it == 3 && player->m_flFlashBangTime( ) > 0.f )
@@ -1343,9 +1364,9 @@ void Visuals::DrawPlayer( Player* player ) {
 				// check if reload animation is going on.
 				if( layer1->m_weight != 0.f && player->GetSequenceActivity( layer1->m_sequence ) == 967 /* ACT_CSGO_RELOAD */ )
 					if (dormant)
-					flags.push_back( { XOR( "r" ), { 210, 210, 210, low_alpha } } );
+					flags.push_back( { XOR( "reload" ), { 210, 210, 210, low_alpha } } );
 					else
-					flags.push_back({ XOR("r"), {  0, 175, 255, low_alpha } });
+					flags.push_back({ XOR("reload"), {  0, 175, 255, low_alpha } });
 			}
 
 			// bomb.
@@ -1401,6 +1422,13 @@ void Visuals::DrawPlayer( Player* player ) {
 
 				if (!dormant && data->m_hit)
 					flags.push_back({ "HIT", { 220, 220, 220, low_alpha} });
+
+			}
+
+			if (*it == 10) {
+
+				if ( data->m_is_cute || data->m_uses_cute)
+					flags.push_back({ "cute", { 206, 139, 255, low_alpha} });
 
 			}
 		}
@@ -2289,7 +2317,7 @@ void Visuals::DrawHistorySkeleton(Player* player, int opacity) {
 	}
 }
 
-void Visuals::	IndicateAngles()
+void Visuals::IndicateAngles()
 {
 	if (!g_csgo.m_engine->IsInGame() && !g_csgo.m_engine->IsConnected())
 		return;
@@ -2328,7 +2356,7 @@ void Visuals::	IndicateAngles()
 			}
 		}
 
-		if (g_menu.main.antiaim.body_yaw.get() == 1 || g_menu.main.antiaim.body_yaw.get() == 2 || g_menu.main.antiaim.body_yaw.get() == 3 || g_menu.main.antiaim.body_yaw.get() == 4 || g_menu.main.antiaim.body_yaw.get() == 5 || g_menu.main.antiaim.body_yaw.get() == 6)
+		if (g_menu.main.antiaim.body_fake_stand.get() == 1 || g_menu.main.antiaim.body_fake_stand.get() == 2 || g_menu.main.antiaim.body_fake_stand.get() == 3 || g_menu.main.antiaim.body_fake_stand.get() == 4 || g_menu.main.antiaim.body_fake_stand.get() == 5 || g_menu.main.antiaim.body_fake_stand.get() == 6)
 		{
 			float lby = g_cl.m_local->m_flLowerBodyYawTarget();
 			const vec3_t lby_pos(50.f * cos(math::deg_to_rad(lby)) + pos.x,

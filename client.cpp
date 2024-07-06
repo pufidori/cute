@@ -139,8 +139,8 @@ void Client::ClanTag()
 
 		is_freeze_period = true;
 
-		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 2.4) % 27) {
-			switch (int(g_csgo.m_globals->m_curtime * 2.4) % 27) {
+		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
+			switch (int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
 			case 0: SetClanTag(XOR("         c")); break;
 			case 1: SetClanTag(XOR("        cu")); break;
 			case 2: SetClanTag(XOR("       cut")); break;
@@ -158,9 +158,10 @@ void Client::ClanTag()
 			case 14:SetClanTag(XOR("vip       ")); break;
 			case 15:SetClanTag(XOR("ip        ")); break;
 			case 16:SetClanTag(XOR("p         ")); break;
+			case 17:SetClanTag(XOR("          ")); break;
 			default:;
 			}
-			iPrevFrame = int(g_csgo.m_globals->m_curtime * 2.4) % 27;
+			iPrevFrame = int(g_csgo.m_globals->m_curtime * 2.6) % 35;
 		}
 
 		// do we want to reset after untoggling the clantag?
@@ -603,13 +604,28 @@ void Client::OnTick(CUserCmd* cmd) {
 }
 
 void Client::SetAngles() {
-	if (!g_cl.m_local || !g_cl.m_processing) {
-		g_cl.m_updated_values = false;
-		return;
-	}
+	//if (!g_cl.m_local || !g_cl.m_processing) {
+		//g_cl.m_updated_values = false;
+		//return;
+	//}
 
 	// apply the rotation.
-	g_cl.m_local->SetAbsAngles(ang_t(0, m_abs_yaw, 0));
+	//g_cl.m_local->SetAbsAngles(ang_t(0, m_abs_yaw, 0));
+
+	// set radar angles.
+	//if (g_csgo.m_input->CAM_IsThirdPerson())
+		//g_csgo.m_prediction->SetLocalViewAngles(m_radar);
+
+	if (!g_cl.m_local || !g_cl.m_processing)
+		return;
+
+	// set the nointerp flag.
+	g_cl.m_local->m_fEffects() |= EF_NOINTERP;
+
+	// apply the rotation.
+	g_cl.m_local->SetAbsAngles(m_rotation);
+	g_cl.m_local->m_angRotation() = m_rotation;
+	g_cl.m_local->m_angNetworkAngles() = m_rotation;
 
 	// set radar angles.
 	if (g_csgo.m_input->CAM_IsThirdPerson())

@@ -676,7 +676,7 @@ public:
 		name_esp_alpha.AddShowCallback(callbacks::nameon);
 		RegisterElement(&name_esp_alpha);
 
-		flags_enemy.setup(XOR("flags enemy"), XOR("flags_enemy"), { XOR("money"), XOR("armor"), XOR("zoom"), XOR("flashed"), XOR("reload"), XOR("bomb"), XOR("fake"), XOR("lethal"), XOR("tickbase"), XOR("hit")});
+		flags_enemy.setup(XOR("flags enemy"), XOR("flags_enemy"), { XOR("money"), XOR("armor"), XOR("zoom"), XOR("flashed"), XOR("reload"), XOR("bomb"), XOR("fake"), XOR("lethal"), XOR("tickbase"), XOR("hit"), XOR("friends")});
 		RegisterElement(&flags_enemy);
 
 		weapontext.setup(XOR("weapon text"), XOR("weapontext"));
@@ -1181,10 +1181,10 @@ public:
 		FogColor.setup("color", XOR("FogColor"), colors::burgundy);
 		RegisterElement(&FogColor);
 
-		FogStart.setup(XOR("Start"), XOR("Fog start"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"%"));
+		FogStart.setup(XOR("Start"), XOR("Fog start"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"u"));
 		RegisterElement(&FogStart);
 
-		FogEnd.setup(XOR("End"), XOR("Fog end"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"%"));
+		FogEnd.setup(XOR("End"), XOR("Fog end"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"u"));
 		RegisterElement(&FogEnd);
 
 		Fogdensity.setup(XOR("Density"), XOR("Fog density"), 0.f, 100.f, false, 0, 100.f, 1.f, XOR(L"%"));
@@ -1196,9 +1196,12 @@ public:
 		postprocess.setup(XOR("disable post processing"), XOR("postprocess"));
 		RegisterElement(&postprocess, 1);
 
-		thirdperson.setup(XOR("force thirdperson"), XOR("thirdperson"));
+		thirdperson.setup(XOR("thirdperson"), XOR("thirdperson"));
 		thirdperson.SetToggleCallback(callbacks::ToggleThirdPerson);
 		RegisterElement(&thirdperson, 1);
+
+		thirdperson_distance.setup(XOR(" "), XOR("thirdperson_distance"), 50.f, 300.f, false, 0, 150.f, 1.f, XOR(L"u"));
+		RegisterElement(&thirdperson_distance, 1);
 
 		disableteam.setup(XOR("disable rendering of teammates"), XOR("disableteam"));
 		RegisterElement(&disableteam, 1);
@@ -1265,8 +1268,6 @@ public:
 		bullet_impacts.setup(XOR("bullet impacts"), XOR("bullet_impacts"));
 		RegisterElement(&bullet_impacts, 1);
 
-		thirdperson_distance.setup(XOR(" "), XOR("thirdperson_distance"), 50.f, 300.f, false, 0, 150.f, 1.f, XOR(L"?"));
-		RegisterElement(&thirdperson_distance, 1);
 	}
 };
 
