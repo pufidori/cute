@@ -604,30 +604,15 @@ void Client::OnTick(CUserCmd* cmd) {
 }
 
 void Client::SetAngles() {
-	//if (!g_cl.m_local || !g_cl.m_processing) {
-		//g_cl.m_updated_values = false;
-		//return;
-	//}
-
-	// apply the rotation.
-	//g_cl.m_local->SetAbsAngles(ang_t(0, m_abs_yaw, 0));
-
-	// set radar angles.
-	//if (g_csgo.m_input->CAM_IsThirdPerson())
-		//g_csgo.m_prediction->SetLocalViewAngles(m_radar);
-
-	if (!g_cl.m_local || !g_cl.m_processing)
+	if (!g_cl.m_local || !g_cl.m_processing) {
+		g_cl.m_updated_values = false;
 		return;
-
-	// set the nointerp flag.
-	g_cl.m_local->m_fEffects() |= EF_NOINTERP;
+	}
 
 	// apply the rotation.
-	g_cl.m_local->SetAbsAngles(m_rotation);
-	g_cl.m_local->m_angRotation() = m_rotation;
-	g_cl.m_local->m_angNetworkAngles() = m_rotation;
+	g_cl.m_local->SetAbsAngles(ang_t(0, m_abs_yaw, 0));
 
-	// set radar angles.
+	 //set radar angles.
 	if (g_csgo.m_input->CAM_IsThirdPerson())
 		g_csgo.m_prediction->SetLocalViewAngles(m_radar);
 }
