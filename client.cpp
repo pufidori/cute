@@ -10,10 +10,12 @@ ulong_t __stdcall Client::init(void* arg) {
 	// stop here if we failed to acquire all the data needed from csgo.
 	if (!g_csgo.init())
 		return 0;
-
+	g_csgo.m_engine->ExecuteClientCmd((XOR("voice_modenable 1")));
 	// welcome the user.
-	g_notify.add(tfm::format(XOR("Welcome to cute.\n")));
-	g_notify.add(tfm::format(XOR("build - cute " __DATE__ "\n")));
+	g_notify.add(tfm::format(XOR("Welcome.\n")));
+	g_notify.add(tfm::format(XOR("cute.vip by fruitydevteam\n")));
+	g_notify.add(tfm::format(XOR("made with love <3\n")));
+	g_notify.add(tfm::format(XOR("build - beta " __DATE__ "\n")));
 	g_cl.UnlockHiddenConvars();
 
 	return 1;
@@ -747,6 +749,11 @@ void Client::UpdateInformation() {
 		// remove body lean
 		if (g_menu.main.misc.bodeeeelean.get())
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
+
+
+		//below is something i want to do in the future, dk if it is possible but, in air static legs.
+		//g_cl.m_local->m_flPoseParameter()[PoseParam::JUMP_FALL] = 1.0f;
+
 
 		// call original, bypass hook.
 		g_hooks.m_bUpdatingCSALP = true;
