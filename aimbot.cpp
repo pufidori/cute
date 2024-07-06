@@ -838,7 +838,7 @@ void Aimbot::StartTargetSelection() {
 		}*/
 
 		auto local_player = g_csgo.m_entlist->GetClientEntity< Player* >(g_csgo.m_engine->GetLocalPlayer());
-		if (local_player->alive() != 0) {
+		if (g_menu.main.aimbot.enable.get()) {
 
 			if (data->m_is_cute
 				&& !data->m_is_godhook
