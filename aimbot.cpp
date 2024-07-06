@@ -824,7 +824,22 @@ void Aimbot::StartTargetSelection() {
 		if (!front || front->dormant() || front->immune() || !front->m_setup)
 			continue;
 
-		if (g_menu.main.misc.whitelist.get()) {
+		// force whitelist
+		/*if (g_menu.main.misc.whitelist.get()) {
+
+			if (data->m_is_cute
+				&& !data->m_is_godhook
+				&& !data->m_is_robertpaste
+				&& !data->m_is_pandora
+				&& !data->m_is_fade
+				&& !data->m_is_dopium
+				&& !data->m_is_cheese_crack
+				&& !data->m_is_kaaba)
+				continue;
+		}*/
+
+		auto local_player = g_csgo.m_entlist->GetClientEntity< Player* >(g_csgo.m_engine->GetLocalPlayer());
+		if (local_player->alive() != 0) {
 
 			if (data->m_is_cute
 				&& !data->m_is_godhook
