@@ -46,7 +46,7 @@ public:
 	void ResolveAir(AimPlayer* data, LagRecord* record, Player* player);
 	void ResolveAir(AimPlayer* data, LagRecord* record);
 	void resolve(Player* entity, LagRecord* record);
-
+	void ResolveLby(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
 	void AirNS(AimPlayer* data, LagRecord* record);
 	void ResolvePoses(Player* player, LagRecord* record);
 

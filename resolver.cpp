@@ -158,33 +158,54 @@ void Resolver::SetMode(LagRecord* record) {
 void Resolver::ResolveAngles(Player* player, LagRecord* record) {
 	AimPlayer* data = &g_aimbot.m_players[player->index() - 1];
 
-	// mark this record if it contains a shot.
+	SetMode(record);
 	MatchShot(data, record);
 
-	// next up mark this record with a resolver mode that will be used.
-	SetMode(record);
+	LagRecord* previous = nullptr;
+	if (data->m_records.size() > 1)
+		previous = data->m_records[1].get();
 
-	// if we are in nospread mode, force all players pitches to down.
-	// TODO; we should check thei actual pitch and up too, since those are the other 2 possible angles.
-	// this should be somehow combined into some iteration that matches with the air angle iteration.
+	CCSGOPlayerAnimState* state = player->m_PlayerAnimState();
+	if (!state)
+		return;
+
+	if (record->m_mode == RESOLVE_STAND) {
+		if (previous && record->m_body != previous->m_body) {
+			data->m_body_proxy_updated = record->m_anim_time + 1.1f;
+			data->m_body_pred_idx = true;
+
+			record->m_mode = RESOLVE_LBY_UPDATE;
+		}
+		else if (data->m_body_proxy_updated <= record->m_anim_time && data->m_body_pred_idx) {
+			data->m_body_proxy_updated = record->m_anim_time + 1.1f;
+
+			record->m_mode = RESOLVE_LBY_UPDATE;
+		}
+	}
+
 	if (g_menu.main.aimbot.nospread.get())
 		record->m_eye_angles.x = 90.f;
 
-	// we arrived here we can do the acutal resolve.
-	if (record->m_mode == Modes::RESOLVE_WALK)
+	switch (record->m_mode) {
+	case RESOLVE_WALK:
 		ResolveWalk(data, record);
-
-	else if (record->m_mode == Modes::RESOLVE_OVERRIDE || (g_input.GetKeyState(g_menu.main.aimbot.override.get())))
-		ResolveOverride(player, record, data);
-
-	else if (record->m_mode == Modes::RESOLVE_LASTMOVE || record->m_mode == Modes::RESOLVE_UNKNOWM && !(g_input.GetKeyState(g_menu.main.aimbot.override.get())))
-		LastMoveLby(record, data, player);
-
-	else if (record->m_mode == Modes::RESOLVE_AIR)
+		break;
+	case RESOLVE_STAND:
+		ResolveStand(data, record);
+		break;
+	case RESOLVE_AIR:
 		ResolveAir(data, record, player);
+		break;
+	case RESOLVE_LBY_UPDATE:
+		ResolveLby(data, record, state);
+		break;
+	}
 
-	// normalize the eye angles, doesn't really matter but its clean.
 	math::NormalizeAngle(record->m_eye_angles.y);
+}
+
+void Resolver::ResolveLby(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state) {
+	record->m_eye_angles.y = record->m_body;
 }
 
 void Resolver::ResolveWalk(AimPlayer* data, LagRecord* record) {
@@ -192,8 +213,8 @@ void Resolver::ResolveWalk(AimPlayer* data, LagRecord* record) {
 	record->m_eye_angles.y = record->m_body;
 
 	// delay body update.
-	//data->m_body_update = record->m_anim_time + 0.22f;
-
+	data->m_body_proxy_updated = record->m_anim_time + 0.22f;
+		
 	// reset stand and body index.
 	data->m_stand_index = 0;
 	data->m_stand_index2 = 0;
