@@ -28,7 +28,7 @@ bool BoneHandler::SetupBones( Player* player, BoneArray* pBoneMatrix, float time
 	player->RemoveIKContext();
 	player->InvalidateBoneCache();
 	// not sure of that one 
-        // player->m_nCustomBlendingRuleMask() = -1;
+    //player->m_nCustomBlendingRuleMask() = -1;
 
 	g_bone_handler.m_running = true;
 	const bool result = player->SetupBones( pBoneMatrix, 128, 0x7FF00, time );

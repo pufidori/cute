@@ -391,7 +391,7 @@ void AimPlayer::handle_animations(LagRecord* record) {
 
 	// reset fakewalk state.
 	record->m_fake_flick = false;
-	record->m_mode = Resolver::Modes::RESOLVE_NONE;
+	record->m_mode = Resolver::Modes::RESOLVE_DISABLED;
 	record->m_resolver_mode = XOR("NONE");
 	record->m_extrapolated = record->m_broke_lc = false;
 	record->m_ground_for_two_ticks = record->m_flags & FL_ONGROUND;
@@ -707,7 +707,7 @@ void AimPlayer::SetupHitboxes(LagRecord* record, bool history) {
 
 	if (m_prefer_body) {
 
-		if (g_menu.main.aimbot.prefer_baim_disablers.get(0) && record->m_mode == Resolver::Modes::RESOLVE_LBY_UPDATE)
+		if (g_menu.main.aimbot.prefer_baim_disablers.get(0) && record->m_mode == Resolver::Modes::RESOLVE_FLICK)
 			m_prefer_body = false;
 
 		if (g_menu.main.aimbot.prefer_baim_disablers.get(1) && record->m_mode == Resolver::Modes::RESOLVE_WALK)
@@ -838,7 +838,7 @@ void Aimbot::StartTargetSelection() {
 		}*/
 
 		auto local_player = g_csgo.m_entlist->GetClientEntity< Player* >(g_csgo.m_engine->GetLocalPlayer());
-		if (g_menu.main.aimbot.enable.get()) {
+		if (!g_menu.main.misc.dumper.get()) {
 
 			if (data->m_is_cute
 				&& !data->m_is_godhook

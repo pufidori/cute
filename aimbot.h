@@ -63,6 +63,15 @@ public:
 	bool       m_moved;
 	//MoveData_t m_walk_record;
 
+	float     m_body_update, m_walk_body, m_prev_speed, m_last_speed, m_last_move_time;
+	bool      m_can_predict;
+	int m_stand_index;
+	int m_body_index;
+	int m_air_index;
+	C_AnimationLayer m_Pslayers[13];
+
+	MoveData_t m_walk_record;
+
 
 	// data about the LBY proxy.
 	float m_body_timer;
@@ -90,10 +99,6 @@ public:
 	int   m_change_stored;
 	float m_upd_time;
 	float m_fov;
-	LagRecord m_walk_record;
-	int m_stand_index;
-	int m_stand_index2;
-	int m_stand_index3;
 	int m_last_move;
 	int m_unknown_move;
 	int m_ff_index;
@@ -124,7 +129,7 @@ public:
 	bool m_hit;
 
 	// network shit
-	float m_networked_angle = 1337.f;
+	float m_networked_angle = 180.f;
 	bool  m_is_kaaba = false;
 	bool  m_is_cheese_crack = false;
 	bool  m_is_cute = false;

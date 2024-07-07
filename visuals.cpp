@@ -716,7 +716,7 @@ void Visuals::draw( Entity* ent ) {
 		g_cl.kaaba.clear();
 		g_cl.cheese.clear();
 		g_cl.dopium.clear();
-		g_cl.same_hack.clear();
+		g_cl.cutee.clear();
 		g_cl.fade.clear();
 		g_cl.roberthook.clear();
 		return;
@@ -1381,7 +1381,7 @@ void Visuals::DrawPlayer( Player* player ) {
 				LagRecord* current = data->m_records.front().get();
 
 				Color clr = Color(255, 255, 255, low_alpha);
-				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_LBY_UPDATE) {
+				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_FLICK) {
 					clr = Color(155, 210, 100, low_alpha);
 				}
 
@@ -1436,14 +1436,13 @@ void Visuals::DrawPlayer( Player* player ) {
 			
 		
 
-
 		if (data && data->m_records.size() && enemy && g_menu.main.aimbot.correct.get()) {
 			LagRecord* current = data->m_records.front().get();
-			if (current->m_mode == Resolver::Modes::RESOLVE_LAST_LBY)
+			if (current->m_mode == Resolver::Modes::RESOLVE_BODY)
 				flags.push_back({ XOR("lby"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
 				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY_UPDATE)
+			else if (current->m_mode == Resolver::Modes::RESOLVE_PREFLICK)
 				flags.push_back({ XOR("predict"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
 				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });
@@ -1453,13 +1452,13 @@ void Visuals::DrawPlayer( Player* player ) {
 				flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
 			else
 				flags.push_back({ XOR("moving"), { 255,255,255, low_alpha } });
-		}
 
-		// iterate flags.
-		for (size_t i{ }; i < flags.size(); ++i) {
-			const auto& f = flags[i];
-			int offset = i * (render::menu.m_size.m_height) + 1;
-			render::menu.string(box.x - 1 + box.w + 3, box.y + 1 + offset - 2, f.second, f.first);
+			// iterate flags.
+			for (size_t i{ }; i < flags.size(); ++i) {
+				const auto& f = flags[i];
+				int offset = i * (render::menu.m_size.m_height) + 1;
+				render::menu.string(box.x - 1 + box.w + 3, box.y + 1 + offset - 2, f.second, f.first);
+			}
 		}
 	}
 

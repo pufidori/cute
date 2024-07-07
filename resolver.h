@@ -1,3 +1,4 @@
+
 #pragma once
 
 class ShotRecord;
@@ -5,26 +6,28 @@ class ShotRecord;
 class Resolver {
 public:
 	enum Modes : size_t {
-		RESOLVE_NONE = 0,
+		RESOLVE_DISABLED = 0,
 		RESOLVE_WALK,
+		RESOLVE_PREFLICK,
 		RESOLVE_STAND,
 		RESOLVE_STAND1,
 		RESOLVE_STAND2,
-		RESOLVE_AIR,
-		RESOLVE_LASTMOVE,
-		RESOLVE_OVERRIDE,
-		RESOLVE_UNKNOWM,
 		RESOLVE_BODY,
+		RESOLVE_AIR,
+		RESOLVE_FLICK,
+		RESOLVE_FAKEFLICK,
 		RESOLVE_STOPPED_MOVING,
-		RESOLVE_LBY_UPDATE,
-		RESOLVE_LAST_LBY,
+		RESOLVE_OVERRIDE,
+		RESOLVE_LASTMOVE,
+		RESOLVE_UNKNOWM,
+		RESOLVE_BRUTEFORCE,
 	};
 
 public:
 	LagRecord* FindIdealRecord(AimPlayer* data);
 	LagRecord* FindLastRecord(AimPlayer* data);
 
-	LagRecord* FindFirstRecord(AimPlayer* data);
+	//LagRecord* FindFirstRecord(AimPlayer* data);
 
 	void OnBodyUpdate(Player* player, float value);
 	float GetAwayAngle(LagRecord* record);
@@ -32,37 +35,41 @@ public:
 	void MatchShot(AimPlayer* data, LagRecord* record);
 	void SetMode(LagRecord* record);
 
-	void DetectSide(Player* player, int* side);
-
 	void ResolveAngles(Player* player, LagRecord* record);
-	void ResolveWalk(AimPlayer* data, LagRecord* record);
-	float GetLBYRotatedYaw(float lby, float yaw);
-	bool IsYawSideways(Player* entity, float yaw);
-	void ResolveYawBruteforce(LagRecord* record, Player* player, AimPlayer* data);
-	float GetDirectionAngle(int index, Player* player);
-	void LastMoveLby(LagRecord* record, AimPlayer* data, Player* player);
-	void ResolveStand(AimPlayer* data, LagRecord* record);
-	void StandNS(AimPlayer* data, LagRecord* record);
-	void ResolveAir(AimPlayer* data, LagRecord* record, Player* player);
-	void ResolveAir(AimPlayer* data, LagRecord* record);
-	void resolve(Player* entity, LagRecord* record);
+	void AntiFreestand(LagRecord* record, float& current_yaw, float multiplier);
+	void ResolveWalk(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
+	void ResolveStand(AimPlayer* data, LagRecord* record, LagRecord* previous, CCSGOPlayerAnimState* state);
 	void ResolveLby(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
-	void AirNS(AimPlayer* data, LagRecord* record);
+	void ResolveAir(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
 	void ResolvePoses(Player* player, LagRecord* record);
-
-	bool IdealFreestand(Player* entity, float& yaw, int damage_toleranc);
-	bool lby_updated(LagRecord* a, AimPlayer* b, Player* entity);
-	bool can_backtrack(Player* entity);
-	void lby_update_checks(Player* entity, LagRecord* a, AimPlayer* b);
-	void store(Player* entity, float yaw, AimPlayer* b);
-
-	void ResolveOverride(Player* player, LagRecord* record, AimPlayer* data);
-
-	void AntiFreestand(Player* pEnemy, float& y, float flLeftDamage, float flRightDamage, float flRightFraction, float flLeftFraction, float flToMe, int& iShotsMissed);
 
 public:
 	std::array< vec3_t, 64 > m_impacts;
 	int	   iPlayers[64];
+	bool   m_step_switch;
+	int    m_random_lag;
+	float  m_next_random_update;
+	float  m_random_angle;
+	float  m_direction;
+	float  m_auto;
+	float  m_auto_dist;
+	float  m_auto_last;
+	float  m_view;
+
+	class PlayerResolveRecord
+	{
+	public:
+		struct AntiFreestandingRecord
+		{
+			int right_damage = 0, left_damage = 0;
+			float right_fraction = 0.f, left_fraction = 0.f;
+		};
+
+	public:
+		AntiFreestandingRecord m_sAntiEdge;
+	};
+
+	PlayerResolveRecord player_resolve_records[33];
 };
 
 extern Resolver g_resolver;
