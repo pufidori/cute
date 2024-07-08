@@ -15,7 +15,7 @@ ulong_t __stdcall Client::init(void* arg) {
 	g_notify.add(tfm::format(XOR("Welcome.\n")));
 	g_notify.add(tfm::format(XOR("cute.vip by fruitydevteam\n")));
 	g_notify.add(tfm::format(XOR("made with love <3\n")));
-	g_notify.add(tfm::format(XOR("build - beta " __DATE__ "\n")));
+	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__"\n")));
 	g_cl.UnlockHiddenConvars();
 
 	return 1;
