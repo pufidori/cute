@@ -134,8 +134,8 @@ public:
 		correct.setup(XOR("anti-aim correction"), XOR("correct"));
 		RegisterElement(&correct, 1);
 
-		correct_opt.setup(XOR(""), XOR("correct_opt"), { XOR("correct overlap"), XOR("extend correction") }, false);
-		RegisterElement(&correct_opt, 1);
+		//correct_opt.setup(XOR(""), XOR("correct_opt"), { XOR("correct overlap"), XOR("extend correction") }, false);
+		//RegisterElement(&correct_opt, 1);
 
 		fakelag_correction.setup(XOR("fake-lag correction"), XOR("fakelag_correction"), { XOR("off"), XOR("low"), XOR("high") });
 		RegisterElement(&fakelag_correction, 1);
@@ -292,7 +292,7 @@ public:
 		pitch_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
 		RegisterElement(&pitch_stand);
 
-		yaw_stand.setup(XOR("yaw"), XOR("yaw_stnd"), { XOR("off"), XOR("direction"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("sakura"), XOR("alicespin") });
+		yaw_stand.setup(XOR("yaw"), XOR("yaw_stnd"), { XOR("off"), XOR("direction"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("sakura"), XOR("alicespin"),XOR("distortionz")});
 		yaw_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
 		RegisterElement(&yaw_stand);
 

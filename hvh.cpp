@@ -496,61 +496,53 @@ void HVH::DoRealAntiAim() {
 		// set the yaw to the direction before applying any other operations.
 		g_cl.m_cmd->m_view_angles.y = m_direction;
 
-		bool stand = g_menu.main.antiaim.body_yaw.get() > 0 && m_mode == AntiAimMode::STAND;
+		//bool stand = g_menu.main.antiaim.body_yaw.get() > 0 && m_mode == AntiAimMode::STAND;
+
+		bool stand = g_menu.main.antiaim.body_fake_stand.get() > 0 && m_mode == AntiAimMode::STAND;
 
 		// one tick before the update.
 		if (stand && !g_cl.m_lag && g_csgo.m_globals->m_curtime >= (g_cl.m_body_pred - g_cl.m_anim_frame) && g_csgo.m_globals->m_curtime < g_cl.m_body_pred) {
-			
 			// z mode.
-			if (g_menu.main.antiaim.body_yaw.get() == 2)
-				g_cl.m_cmd->m_view_angles.y += g_menu.main.antiaim.body_yaw_twist_double.get();
+			if (g_menu.main.antiaim.body_fake_stand.get() == 4)
+				g_cl.m_cmd->m_view_angles.y -= 90.f;
 		}
+
+		float custom = g_menu.main.antiaim.body_fake_stand_custom.get() * 2.5;
+		static int negative = false;
 
 		// check if we will have a lby fake this tick.
 		if (!g_cl.m_lag && g_csgo.m_globals->m_curtime >= g_cl.m_body_pred && stand) {
 			// there will be an lbyt update on this tick.
 			if (stand) {
-				side_ = -side_;
-				switch (g_menu.main.antiaim.body_yaw.get()) {
-				case 1: // static default flick
-					g_cl.m_cmd->m_view_angles.y += g_menu.main.antiaim.body_yaw_angle.get();
+				switch (g_menu.main.antiaim.body_fake_stand.get()) {
+
+					// left.
+				case 1:
+					g_cl.m_cmd->m_view_angles.y += 110.f;
 					break;
-				case 2: // twist (also called z, but its "Twist" on skeet)
-					g_cl.m_cmd->m_view_angles.y += g_menu.main.antiaim.body_yaw_twist.get();
+
+					// right.
+				case 2:
+					g_cl.m_cmd->m_view_angles.y -= 110.f;
 					break;
-				case 3: // switch
-					g_cl.m_cmd->m_view_angles.y += g_menu.main.antiaim.body_yaw_switch.get() * side_;
+
+					// opposite.
+				case 3:
+					g_cl.m_cmd->m_view_angles.y += 180.f;
 					break;
+
+					// z.
 				case 4:
-					switch (g_cl.m_cmd->m_tick % 3) {
-					case 0:
-						g_cl.m_cmd->m_view_angles.y -= 45.f;
-						break;
-					case 1:
-						g_cl.m_cmd->m_view_angles.y += 25.f;
-						break;
-					case 2:
-						g_cl.m_cmd->m_view_angles.y += 45.f;
-						break;
-					default:
-						g_cl.m_cmd->m_view_angles.y -= 35.f;
-						break;
-
-					}
-
-					// swap last real and last fake for premium resolver breaker
-					if (swap_count > 1) {
-						m_last_fake = g_cl.m_local->m_flLowerBodyYawTarget();
-						m_swap = true;
-					}
-					if (m_swap) {
-						int zw = m_last_fake;
-						m_last_fake = m_last_real;
-						m_last_real = zw;
-					}
-					swap_count++;
+					g_cl.m_cmd->m_view_angles.y += 90.f;
 					break;
-				default:
+
+				case 5:
+					g_cl.m_cmd->m_view_angles.y += custom;
+					break;
+
+				case 6:
+					negative ? g_cl.m_cmd->m_view_angles.y += 110.f : g_cl.m_cmd->m_view_angles.y -= 110.f;
+					negative = !negative;
 					break;
 				}
 			}
@@ -622,7 +614,7 @@ void HVH::DoRealAntiAim() {
 					distortion_angle -= 360.f;
 
 				// apply the distortion.
-				if (!manual || !g_menu.main.antiaim.manual_ignore.get(0))
+				if (!manual)
 				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_angle;
 				break;
 			}
@@ -717,6 +709,18 @@ void HVH::DoRealAntiAim() {
 				// set the view angle
 				g_cl.m_cmd->m_view_angles.y = current_angle;
 
+				break;
+			}
+			case 7: {
+				float distortion_delta1;
+
+				distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 75;
+
+				distortion_delta1 += (75.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
+
+				math::NormalizeAngle(distortion_delta1);
+
+				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_delta1;
 				break;
 			}
 
