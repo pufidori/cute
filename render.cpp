@@ -19,21 +19,21 @@ namespace render {
 }
 
 void render::init( ) {
-	menu = Font(XOR("Tahoma"), 13, FW_NORMAL, FONTFLAG_DROPSHADOW);
+	menu       = Font(XOR("Lucida Sans Unicode"), 15, FW_NORMAL, FONTFLAG_DROPSHADOW);
 	menu_shade = Font( XOR( "Lucida Sans Unicode" ), 15, FW_NORMAL, FONTFLAG_DROPSHADOW);
 	esp        = Font( XOR( "Tahoma" ), 12, FW_NORMAL, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
 	esp2       = Font( XOR( "Verdana" ), 12, FW_NORMAL, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
-	esp_small  = Font( XOR( "Smallest Pixel-7" ), 10, FW_NORMAL, FONTFLAG_OUTLINE);
-	esp_small2 = Font( XOR( "Small Fonts" ), 9, FW_NORMAL, FONTFLAG_OUTLINE);
-	esp_name   = Font( XOR( "Verdana" ), 12, FW_NORMAL, FONTFLAG_DROPSHADOW);
-	esp_other  = Font( XOR( "Verdana" ), 12, FW_BOLD, FONTFLAG_DROPSHADOW);
+	esp_small  = Font( XOR( "ProggyTinyTT" ), 10, FW_NORMAL, FONTFLAG_OUTLINE);
+	esp_small2 = Font( XOR( "ProggyTinyTT" ), 9, FW_NORMAL, FONTFLAG_OUTLINE);
+	esp_name   = Font( XOR( "Lucida Sans Unicode" ), 12, FW_NORMAL, FONTFLAG_DROPSHADOW);
+	esp_other  = Font( XOR( "ProggyTinyTT" ), 12, FW_BOLD, FONTFLAG_DROPSHADOW);
 	hud        = Font( XOR( "Tahoma" ), 17, FW_NORMAL, FONTFLAG_ANTIALIAS );
-	cs =		 Font(XOR("Counter-Strike"), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
+	cs         = Font(XOR("Counter-Strike"), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	indicator  = Font( XOR( "Verdana" ), 26, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
 	indicator2 = Font( XOR( "Bahnschrift" ), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	console    = Font( XOR( "Lucida Console" ), 10, FW_DONTCARE, FONTFLAG_DROPSHADOW);
 	manualaa   = Font( XOR( "Acta Symbols W95 Arrows" ), 16, FW_NORMAL, FONTFLAG_ANTIALIAS);
-	output	   = Font( XOR( "Verdana"), 12, FW_BOLD, FONTFLAG_OUTLINE);
+	output     = Font(XOR("Lucida Sans Unicode"), 12, FW_NORMAL, FONTFLAG_DROPSHADOW);
 }
 
 void render::gradient1337(int x, int y, int w, int h, Color color1, Color color2) {

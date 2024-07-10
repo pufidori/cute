@@ -49,7 +49,7 @@ public:
 public:
 	void init() {
 		// title.
-		SetTitle(XOR("aimbot"));
+		SetTitle(XOR("Rage Aim"));
 
 		enable.setup(XOR("enabled"), XOR("enable"));
 		RegisterElement(&enable);
@@ -273,7 +273,7 @@ public:
 
 public:
 	void init() {
-		SetTitle(XOR("anti-aim"));
+		SetTitle(XOR("Anti-Aimbot"));
 
 		enable.setup(XOR("enable"), XOR("enable"));
 		RegisterElement(&enable);
@@ -292,9 +292,26 @@ public:
 		pitch_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
 		RegisterElement(&pitch_stand);
 
-		yaw_stand.setup(XOR("yaw"), XOR("yaw_stnd"), { XOR("off"), XOR("direction"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("sakura"), XOR("alicespin"),XOR("distortionz")});
+		yaw_stand.setup(XOR("yaw"), XOR("yaw_stnd"), { XOR("off"), XOR("direction"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("sakura"), XOR("alicespin"),XOR("distortion")});
 		yaw_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
 		RegisterElement(&yaw_stand);
+
+		distortion.setup(XOR("distortion"), XOR("distortion"));
+		distortion.AddShowCallback(callbacks::distortion);
+		distortion.AddShowCallback(callbacks::IsAntiAimModeStand);
+		RegisterElement(&distortion, 1);
+
+		dir_distort_range.setup("distort range", XOR("dir_distort_range"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
+		dir_distort_range.AddShowCallback(callbacks::IsUsingDistortion);
+		dir_distort_range.AddShowCallback(callbacks::IsAntiAimModeStand);
+		dir_distort_speed.AddShowCallback(callbacks::distortion);
+		RegisterElement(&dir_distort_range, 1);
+
+		dir_distort_speed.setup("distort speed", XOR("dir_distort_speed"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
+		dir_distort_speed.AddShowCallback(callbacks::IsUsingDistortion);
+		dir_distort_speed.AddShowCallback(callbacks::IsAntiAimModeStand);
+		dir_distort_speed.AddShowCallback(callbacks::distortion);
+		RegisterElement(&dir_distort_speed, 1);
 
 		jitter_range_stand.setup("", XOR("jitter_range_stnd"), 1.f, 180.f, false, 0, 45.f, 5.f, XOR(L"°"));
 		jitter_range_stand.AddShowCallback(callbacks::IsAntiAimModeStand);
@@ -499,18 +516,6 @@ public:
 		allow_land.setup(XOR("allow landing animation"), XOR("allow_land"));
 		RegisterElement(&allow_land, 1);
 
-		distortion.setup(XOR("distortion"), XOR("distortion"));
-		distortion.AddShowCallback(callbacks::saksoo);
-		RegisterElement(&distortion, 1);
-
-		dir_distort_range.setup("distort range", XOR("dir_distort_range"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
-		dir_distort_range.AddShowCallback(callbacks::IsUsingDistortion);
-		RegisterElement(&dir_distort_range, 1);
-
-		dir_distort_speed.setup("distort speed", XOR("dir_distort_speed"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
-		dir_distort_speed.AddShowCallback(callbacks::IsUsingDistortion);
-		RegisterElement(&dir_distort_speed, 1);
-
 		landangle.setup(XOR("animation angle"), XOR("landangle"), -89.f, 89.f, false, 0.f, -12.f, 1.f);
 		landangle.AddShowCallback(callbacks::landon);
 		RegisterElement(&landangle, 1);
@@ -519,8 +524,8 @@ public:
 		landlen.AddShowCallback(callbacks::landon);
 		RegisterElement(&landlen, 1);
 
-		draw_angles.setup(XOR("draw angles"), XOR("draw_angles"));
-		RegisterElement(&draw_angles, 1);
+		//draw_angles.setup(XOR("draw angles"), XOR("draw_angles"));
+		//RegisterElement(&draw_angles, 1);
 
 		/*allow_land.setup(XOR("allow landing animation"), XOR("allow_land"));
 		RegisterElement(&allow_land, 1);
@@ -651,7 +656,7 @@ public:
 
 public:
 	void init() {
-		SetTitle(XOR("players"));
+		SetTitle(XOR("Players"));
 
 		teammates.setup(XOR("teammates"), XOR("teammates"));
 		RegisterElement(&teammates);
@@ -1039,7 +1044,7 @@ public:
 
 public:
 	void init( ) {
-		SetTitle( XOR( "visuals" ) );
+		SetTitle( XOR( "Visuals" ) );
 
 		enemy_radar.setup(XOR("radar"), XOR("enemy_radar"));
 		RegisterElement(&enemy_radar);
@@ -1509,9 +1514,9 @@ public:
 
 public:
 	void init( ) {
-		SetTitle( XOR( "skins" ) );
+		SetTitle( XOR( "Skins" ) );
 
-		enable.setup( XOR( "enable" ), XOR( "skins_enable" ) );
+		enable.setup( XOR( "Enable" ), XOR( "skins_enable" ) );
 		enable.SetCallback( callbacks::ForceFullUpdate );
 		RegisterElement( &enable );
 
@@ -2453,7 +2458,7 @@ public:
 
 public:
 	void init( ) {
-		SetTitle( XOR( "misc" ) );
+		SetTitle( XOR( "Misc" ) );
 
 		fov_amt.setup("override fov", XOR("fov_amt"), 60.f, 140.f, true, 0, 90.f, 1.f, XOR(L"°"));
 		RegisterElement(&fov_amt);
@@ -2668,7 +2673,7 @@ public:
 	Button   nexus;
 public:
 	void init() {
-		SetTitle(XOR("servers"));
+		SetTitle(XOR("Servers"));
 
 		connect.setup(XOR("connect to dick's"));
 		connect.SetCallback(callbacks::dicks);
@@ -2704,8 +2709,8 @@ public:
 	SvTab		 servers;
 public:
 	void init( ) {
-		SetPosition( 50, 50 );
-		SetSize( 680, 550 );
+		SetPosition( 250, 200 );
+		SetSize( 500, 650 );
 
 		// aim.
 		RegisterTab( &aimbot );

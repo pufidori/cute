@@ -1331,14 +1331,14 @@ void Visuals::DrawPlayer( Player* player ) {
 				if (player->m_ArmorValue() > 0) {
 					if (player->m_bHasHelmet())
 						if (dormant)
-						flags.push_back({ XOR("H"), {  210, 210, 210, low_alpha } });
+						flags.push_back({ XOR("hk"), {  210, 210, 210, low_alpha } });
 						else
-						flags.push_back({ XOR("H"), {  255, 255, 255, low_alpha } });
+						flags.push_back({ XOR("hk"), {  255, 255, 255, low_alpha } });
 					else
 				if (dormant)
-					flags.push_back({ XOR("K"), {  210, 210, 210, low_alpha } });
+					flags.push_back({ XOR("k"), {  210, 210, 210, low_alpha } });
 				else
-					flags.push_back({ XOR("K"), {  255, 255, 255, low_alpha } });
+					flags.push_back({ XOR("k"), {  255, 255, 255, low_alpha } });
 				}
 			}
 
@@ -1398,7 +1398,7 @@ void Visuals::DrawPlayer( Player* player ) {
 					auto data = m_weapon->GetWpnData();
 
 					if (data->m_damage >= (int)std::round(player->m_iHealth()))
-						flags.push_back({ XOR("lethal"), { 163, 169, 111, low_alpha } });
+						flags.push_back({ XOR("lethal"), { 240, 20, 20, low_alpha } });
 				}
 			}
 

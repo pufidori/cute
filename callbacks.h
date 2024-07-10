@@ -165,7 +165,7 @@ namespace callbacks {
 	bool KNIFE_BUTTERFLY( );
 	bool KNIFE_SHADOW_DAGGERS( );
 	bool IsOverrideDamage();
-
+	bool distortion();
 	bool IsLimitTarget();
 
 	void ToggleDMG();
