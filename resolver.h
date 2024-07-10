@@ -10,6 +10,9 @@ public:
 		RESOLVE_WALK,
 		RESOLVE_PREFLICK,
 		RESOLVE_STAND,
+		RESOLVE_LBY,
+		RESOLVE_SPIN,
+		RESOLVE_DISTORTION,
 		RESOLVE_STAND1,
 		RESOLVE_STAND2,
 		RESOLVE_BODY,
@@ -40,6 +43,7 @@ public:
 	void ResolveWalk(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
 	void ResolveStand(AimPlayer* data, LagRecord* record, LagRecord* previous, CCSGOPlayerAnimState* state);
 	void ResolveLby(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
+	void ondistortion(Player* player, LagRecord* record);
 	void ResolveAir(AimPlayer* data, LagRecord* record, CCSGOPlayerAnimState* state);
 	void ResolvePoses(Player* player, LagRecord* record);
 
