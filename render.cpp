@@ -20,7 +20,7 @@ namespace render {
 
 void render::init( ) {
 	menu = Font(XOR("Tahoma"), 13, FW_NORMAL, FONTFLAG_DROPSHADOW);
-	menu_shade = Font( XOR( "Tahoma" ), 13, FW_NORMAL, FONTFLAG_DROPSHADOW );
+	menu_shade = Font( XOR( "Lucida Sans Unicode" ), 15, FW_NORMAL, FONTFLAG_DROPSHADOW);
 	esp        = Font( XOR( "Tahoma" ), 12, FW_NORMAL, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
 	esp2       = Font( XOR( "Verdana" ), 12, FW_NORMAL, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	esp_small  = Font( XOR( "Smallest Pixel-7" ), 10, FW_NORMAL, FONTFLAG_OUTLINE);

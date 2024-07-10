@@ -56,6 +56,7 @@ public:
 	bool   m_left, m_right, m_back, m_forward;
 
 public:
+	void DoDistortion(); 
 	void IdealPitch( );
 	void AntiAimPitch( );
 	void AutoDirection( );

@@ -21,11 +21,10 @@ void Form::draw( ) {
 	// get gui color.
 	Color color = g_gui.m_color;
 	color.a( ) = m_alpha;
-
-	// background.
-	render::rect_filled(m_x, m_y, m_width, m_height, { 35, 25, 35, m_alpha });
+        // Background
+    render::rect_filled(m_x, m_y, m_width, m_height, { 23, 23, 23, m_alpha });
 	for (int io = 0; io < m_width / 2 - 5; io++) {
-		render::rect(m_x + 5 + (io * 2), m_y + 5, 1, m_height - 11, { 30, 40, 45, m_alpha }); // 20,20,20 - shit menu pattern
+		//render::rect(m_x + 5 + (io * 2), m_y + 5, 1, m_height - 11, { 30, 40, 45, m_alpha }); // 20,20,20 - shit menu pattern
 	}
 
 	// lbgt line
@@ -49,49 +48,60 @@ void Form::draw( ) {
 		// tabs background and border.
 		Rect tabs_area = GetTabsRect( );
 
-	//	render::rect_filled( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 27, 27, 27, m_alpha } );
-		render::rect( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 0, 0, 0, m_alpha } );
-		render::rect( tabs_area.x + 1, tabs_area.y + 1, tabs_area.w - 2, tabs_area.h - 2, { 48, 48, 48, m_alpha } );
+        // Calculate button dimensions
+        int buttonWidth = 80; // Adjust button width as needed
+        int buttonHeight = 16; // Adjust button height as needed
+        int buttonSpacing = 4; // Adjust spacing between buttons as needed
 
-		for( size_t i{}; i < m_tabs.size( ); ++i ) {
-			const auto& t = m_tabs[ i ];
+        // Iterate through tabs and render them as buttons
+        int yOffset = 0;
+        for (size_t i = 0; i < m_tabs.size(); ++i) {
+            const auto& tab = m_tabs[i];
 
-			render::menu_shade.string( tabs_area.x + 10, tabs_area.y + 5 + ( i * 16 ),
-							 t == m_active_tab ? color : Color{ 152, 152, 152, m_alpha },
-							 t->m_title );
-		}
+            // Calculate button position
+            int buttonX = tabs_area.x + 10;
+            int buttonY = tabs_area.y + 5 + yOffset;
 
-		// this tab has elements.
-		if( !m_active_tab->m_elements.empty( ) ) {
-			// elements background and border.
-			Rect el = GetElementsRect( );
+            // Determine if mouse is over the button
+            bool mouseOver = g_input.IsCursorInBounds(buttonX, buttonY, buttonX + buttonWidth, buttonY + buttonHeight);
 
-			//render::rect_filled( el.x, el.y, el.w, el.h, { 27, 27, 27, m_alpha } );
-			render::rect( el.x, el.y, el.w, el.h, { 0, 0, 0, m_alpha } );
-			render::rect( el.x + 1, el.y + 1, el.w - 2, el.h - 2, { 48, 48, 48, m_alpha } );
+            // Handle tab switching on click
+            if (mouseOver && g_input.GetKeyPress(VK_LBUTTON)) {
+                m_active_tab = tab;
+                break; // Exit loop early since tab is already switched
+            }
 
+            // Render button background
+            render::rect_filled(buttonX, buttonY, buttonWidth, buttonHeight, tab == m_active_tab ? Color{ color.r(), color.g(), color.b(), 50 } : Color{ 27, 27, 27, 50 });
 
+            // Render button outline
+            //render::rect(buttonX, buttonY, buttonWidth, buttonHeight, { 5, 5, 5, m_alpha });
 
-			// iterate elements to display.
-			for( const auto& e : m_active_tab->m_elements ) {
+            // Render button text
+            render::menu_shade.string(buttonX + 5, buttonY + 2, tab == m_active_tab ? colors::white : Color{ 152, 152, 152, m_alpha }, tab->m_title);
 
-				// draw the active element last.
-				if( !e || ( m_active_element && e == m_active_element ) )
-					continue;
+            // Update yOffset for the next button
+            yOffset += buttonHeight + buttonSpacing;
+        }
 
-				if( !e->m_show )
-					continue;
+        // Draw elements for the active tab if it has any
+        if (!m_active_tab->m_elements.empty()) {
+            Rect el = GetElementsRect();
+           // render::rect(el.x, el.y, el.w, el.h, { 0, 0, 0, m_alpha });
+           // render::rect(el.x + 1, el.y + 1, el.w - 2, el.h - 2, { 48, 48, 48, m_alpha });
 
-				// this element we dont draw.
-				if( !( e->m_flags & ElementFlags::DRAW ) )
-					continue;
+            for (const auto& e : m_active_tab->m_elements) {
+                if (!e || (m_active_element && e == m_active_element))
+                    continue;
+                if (!e->m_show)
+                    continue;
+                if (!(e->m_flags & ElementFlags::DRAW))
+                    continue;
+                e->draw();
+            }
 
-				e->draw( );
-			}
-
-			// we still have to draw one last fucker.
-			if( m_active_element && m_active_element->m_show )
-				m_active_element->draw( );
-		}
-	}
+            if (m_active_element && m_active_element->m_show)
+                m_active_element->draw();
+        }
+    }
 }

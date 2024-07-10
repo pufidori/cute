@@ -3,6 +3,24 @@
 
 HVH g_hvh{ };;
 
+void HVH::DoDistortion()
+{
+	bool do_distort = true;
+	bool cant_distort = g_menu.main.antiaim.manual_ignore.get(1) && (g_hvh.m_left || g_hvh.m_back || g_hvh.m_right || g_hvh.m_forward);
+
+	if (!cant_distort && do_distort) {
+		float distortion_speed = g_menu.main.antiaim.dir_distort_speed.get() * 0.02f;
+		float distortion_range = g_menu.main.antiaim.dir_distort_range.get();
+
+		float time = g_csgo.m_globals->m_curtime * distortion_speed;
+		float distortion_angle = sin(time) * distortion_range;
+
+		g_cl.m_cmd->m_view_angles.y += distortion_angle;
+
+		g_cl.m_cmd->m_view_angles.y = math::NormalizeYaw(g_cl.m_cmd->m_view_angles.y);
+	}
+}
+
 void HVH::IdealPitch() {
 	CCSGOPlayerAnimState* state = g_cl.m_local->m_PlayerAnimState();
 	if (!state)
@@ -604,18 +622,15 @@ void HVH::DoRealAntiAim() {
 
 				// distortion.
 			case 5: {
-				// define the distortion parameters.
-				static float distortion_step = 45.f; // step size for the distortion.
-				static float distortion_angle = 0.f;
+				float distortion_delta1;
 
-				// update the distortion angle.
-				distortion_angle += distortion_step;
-				if (distortion_angle > 180.f)
-					distortion_angle -= 360.f;
+				distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 75;
 
-				// apply the distortion.
-				if (!manual)
-				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_angle;
+				distortion_delta1 += (75.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
+
+				math::NormalizeAngle(distortion_delta1);
+
+				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_delta1;
 				break;
 			}
 
@@ -712,15 +727,7 @@ void HVH::DoRealAntiAim() {
 				break;
 			}
 			case 7: {
-				float distortion_delta1;
-
-				distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 75;
-
-				distortion_delta1 += (75.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
-
-				math::NormalizeAngle(distortion_delta1);
-
-				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_delta1;
+				DoDistortion();
 				break;
 			}
 

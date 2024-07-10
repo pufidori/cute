@@ -499,6 +499,18 @@ public:
 		allow_land.setup(XOR("allow landing animation"), XOR("allow_land"));
 		RegisterElement(&allow_land, 1);
 
+		distortion.setup(XOR("distortion"), XOR("distortion"));
+		distortion.AddShowCallback(callbacks::saksoo);
+		RegisterElement(&distortion, 1);
+
+		dir_distort_range.setup("distort range", XOR("dir_distort_range"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
+		dir_distort_range.AddShowCallback(callbacks::IsUsingDistortion);
+		RegisterElement(&dir_distort_range, 1);
+
+		dir_distort_speed.setup("distort speed", XOR("dir_distort_speed"), 0.f, 360.f, false, 0, 360.f, 1.f, XOR(L"%"));
+		dir_distort_speed.AddShowCallback(callbacks::IsUsingDistortion);
+		RegisterElement(&dir_distort_speed, 1);
+
 		landangle.setup(XOR("animation angle"), XOR("landangle"), -89.f, 89.f, false, 0.f, -12.f, 1.f);
 		landangle.AddShowCallback(callbacks::landon);
 		RegisterElement(&landangle, 1);
@@ -2660,19 +2672,19 @@ public:
 
 		connect.setup(XOR("connect to dick's"));
 		connect.SetCallback(callbacks::dicks);
-		RegisterElement(&connect, 1);
+		RegisterElement(&connect);
 
 		mrx1.setup(XOR("connect to mrx #1"));
 		mrx1.SetCallback(callbacks::mrx1);
-		RegisterElement(&mrx1, 1);
+		RegisterElement(&mrx1);
 
 		mrx2.setup(XOR("connect to mrx #2"));
 		mrx2.SetCallback(callbacks::mrx2);
-		RegisterElement(&mrx2, 1);
+		RegisterElement(&mrx2);
 
 		nexus.setup(XOR("connect to nexus"));
 		nexus.SetCallback(callbacks::nexus);
-		RegisterElement(&nexus, 1);
+		RegisterElement(&nexus);
 	}
 };
 
