@@ -533,7 +533,8 @@ void HVH::DoRealAntiAim() {
 
 					// z.
 				case 4:
-					g_cl.m_cmd->m_view_angles.y += 90.f;
+					negative ? g_cl.m_cmd->m_view_angles.y += 110.f : g_cl.m_cmd->m_view_angles.y -= 110.f;
+					negative = !negative;
 					break;
 
 				case 5:
@@ -541,8 +542,7 @@ void HVH::DoRealAntiAim() {
 					break;
 
 				case 6:
-					negative ? g_cl.m_cmd->m_view_angles.y += 110.f : g_cl.m_cmd->m_view_angles.y -= 110.f;
-					negative = !negative;
+					g_cl.m_cmd->m_view_angles.y += 90.f;
 					break;
 				}
 			}
@@ -763,6 +763,90 @@ void HVH::DoRealAntiAim() {
 	math::NormalizeAngle(g_cl.m_cmd->m_view_angles.y);
 }
 
+void HVH::doDistortion() {
+	bool do_distort = true;
+	bool manual = (g_hvh.m_left || g_hvh.m_back || g_hvh.m_right || g_hvh.m_forward);
+	bool cant_distort = (manual, g_menu.main.antiaim.distdisable.get(1), g_menu.main.antiaim.distdisable.get(2));
+
+	// stand.
+	if (g_cl.m_speed < 0.1f && g_cl.m_ground) {
+		if (g_menu.main.antiaim.distdisable.get(0))
+			do_distort = false;
+	}
+
+	// move.
+	if (g_cl.m_speed > 0.1f && g_cl.m_ground || g_input.GetKeyState(g_menu.main.misc.fakewalk.get())) {
+		if (g_menu.main.antiaim.distdisable.get(1))
+			do_distort = false;
+	}
+
+	// air.
+	else if (g_menu.main.antiaim.distdisable.get(2) && !g_cl.m_ground) {
+		do_distort = false;
+	}
+
+	if (!cant_distort && do_distort) {
+		static auto interval_per_tick_sim{ g_csgo.m_globals->m_interval };
+		bool change_dist_dir{};
+		static bool change_dir{};
+
+		interval_per_tick_sim += g_csgo.m_globals->m_interval;
+
+		if (interval_per_tick_sim >= 1.f)
+			interval_per_tick_sim = 0.f;
+
+		static auto final_wish_ang{ g_cl.m_cmd->m_view_angles.y };
+		static auto angle = g_cl.m_cmd->m_view_angles.y;
+
+		const auto distortion_speed = (g_menu.main.antiaim.dir_distort_speed.get() * 3.f) / 100.f;
+		const auto distortion = std::sin((g_csgo.m_globals->m_curtime * distortion_speed) * math::pi);
+
+		const auto dist_factor = (g_menu.main.antiaim.dir_distort_range.get() / 100.f) * 120.f;
+		auto total_distortion = dist_factor * distortion;
+
+		if (g_menu.main.antiaim.shift_distortion.get()) {
+			if (g_hvh.m_lby_counter_updated == g_hvh.m_lby_counter
+				|| (g_hvh.m_lby_counter_updated = g_hvh.m_lby_counter, ++g_hvh.m_lby_on_same_pos, g_hvh.m_lby_on_same_pos < g_menu.main.antiaim.shift_await.get())) {
+				change_dist_dir = change_dir;
+			}
+			else {
+				g_hvh.m_lby_on_same_pos = 0;
+				change_dist_dir = change_dir == false;
+				change_dir = !change_dir;
+			}
+
+			auto shift_factor_mult = g_menu.main.antiaim.shift_range.get() / 100.f;
+
+			if (!change_dist_dir) {
+				shift_factor_mult *= -1.f;
+			}
+			total_distortion = (shift_factor_mult + distortion) * dist_factor;
+		}
+
+		if (g_menu.main.antiaim.force_turn.get()) {
+			const auto distortion_speed_updated = std::exp(distortion_speed * interval_per_tick_sim);
+			auto final_distortion_angle = distortion_speed_updated * ((g_menu.main.antiaim.dir_distort_range.get() * 120.f) / 100.f);
+			auto additional_delta{ 0.f };
+			if (change_dir)
+				additional_delta = 60.f;
+			else {
+				additional_delta = -60.f;
+				final_distortion_angle *= -1.f;
+			}
+
+			final_wish_ang = (additional_delta + angle) + final_distortion_angle;
+		}
+		else {
+			final_wish_ang = angle + total_distortion;
+		}
+
+		final_wish_ang = math::NormalizeYaw(final_wish_ang);
+
+		g_cl.m_cmd->m_view_angles.y = final_wish_ang;
+	}
+
+}
+
 void HVH::DoFakeAntiAim() {
 	// do fake yaw operations.
 
@@ -949,22 +1033,28 @@ void HVH::AntiAim() {
 	// we have no real, but we do have a fake.
 	else if (g_menu.main.antiaim.fake_yaw.get() > 0)
 		m_direction = g_cl.m_cmd->m_view_angles.y;
-
 	if (g_menu.main.antiaim.fake_yaw.get()) {
 		// do not allow 2 consecutive sendpacket true if faking angles.
 		if (*g_cl.m_packet && g_cl.m_old_packet)
 			*g_cl.m_packet = false;
 
 		// run the real on sendpacket false.
-		if (!*g_cl.m_packet || !*g_cl.m_final_packet)
+		if (!*g_cl.m_packet || !*g_cl.m_final_packet) {
 			DoRealAntiAim();
+			doDistortion(); // Run DoDistortion here
+		}
 
 		// run the fake on sendpacket true.
-		else DoFakeAntiAim();
+		else {
+			DoFakeAntiAim();
+		}
 	}
 
 	// no fake, just run real.
-	else DoRealAntiAim();
+	else {
+		DoRealAntiAim();
+		doDistortion(); // Run DoDistortion here as well
+	}
 
 	if (*g_cl.m_packet)
 		g_cl.m_sideways = !g_cl.m_sideways;
@@ -993,7 +1083,7 @@ void HVH::SendPacket() {
 		// delta between the current origin and the last sent origin.
 		float delta = (cur - prev).length_sqr();
 
-		auto activation = g_menu.main.antiaim.fakelag_conditions.GetActiveIndices();
+		/*auto activation = g_menu.main.antiaim.fakelag_conditions.GetActiveIndices();
 		for (auto it = activation.begin(); it != activation.end(); it++) {
 
 			// stand.
@@ -1023,7 +1113,40 @@ void HVH::SendPacket() {
 			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3 >= g_cl.m_body_pred) {
 				active = true;
 				break;
+			}*/
+		auto activation = g_menu.main.antiaim.fakelag_conditions.GetActiveIndices();
+		for (auto it = activation.begin(); it != activation.end(); it++) {
+
+			// stand.
+			if (*it == 0 && m_mode == AntiAimMode::STAND) {
+				active = true;
+				break;
 			}
+
+			// air.
+			if (*it == 2 && ((g_cl.m_buttons & IN_JUMP) || !(g_cl.m_flags & FL_ONGROUND))) {
+				active = true;
+				break;
+			}
+
+			// crouch.
+			if (*it == 3 && g_cl.m_local->m_bDucking()) {
+				active = true;
+				break;
+			}
+
+			// LBY update.
+			if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3 >= g_cl.m_body_pred) {
+				active = true;
+				break;
+			}
+
+			// move.
+			else if (*it == 1 && g_cl.m_local->m_vecVelocity().length_2d() > 40.f && (g_cl.m_flags & FL_ONGROUND)) {
+				active = false;
+				break;
+			}
+		
 		}
 
 		if (active) {

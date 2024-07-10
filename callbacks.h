@@ -166,6 +166,9 @@ namespace callbacks {
 	bool KNIFE_SHADOW_DAGGERS( );
 	bool IsOverrideDamage();
 
+	bool isDistortion();
+	bool isShift();
+
 	bool IsLimitTarget();
 
 	void ToggleDMG();

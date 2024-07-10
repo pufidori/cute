@@ -217,12 +217,18 @@ public:
 	Slider   alice_range_stand;
 	Slider   alice_speed_stand;
 
+	//HERE
+
 	Checkbox distortion;
 	MultiDropdown distort_disablers;
 	Checkbox force_turn;
 	Slider   shift_range;
 	Slider   dir_distort_range;
 	Slider   dir_distort_speed;
+	Checkbox shift_distortion;
+	Slider   shift_await;
+	//ZZz
+
 
 	Dropdown pitch_walk;
 	Dropdown yaw_walk;
@@ -264,6 +270,8 @@ public:
 	Slider		  landlen;
 	Slider        fakelag_fluct_amt;
 	Slider        fakelag_fluct_ticks;
+
+	MultiDropdown distdisable;
 
 	MultiDropdown manual_ignore;
 	Keybind		  manual_left;
@@ -353,6 +361,37 @@ public:
 		//body_fake_stand_custom.AddShowCallback(callbacks::HasStandYaw);
 		body_fake_stand_custom.AddShowCallback(callbacks::IsCustomLby);
 		RegisterElement(&body_fake_stand_custom);
+
+
+		distortion.setup(XOR("distortion"), XOR("distortion"));
+		RegisterElement(&distortion);
+
+		force_turn.setup(XOR("force turn"), XOR("force turn"));
+		force_turn.AddShowCallback(callbacks::isDistortion);
+		RegisterElement(&force_turn);
+
+		shift_distortion.setup(XOR("shift distortion"), XOR("shift_distortion"));
+		shift_range.AddShowCallback(callbacks::isDistortion);
+		RegisterElement(&shift_distortion);
+
+		shift_range.setup("shift range", XOR("shift_range"), 0.f, 360.f, false, 0, 360.f, 5.f, XOR(L"°"));
+		shift_range.AddShowCallback(callbacks::isDistortion);
+		shift_range.AddShowCallback(callbacks::isShift);
+		RegisterElement(&shift_range);
+
+		shift_await.setup("shift await", XOR("shift_range"), 0, 6, false, 0, 6, 1, XOR(L"x"));
+		shift_await.AddShowCallback(callbacks::isDistortion);
+		shift_await.AddShowCallback(callbacks::isShift);
+		RegisterElement(&shift_await);
+
+		dir_distort_range.setup("distortion range", XOR("dir_distort_range"), 0.f, 360.f, false, 0, 360.f, 5.f, XOR(L"°"));
+		dir_distort_range.AddShowCallback(callbacks::isDistortion);
+		RegisterElement(&dir_distort_range);
+
+		dir_distort_speed.setup("turn speed", XOR("dir_distort_speed"), 1.f, 100.f, false, 0, 10.f, 1.f, XOR(L"%"));
+		dir_distort_speed.AddShowCallback(callbacks::isDistortion);
+		RegisterElement(&dir_distort_speed);
+
 
 		// walk.
 		pitch_walk.setup(XOR("pitch"), XOR("pitch_walk"), { XOR("off"), XOR("down"), XOR("up"), XOR("random"), XOR("ideal"), XOR("zero") });
@@ -516,6 +555,9 @@ public:
 		landangle.setup(XOR("animation angle"), XOR("landangle"), -89, 89, false, 0, -12, 1.f);
 		landangle.AddShowCallback(callbacks::landon);
 		RegisterElement(&landangle, 1);*/
+
+		distdisable.setup("distortion disable conds", XOR("distortion"), { XOR("stand"), XOR("move"), XOR("air") }, false);
+		RegisterElement(&distdisable, 1);
 
 		manual_ignore.setup(XOR("manual ignore conditions"), XOR("manual_ignore"), { "ignore jitter", "ignore rotate" });
 		RegisterElement(&manual_ignore, 1);
