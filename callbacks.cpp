@@ -393,13 +393,6 @@ bool callbacks::IsSwitchFakeBody() {
 	return g_menu.main.antiaim.body_yaw.get() == 3;
 }
 
-bool callbacks::isDistortion() {
-	return g_menu.main.antiaim.distortion.get();
-}
-
-bool callbacks::isShift() {
-	return g_menu.main.antiaim.shift_distortion.get();
-}
 
 bool callbacks::IsCustomBody() {
 	return g_menu.main.antiaim.body_yaw.get() == 1;

@@ -37,9 +37,6 @@ public:
 	float m_alice_speed;
 	float  m_rand_update;
 	int    m_dir;
-	int	   m_lby_counter;
-	int   m_lby_on_same_pos;
-	bool   m_lby_counter_updated;
 	float  m_dir_custom;
 	size_t m_base_angle;
 	float  m_auto_time;
@@ -66,7 +63,6 @@ public:
     bool DoEdgeAntiAim( Player *player, ang_t &out );
 	void DoRealAntiAim( );
 	void DoFakeAntiAim( );
-	void doDistortion();
 	void AntiAim( );
 	void SendPacket( );
 };
