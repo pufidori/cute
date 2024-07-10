@@ -620,17 +620,20 @@ void HVH::DoRealAntiAim() {
 				g_cl.m_cmd->m_view_angles.y = m_random_angle;
 				break;
 
-				// distortion.
+		// distortion.
 			case 5: {
-				float distortion_delta1;
+				// define the distortion parameters.
+				static float distortion_step = 45.f; // step size for the distortion.
+				static float distortion_angle = 0.f;
 
-				distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 75;
+				// update the distortion angle.
+				distortion_angle += distortion_step;
+				if (distortion_angle > 180.f)
+					distortion_angle -= 360.f;
 
-				distortion_delta1 += (75.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
-
-				math::NormalizeAngle(distortion_delta1);
-
-				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_delta1;
+				// apply the distortion.
+				if (!manual)
+				g_cl.m_cmd->m_view_angles.y = m_direction + distortion_angle;
 				break;
 			}
 
