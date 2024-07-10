@@ -40,6 +40,7 @@ public:
 	void DrawHUD();
 	void ClanTag();
 	void Skybox();
+	void SpotifyDisplay();
 	void UpdateInformation();
 	void MouseFix(CUserCmd* cmd);
 	void SetAngles();

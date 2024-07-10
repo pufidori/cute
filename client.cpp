@@ -1,4 +1,6 @@
 #include "includes.h"
+#include <windows.h>
+#include <psapi.h>
 
 Client g_cl{ };
 char username[33] = "\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x90";
@@ -286,6 +288,69 @@ void Client::Skybox()
 	fog_destiny->SetValue(destiny); 
 }
 
+//UHH WHAT
+void Client::SpotifyDisplay() {
+
+	if (!g_menu.main.misc.whitelist.get())
+		return;
+
+	for (auto hwnd = GetTopWindow(0); hwnd; hwnd = GetWindow(hwnd, GW_HWNDNEXT)) {
+		if (!IsWindowVisible(hwnd))
+			continue;
+
+		const auto length = GetWindowTextLengthW(hwnd);
+		if (length == 0)
+			continue;
+
+		wchar_t filename[300];
+		DWORD pid{ 0 };
+		GetWindowThreadProcessId(hwnd, &pid);
+
+		const auto handle = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+		GetModuleFileNameExW(handle, nullptr, filename, 300);
+
+		const auto sane_filename = std::wstring{ filename };
+
+		int pos_y = 2;
+		if (g_menu.main.misc.whitelist.get())
+			pos_y = 19;
+		else
+			pos_y = pos_y;
+
+		int alpha = sin(abs(fmod(-math::pi + (g_csgo.m_globals->m_curtime * (2 / .75)), (math::pi * 2)))) * 225;
+		if (alpha < 0)
+			alpha = alpha * (-1);
+
+		CloseHandle(handle);
+
+		if (sane_filename.find(L"Spotify.exe") != std::string::npos) {
+			wchar_t title[300];
+			if (!GetWindowTextW(hwnd, title, 300))
+				return;
+			else {
+				const auto sane_title = std::wstring{ title };
+				std::string ascii_title = { sane_title.begin() , sane_title.end() };
+
+				// forcing lowercase on title and artist
+				std::for_each(ascii_title.begin(), ascii_title.end(), [](char& c) {
+					c = ::tolower(c);
+					});
+				std::cout << ascii_title << std::endl;
+
+				// note - cole; the & symbol just fuckes the pos up and idk why so we do this -_-
+				std::replace(ascii_title.begin(), ascii_title.end(), '&', '-');
+				std::cout << ascii_title << std::endl;
+
+				if (sane_title.find(L"-") != std::string::npos)
+					render::menu_shade.string(m_width - 4, pos_y, { 225, 225, 225, 225 }, ascii_title.c_str(), render::ALIGN_RIGHT);
+				else
+					render::menu_shade.string(m_width - 4, pos_y, { 225, 225, 225, alpha }, XOR("paused / stopped"), render::ALIGN_RIGHT);
+			}
+		}
+	}
+}
+
+
 void Client::OnPaint() {
 	// update screen size.
 	g_csgo.m_engine->GetScreenSize(m_width, m_height);
@@ -297,6 +362,9 @@ void Client::OnPaint() {
 
 	DrawHUD();
 	KillFeed();
+	SpotifyDisplay();
+
+	g_visuals.IndicateAngles();
 
 	events::player_say;
 
