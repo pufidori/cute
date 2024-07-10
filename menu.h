@@ -2710,7 +2710,7 @@ public:
 public:
 	void init( ) {
 		SetPosition( 250, 200 );
-		SetSize( 500, 650 );
+		SetSize( 600, 650 );
 
 		// aim.
 		RegisterTab( &aimbot );
