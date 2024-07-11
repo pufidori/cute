@@ -69,10 +69,6 @@ vec3_t Aimbot::UpdateShootPosition(float pitch)
 	return result;
 }
 
-
-
-
-
 void AimPlayer::resetup_velocity(LagRecord* record, LagRecord* previous) {
 
 	// reset all our velocity values
@@ -134,7 +130,6 @@ void AimPlayer::resetup_velocity(LagRecord* record, LagRecord* previous) {
 		}
 	}
 }
-
 
 void AimPlayer::correct_landing(LagRecord* record, LagRecord* previous) {
 
@@ -1140,13 +1135,21 @@ void Aimbot::find() {
 
 	const bool ground = (g_cl.m_flags & FL_ONGROUND) && g_cl.m_local->m_fFlags() & FL_ONGROUND;
 
+
+
+
 	const bool found_target = best.player && best.record && best.damage > 0;
 
 	// set autostop shit.
+	// set autostop shit.
+	if (found_target || m_found_hit && g_menu.main.aimbot.quick_stop_mode.get(4)) {
+		if (ground && g_menu.main.aimbot.quick_stop.get()) {
 
-	if (ground && g_menu.main.aimbot.autostop.get())
-		if (g_cl.m_weapon_fire && g_cl.m_player_fire)
-			m_stop = true;
+			if (g_cl.m_weapon_fire || g_menu.main.aimbot.quick_stop_mode.get(1) && g_cl.m_player_fire)
+				m_stop = true;
+
+		}
+	}
 
 	// verify our target and set needed data->
 	if (found_target) {

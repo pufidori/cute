@@ -733,7 +733,7 @@ void Movement::NullVelocity() {
 	g_cl.m_cmd->m_side_move = negative_side_direction.y;
 }
 
-void Movement::AutoStop() {
+/*void Movement::AutoStop() {
 	if (g_input.GetKeyState(g_menu.main.misc.fakewalk.get()))
 		return;
 
@@ -815,9 +815,65 @@ void Movement::AutoStop() {
 	else {
 		ClampMovementSpeed(max_speed * 0.25f);
 	}
+}*/
+
+void Movement::AutoStop() {
+	if (g_cl.m_weapon_id == ZEUS)
+		return;
+
+
+
+	if (g_aimbot.m_stop && g_cl.m_ground) {
+
+		auto ac_standing = [&]() -> const float
+			{
+				const auto max_speed = g_cl.m_weapon->m_zoomLevel() > 0 ? g_cl.m_weapon->GetWpnData()->m_max_player_speed_alt : g_cl.m_weapon->GetWpnData()->m_max_player_speed;
+				return max_speed / 3.f;
+			};
+
+
+		float speed = g_cl.m_local->m_vecVelocity().length_2d();
+		if (speed <= ac_standing()) { return; }
+		float mSpeed = (g_cl.m_weapon->m_zoomLevel() == 0 ? g_cl.m_weapon->GetWpnData()->m_max_player_speed : g_cl.m_weapon->GetWpnData()->m_max_player_speed_alt) * 0.1f;
+		if (mSpeed > speed) { return; }
+
+		ang_t dir;
+		math::VectorAngles(g_cl.m_local->m_vecVelocity(), dir);
+		dir.y = g_cl.m_view_angles.y - dir.y;
+
+		vec3_t forward;
+		math::AngleVectors(dir, &forward);
+		vec3_t new_dir = forward * -speed;
+
+		g_cl.m_cmd->m_forward_move = new_dir.x;
+		g_cl.m_cmd->m_side_move = new_dir.y;
+
+		//if (g_cl.m_local->m_vecVelocity().length() > 15.f) {
+		//	vec3_t Velocity = g_cl.m_local->m_vecVelocity();
+
+		//	static float Speed = 450.f;
+
+		//	ang_t Direction;
+		//	ang_t RealView = g_cl.m_cmd->m_view_angles;
+
+		//	math::VectorAngles(Velocity, Direction);
+		//	Direction.y = RealView.y - Direction.y;
+
+		//	vec3_t Forward;
+		//	math::AngleVectors(Direction, &Forward);
+		//	vec3_t NegativeDirection = Forward * -Speed;
+
+		//	g_cl.m_cmd->m_forward_move = NegativeDirection.x;
+		//	g_cl.m_cmd->m_side_move = NegativeDirection.y;
+		//}
+		//else {
+		//	g_cl.m_cmd->m_forward_move = 0.f;
+		//	g_cl.m_cmd->m_side_move = 0.f;
+		//}
+	}
+	else
+		g_aimbot.m_stop = false;
 }
-
-
 
 
 void Movement::FakeWalk( ) {

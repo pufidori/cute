@@ -30,9 +30,12 @@ public:
 	Checkbox	  correct;
 	//MultiDropdown correct_opt;
 	Dropdown      fakelag_correction;
-	Checkbox	  autostop;
+	//Checkbox	  autostop;
 	Dropdown      delay_shot_center;
-	//Slider		  auto_stop_air_sens;
+	Checkbox	  quick_stop;
+	MultiDropdown quick_stop_mode;
+	//Dropdown      delay_shot_center;
+	Slider		  quick_stop_air_sens;
 	Checkbox      prefer_baim;
 	MultiDropdown prefer_baim_disablers;
 	Checkbox      debugaim;
@@ -139,8 +142,20 @@ public:
 		fakelag_correction.setup(XOR("fake-lag correction"), XOR("fakelag_correction"), { XOR("off"), XOR("low"), XOR("high") });
 		RegisterElement(&fakelag_correction, 1);
 
-		autostop.setup(XOR("automatic stop"), XOR("autostop"));
-		RegisterElement(&autostop, 1);
+		//autostop.setup(XOR("automatic stop"), XOR("autostop"));
+		//RegisterElement(&autostop, 1);
+
+		quick_stop.setup(XOR("quick stop"), XOR("quick_stop"));
+		RegisterElement(&quick_stop, 1);
+
+		quick_stop_mode.setup(XOR(""), XOR("quick_stop_mode"), { "slow motion", "between shots", "force accuracy", "in air", "early" }, false);
+		quick_stop_mode.AddShowCallback(callbacks::IsAstopOn);
+		RegisterElement(&quick_stop_mode, 1);
+
+		quick_stop_air_sens.setup("", XOR("quick_stop_air_sens"), 10.f, 100.f, false, 0, 30.f, 1.f, XOR(L"%"));
+		quick_stop_air_sens.AddShowCallback(callbacks::IsInAirAstop);
+		quick_stop_air_sens.AddShowCallback(callbacks::IsAstopOn);
+		RegisterElement(&quick_stop_air_sens, 1);
 
 		// delay shot for damage
 		delay_shot_center.setup(XOR("center delay"), XOR("delay_shot_center"), { XOR("off"), XOR("normal"), XOR("high") });
