@@ -1318,8 +1318,8 @@ void Visuals::DrawPlayer( Player* player ) {
 		std::string name{ std::string(info.m_name).substr(0, 24) };
 
 		// smallfonts needs upper case.
-		//if (g_menu.main.players.name_style.get() == 0)
-		//	std::transform(std::execution::par, name.begin(), name.end(), name.begin(), ::toupper);
+		if (g_menu.main.players.name_style.get() == 0)
+		std::transform(std::execution::par, name.begin(), name.end(), name.begin(), ::toupper);
 
 		Color clr = g_menu.main.players.name_color.get();
 		// override alpha.
@@ -1448,10 +1448,10 @@ void Visuals::DrawPlayer( Player* player ) {
 						if (dormant)
 						flags.push_back({ XOR("hk"), {  210, 210, 210, low_alpha } });
 						else
-						flags.push_back({ XOR("hk"), {  255, 255, 255, low_alpha } });
+						flags.push_back({ XOR("k"), {  255, 255, 255, low_alpha } });
 					else
 				if (dormant)
-					flags.push_back({ XOR("k"), {  210, 210, 210, low_alpha } });
+					flags.push_back({ XOR("hk"), {  210, 210, 210, low_alpha } });
 				else
 					flags.push_back({ XOR("k"), {  255, 255, 255, low_alpha } });
 				}
@@ -1513,14 +1513,14 @@ void Visuals::DrawPlayer( Player* player ) {
 					auto data = m_weapon->GetWpnData();
 
 					if (data->m_damage >= (int)std::round(player->m_iHealth()))
-						flags.push_back({ XOR("lethal"), { 240, 20, 20, low_alpha } });
+						flags.push_back({ XOR("body"), { 240, 20, 20, low_alpha } });
 				}
 			}
 
 
 			if (*it == 8 && data->m_records.size() >= 1 && data->m_shift) {	
 				LagRecord* current = data->m_records.front().get();
-				std::string text = "dt";
+				std::string text = "LC";
 
 				Color col = Color( 255, 255, 255, low_alpha );
 
@@ -1536,7 +1536,7 @@ void Visuals::DrawPlayer( Player* player ) {
 			if (*it == 9 && data && data->m_records.size() > 0 && enemy) {
 
 				if (!dormant && data->m_hit)
-					flags.push_back({ "HIT", { 220, 220, 220, low_alpha} });
+					flags.push_back({ "hit", { 220, 220, 220, low_alpha} });
 
 			}
 
@@ -1546,27 +1546,30 @@ void Visuals::DrawPlayer( Player* player ) {
 					flags.push_back({ "cute", { 206, 139, 255, low_alpha} });
 
 			}
-		}
-
-			
-		
+		}	
 
 		if (data && data->m_records.size() && enemy && g_menu.main.aimbot.correct.get()) {
 			LagRecord* current = data->m_records.front().get();
 			if (current->m_mode == Resolver::Modes::RESOLVE_LBY)
-				flags.push_back({ XOR("lby"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:lby"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
-				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY)
-				flags.push_back({ XOR("predict"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:stand"), { 255,255,255, low_alpha } });
+			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY_PRED)
+				flags.push_back({ XOR("r:predict"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
-				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:stopped"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_AIR)
-				flags.push_back({ XOR("air"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:air"), { 255,255,255, low_alpha } });
+			else if (current->m_mode == Resolver::Modes::RESOLVE_NONE)
+				flags.push_back({ XOR("r:none"), { 255,255,255, low_alpha } });
+			else if (current->m_mode == Resolver::Modes::RESOLVE_WALK)
+				flags.push_back({ XOR("r:walk"), { 255,255,255, low_alpha } });
+			else if (current->m_mode == Resolver::Modes::RESOLVE_NETWORK)
+				flags.push_back({ XOR("r:net"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_OVERRIDE)
 				flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
 			else
-				flags.push_back({ XOR("moving"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:moving"), { 255,255,255, low_alpha } });
 
 			// iterate flags.
 			for (size_t i{ }; i < flags.size(); ++i) {

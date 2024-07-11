@@ -40,11 +40,11 @@ void Keybind::draw( ) {
 	render::menu.string( p.x + KEYBIND_X_OFFSET, p.y - 2, { 205, 205, 205, m_parent->m_alpha }, m_label );
 
 	// box outline.
-	render::rect( p.x + KEYBIND_X_OFFSET, p.y + 15, m_w - KEYBIND_X_OFFSET, KEYBIND_BOX_HEIGHT, { 0, 0, 0, m_parent->m_alpha } );
+	//render::rect( p.x + KEYBIND_X_OFFSET, p.y + 15, m_w - KEYBIND_X_OFFSET, KEYBIND_BOX_HEIGHT, { 0, 0, 0, m_parent->m_alpha } );
 
 	// inner blob
 	// todo; gradient?
-	render::rect_filled( p.x + KEYBIND_X_OFFSET + 1, p.y + 15 + 1, m_w - KEYBIND_X_OFFSET - 2, KEYBIND_BOX_HEIGHT - 2, { 41, 41, 41, m_parent->m_alpha } );
+	//render::rect_filled( p.x + KEYBIND_X_OFFSET + 1, p.y + 15 + 1, m_w - KEYBIND_X_OFFSET - 2, KEYBIND_BOX_HEIGHT - 2, { 41, 41, 41, m_parent->m_alpha } );
 
 	// todo; animate with '...'
 	if( m_set )

@@ -554,9 +554,9 @@ void events::player_say(IGameEvent* evt) {
 
 	static std::vector<std::pair<std::string, std::function<void(void)>>> magic =
 	{
-		{ XOR("net1"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("net_graph 1")); } }, // gg
-		{ XOR("cute_rq"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("quit")); } },
-		{ XOR("kys123"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("kill")); } },
+		//{ XOR("nettspend123"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("net_graph 1")); } }, // gg
+		//{ XOR("gh"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("quit")); } },
+		//{ XOR("nigga balls88"), [&]() { g_csgo.m_engine->ExecuteClientCmd(XOR("kill")); } },
 	};
 
 	// loop through all the messages sent by devs
