@@ -716,7 +716,7 @@ void Visuals::draw( Entity* ent ) {
 		g_cl.kaaba.clear();
 		g_cl.cheese.clear();
 		g_cl.dopium.clear();
-		g_cl.cutee.clear();
+		g_cl.cutie.clear();
 		g_cl.fade.clear();
 		g_cl.roberthook.clear();
 		return;
@@ -1439,7 +1439,7 @@ void Visuals::DrawPlayer( Player* player ) {
 
 			if (*it == 10) {
 
-				if ( data->m_is_cute || data->m_uses_cute)
+				if ( data->m_is_cutie || data->m_uses_cutie)
 					flags.push_back({ "cute", { 206, 139, 255, low_alpha} });
 
 			}

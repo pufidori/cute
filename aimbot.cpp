@@ -281,6 +281,7 @@ void AimPlayer::pre_anim_update(LagRecord* record, LagRecord* previous) {
 
 
 }
+
 void AimPlayer::post_anim_update(LagRecord* record) {
 
 	CCSGOPlayerAnimState* anim_state = m_player->m_PlayerAnimState();
@@ -598,7 +599,7 @@ void AimPlayer::on_data_update(Player* player) {
 	// update player ptr if required.
 	// reset player if changed.
 	if (m_player != player) {
-		m_uses_cute = false;
+		m_uses_cutie = false;
 		m_has_whitelist_on = false;
 		m_last_rate = m_last_cycle = -1.f;
 		m_records.clear();
@@ -663,7 +664,7 @@ void AimPlayer::OnRoundStart(Player* player) {
 	m_moved = false;
 	m_last_time = m_last_rate = m_last_cycle = -1.f;
 	m_change_stored = 0;
-	m_uses_cute = false;
+	m_uses_cutie = false;
 	m_has_whitelist_on = false;
 	m_last_prev_ground = true;
 	m_last_prev_ladder = false;
@@ -833,9 +834,9 @@ void Aimbot::StartTargetSelection() {
 		}*/
 
 		auto local_player = g_csgo.m_entlist->GetClientEntity< Player* >(g_csgo.m_engine->GetLocalPlayer());
-		if (!g_menu.main.misc.dumper.get()) {
+		if (g_menu.main.misc.whitelist.get()) {
 
-			if (data->m_is_cute
+			if (data->m_is_cutie
 				&& !data->m_is_godhook
 				&& !data->m_is_robertpaste
 				&& !data->m_is_pandora
@@ -1141,7 +1142,6 @@ void Aimbot::find() {
 	const bool found_target = best.player && best.record && best.damage > 0;
 
 	// set autostop shit.
-	// set autostop shit.
 	if (found_target || m_found_hit && g_menu.main.aimbot.quick_stop_mode.get(4)) {
 		if (ground && g_menu.main.aimbot.quick_stop.get()) {
 
@@ -1251,7 +1251,7 @@ bool Aimbot::CheckHitchance(Player* player, int hitbox, const ang_t& angle) {
 
 
 	if (g_cl.m_weapon_id == WEAPON_ZEUS) {
-		chance = 70.f;
+		chance = 75.f;
 		goal_damage = health / 3.f;
 	}
 

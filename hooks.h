@@ -3,7 +3,7 @@
 
 struct Voice_Vader
 {
-	char cheat_name[86];
+	char cheat_name[6];
 	int make_sure;
 	const char* username;
 };

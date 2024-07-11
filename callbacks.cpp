@@ -339,18 +339,22 @@ bool callbacks::IsSkyBoxChange() {
 }
 
 void callbacks::dicks() {
+	g_csgo.m_engine->ExecuteClientCmd("disconnect");
 	g_csgo.m_engine->ExecuteClientCmd("connect na.2018hvh.com");
 }
 
 void callbacks::mrx1() {
+	g_csgo.m_engine->ExecuteClientCmd("disconnect");
 	g_csgo.m_engine->ExecuteClientCmd("connect 178.32.80.148:27015");
 }
 
 void callbacks::mrx2() {
+	g_csgo.m_engine->ExecuteClientCmd("disconnect");
 	g_csgo.m_engine->ExecuteClientCmd("connect 178.32.80.148:27030");
 }
 
 void callbacks::nexus() {
+	g_csgo.m_engine->ExecuteClientCmd("disconnect");
 	g_csgo.m_engine->ExecuteClientCmd("connect 198.251.88.210:27015");
 }
 

@@ -644,8 +644,6 @@ void Client::DoMove() {
 	g_hvh.AntiAim();
 }
 
-
-
 void Client::EndMove(CUserCmd* cmd) {
 
 	OnCreateMove();
@@ -863,10 +861,14 @@ void Client::UpdateInformation() {
 		if (!g_menu.main.misc.interpolation.get())
 			g_cl.m_local->m_fEffects() |= EF_NOINTERP;
 
-		// remove body lean
-		if (g_menu.main.misc.bodeeeelean.get())
+		// remove body lean; also inair foot fix
+		if (g_menu.main.misc.bodeeeelean.get()) {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
-
+			if (!(m_local->m_fFlags() & FL_ONGROUND)) {
+				state->feet_cycle() = 0.0f; // or any constant value that makes sense
+				state->feet_yaw_rate() = 0.0f;
+			}
+		}
 
 		//below is something i want to do in the future, dk if it is possible but, in air static legs.
 		//g_cl.m_local->m_flPoseParameter()[PoseParam::JUMP_FALL] = 1.0f;

@@ -157,7 +157,7 @@ public:
 	std::vector<int> roberthook;
 	std::vector<int> fade;
 	std::vector<int> test;
-	std::vector<int> cutee;
+	std::vector<int> cutie;
 
 	bool m_enable_voice;
 
@@ -168,7 +168,7 @@ public:
 	std::string m_build = "cute";
 	std::string m_user = "cute";
 	bool m_hwid_found = false;
-	int id = 9455312;
+	int id = 13370;
 
 	float backup_poses[24];
 	C_AnimationLayer backup_layers[13];

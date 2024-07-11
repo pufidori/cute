@@ -100,7 +100,7 @@ void HVH::AutoDirection() {
 		if (!front || front->dormant() || front->immune() || !front->m_setup)
 			continue;
 
-		if (data->m_is_cute
+		if (data->m_is_cutie
 			&& !data->m_is_godhook
 			&& !data->m_is_robertpaste
 			&& !data->m_is_pandora

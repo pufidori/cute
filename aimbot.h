@@ -104,7 +104,7 @@ public:
 	int m_ff_index;
 
 	bool m_has_whitelist_on;
-	bool m_uses_cute;
+	bool m_uses_cutie;
 	bool m_should_target;
 	float m_last_duration_in_air;
 	float m_last_jump_fall;
@@ -129,10 +129,10 @@ public:
 	bool m_hit;
 
 	// network shit
-	float m_networked_angle = 180.f;
+	float m_networked_angle = 1337.f;
 	bool  m_is_kaaba = false;
 	bool  m_is_cheese_crack = false;
-	bool  m_is_cute = false;
+	bool  m_is_cutie = false;
 	bool  m_is_dopium = false;
 	bool  m_is_robertpaste = false;
 	bool  m_is_fade = false;
@@ -188,7 +188,7 @@ public:
 		m_moved = false;
 		m_change_stored = 0;
 		m_last_time = m_last_rate = m_last_cycle = -1.f;
-		m_uses_cute = false;
+		m_uses_cutie = false;
 		m_has_whitelist_on = false;
 		m_missed_invertfs = false;
 		m_missed_back = false;
@@ -199,7 +199,7 @@ public:
 
 		m_is_kaaba = false;
 		m_is_cheese_crack = false;
-		m_is_cute = false;
+		m_is_cutie = false;
 		m_is_dopium = false;
 		m_is_robertpaste = false;
 		m_is_fade = false;

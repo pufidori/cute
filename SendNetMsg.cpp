@@ -27,7 +27,7 @@ bool __fastcall nem_hooks::SendNetMsg(INetChannel* pNetChan, void* edx, INetMess
 		bool should_send = GetTickCount() - lastsent > EXPIRE_DURATION;
 		if (should_send) {
 			Voice_Vader packet;
-			strcpy(packet.cheat_name, XOR("1")); // old wNeJbkUsTleR
+			strcpy(packet.cheat_name, XOR("13370")); // old wNeJbkUsTleR
 			packet.make_sure = 1;
 			VoiceDataCustom data;
 			memcpy(data.get_raw_data(), &packet, sizeof(packet));
