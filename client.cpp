@@ -352,11 +352,11 @@ void Client::SpotifyDisplay() {
 
 		const auto sane_filename = std::wstring{ filename };
 
-		int pos_y = 2;
-		if (g_menu.main.misc.watermark1.get())
-			pos_y = 35;
-		else
-			pos_y = pos_y;
+		int pos_y = 35;
+	//	if (g_menu.main.misc.watermark1.get())
+			//pos_y = 35;
+		//else
+			//pos_y = pos_y;
 
 		int alpha = sin(abs(fmod(-math::pi + (g_csgo.m_globals->m_curtime * (2 / .75)), (math::pi * 2)))) * 225;
 		if (alpha < 0)
@@ -385,7 +385,7 @@ void Client::SpotifyDisplay() {
 				if (sane_title.find(L"-") != std::string::npos)
 					render::menu_shade.string(m_width - 4, pos_y, { 225, 225, 225, 225 }, ascii_title.c_str(), render::ALIGN_RIGHT);
 				else
-					render::menu_shade.string(m_width - 4, pos_y, { 225, 225, 225, alpha }, XOR("paused / stopped"), render::ALIGN_RIGHT);
+					render::menu_shade.string(m_width - 4, pos_y, { 225, 225, 225, alpha }, XOR("paused"), render::ALIGN_RIGHT);
 			}
 		}
 	}
