@@ -1912,6 +1912,29 @@ public:
 
 class Player : public Entity {
 public:
+
+	enum PoseParam_t {
+		STRAFE_YAW,
+		STAND,
+		LEAN_YAW,
+		SPEED,
+		LADDER_YAW,
+		LADDER_SPEED,
+		JUMP_FALL,
+		MOVE_YAW,
+		MOVE_BLEND_CROUCH,
+		MOVE_BLEND_WALK,
+		MOVE_BLEND_RUN,
+		BODY_YAW,
+		BODY_PITCH,
+		AIM_BLEND_STAND_IDLE,
+		AIM_BLEND_STAND_WALK,
+		AIM_BLEND_STAND_RUN,
+		AIM_BLEND_COURCH_IDLE,
+		AIM_BLEND_CROUCH_WALK,
+		DEATH_YAW
+	};
+
 	// netvars / etc.
 	__forceinline vec3_t& m_vecAbsVelocity() {
 		return get< vec3_t >(g_entoffsets.m_vecAbsVelocity);
@@ -1948,6 +1971,8 @@ public:
 	__forceinline some_ptr_t*& some_ptr() {
 		return *reinterpret_cast<some_ptr_t**>(reinterpret_cast<uintptr_t>(this) + 14612);
 	}
+
+
 
 
 

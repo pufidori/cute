@@ -763,8 +763,7 @@ void Client::OnCreateMove() {
 	}
 }
 
-void Client::UpdateInformation() {
-
+/*void Client::UpdateInformation() {
 	if (!g_cl.m_local || !g_cl.m_processing || !g_csgo.m_engine->IsInGame()) {
 		m_has_updated = false;
 		return;
@@ -864,12 +863,7 @@ void Client::UpdateInformation() {
 		// remove body lean; also inair foot fix
 		if (g_menu.main.misc.bodeeeelean.get()) {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
-			if (!(m_local->m_fFlags() & FL_ONGROUND)) {
-				state->feet_cycle() = 0.0f; // or any constant value that makes sense
-				state->feet_yaw_rate() = 0.0f;
-			}
 		}
-
 		//below is something i want to do in the future, dk if it is possible but, in air static legs.
 		//g_cl.m_local->m_flPoseParameter()[PoseParam::JUMP_FALL] = 1.0f;
 
@@ -932,8 +926,178 @@ void Client::UpdateInformation() {
 
 	// setup bones for current frame
 	m_setupped = g_bone_handler.SetupBonesOnetap(m_local, m_local_bones, g_menu.main.misc.interpolation.get());
-}
+}*/
 
+void Client::UpdateInformation() {
+	if (!g_cl.m_local || !g_cl.m_processing || !g_csgo.m_engine->IsInGame()) {
+		m_has_updated = false;
+		return;
+	}
+
+	CCSGOPlayerAnimState* state = g_cl.m_local->m_PlayerAnimState();
+	if (!state)
+		return;
+
+	if (m_spawn_time != m_local->m_flSpawnTime()) {
+		// reset animstate
+		game::ResetAnimationState(state);
+
+		// store new spawn time
+		m_spawn_time = m_local->m_flSpawnTime();
+
+		// reset this
+		m_has_updated = false;
+	}
+
+	// set those so we use raw velocity
+	g_cl.m_local->SetAbsVelocity(g_cl.m_local->m_vecVelocity());
+	g_cl.m_local->m_iEFlags() &= ~(0x1000 | 0x800);
+
+	// disable eye pos interpolation
+	g_cl.m_local->m_fFlags() |= 0xF0;
+
+	// null out incorrect data
+	g_cl.m_local->some_ptr() = nullptr;
+
+	if (g_csgo.m_input->CAM_IsThirdPerson())
+		*reinterpret_cast<ang_t*>(uintptr_t(g_cl.m_local) + 0x31C4 + 0x4) = m_real_angle; // cancer.
+
+	// backup global vars.
+	const float backup_curtime = g_csgo.m_globals->m_curtime;
+	const float backup_realtime = g_csgo.m_globals->m_realtime;
+	const float backup_frametime = g_csgo.m_globals->m_frametime;
+	const float backup_abs_frametime = g_csgo.m_globals->m_abs_frametime;
+	const float backup_interp = g_csgo.m_globals->m_interp_amt;
+	const int backup_framecount = g_csgo.m_globals->m_frame;
+	const int backup_tickcount = g_csgo.m_globals->m_tick_count;
+
+	const float time{ m_local->m_flOldSimulationTime() + g_csgo.m_globals->m_interval };
+	const int ticks = game::TIME_TO_TICKS(time);
+
+	// correct time and frametime to match server simulation.
+	g_csgo.m_globals->m_curtime = time;
+	g_csgo.m_globals->m_realtime = time;
+	g_csgo.m_globals->m_frametime = g_csgo.m_globals->m_interval;
+	g_csgo.m_globals->m_abs_frametime = g_csgo.m_globals->m_interval;
+	g_csgo.m_globals->m_frame = ticks;
+	g_csgo.m_globals->m_tick_count = ticks;
+	g_csgo.m_globals->m_interp_amt = 0.f;
+
+	// set this var for later use
+	m_real_update = m_local->m_flSimulationTime() != m_last_sim_time;
+
+	if (m_real_update) {
+		// get last networked layers.
+		g_cl.m_local->GetAnimLayers(g_cl.m_layers);
+
+		// store new simtime
+		m_last_sim_time = m_local->m_flSimulationTime();
+
+		// get current origin.
+		vec3_t cur = m_local->m_vecOrigin();
+
+		// get prevoius origin.
+		vec3_t prev = m_net_pos.empty() ? cur : m_net_pos.front().m_pos;
+
+		// check if we broke lagcomp.
+		m_lagcomp = (cur - prev).length_sqr() > 4096.f;
+
+		// save sent origin and time.
+		m_net_pos.emplace_front(g_csgo.m_globals->m_curtime, cur);
+	}
+
+	bool update_anims = m_should_try_upd && !g_menu.main.misc.sync.get() || m_real_update && g_menu.main.misc.sync.get();
+
+	// credits: evitable
+	// if time has changed, animations have updated
+	if (update_anims) {
+		// reset this
+		m_should_try_upd = false;
+
+		if (!m_real_update)
+			g_cl.m_local->GetAnimLayers(m_backup_layers);
+
+		// set the nointerp flag.
+		if (!g_menu.main.misc.interpolation.get())
+			g_cl.m_local->m_fEffects() |= EF_NOINTERP;
+
+		// remove body lean; also inair foot fix
+		if (g_menu.main.misc.bodeeeelean.get()) {
+			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
+		}
+		static int airTicks = 0;
+
+		if (!(m_local->m_fFlags() & FL_ONGROUND)) {
+			// Increment airTicks since player is in the air
+			airTicks++;
+
+			// Check if player has been in air for 2 consecutive ticks
+			if (airTicks >= 2) {
+				// Freeze feet falling animation
+				g_cl.m_local->m_flPoseParameter()[Player::JUMP_FALL] = 1.0f;
+			}
+		}
+		else {
+			// Reset airTicks if player is on the ground
+			airTicks = 0;
+		}
+
+		// call original, bypass hook.
+		g_hooks.m_bUpdatingCSALP = true;
+		g_cl.m_local->UpdateClientSideAnimation();
+		g_hooks.m_bUpdatingCSALP = false;
+
+		if (g_menu.main.antiaim.allow_land.get()) {
+			int value = g_menu.main.antiaim.landangle.get();
+
+			if (state->m_landing && (m_local->m_fFlags() & FL_ONGROUND) && !state->m_dip_air && state->m_dip_cycle > 0.f)
+				m_angle.x = value;
+		}
+
+		if (!m_real_update)
+			g_cl.m_local->SetAnimLayers(m_backup_layers);
+
+		// get last networked poses.
+		g_cl.m_local->GetPoseParameters(g_cl.m_poses);
+
+		// set this as true 
+		m_has_updated = true;
+
+		// store updated abs yaw.
+		g_cl.m_abs_yaw = state->m_foot_yaw;
+
+		// save updated data.
+		m_rotation = g_cl.m_local->m_angAbsRotation();
+		m_speed = state->m_speed;
+		m_ground = state->m_ground;
+
+		// set the nointerp flag.
+		g_cl.m_local->m_fEffects() &= ~EF_NOINTERP;
+	}
+
+	// restore globals
+	g_csgo.m_globals->m_realtime = backup_realtime;
+	g_csgo.m_globals->m_curtime = backup_curtime;
+	g_csgo.m_globals->m_frametime = backup_frametime;
+	g_csgo.m_globals->m_abs_frametime = backup_abs_frametime;
+	g_csgo.m_globals->m_frame = backup_framecount;
+	g_csgo.m_globals->m_tick_count = backup_tickcount;
+	g_csgo.m_globals->m_interp_amt = backup_interp;
+
+	if (!m_has_updated)
+		return;
+
+	// set vars to last networked data
+	m_local->SetPoseParameters(m_poses);
+	m_local->SetAnimLayers(m_layers);
+	m_local->SetAbsAngles(ang_t(0.f, m_abs_yaw, 0.f));
+
+	// invalidate bone accessor and cache
+	m_local->InvalidateBoneCache();
+
+	// setup bones for current frame
+	m_setupped = g_bone_handler.SetupBonesOnetap(m_local, m_local_bones, g_menu.main.misc.interpolation.get());
+}
 
 void Client::MouseFix(CUserCmd* cmd) {
 	/*

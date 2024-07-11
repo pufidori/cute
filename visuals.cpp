@@ -748,7 +748,8 @@ std::string to_string_with_precision(const T a_value, const int n = 3)
 	return out.str();
 }
 
-void Visuals::DrawProjectile(Weapon* ent) {
+//OLD DRAWPROJ
+/*void Visuals::DrawProjectile(Weapon* ent) {
 	if (!ent)
 		return;
 
@@ -844,6 +845,108 @@ void Visuals::DrawProjectile(Weapon* ent) {
 		}
 	}
 
+}*/
+
+void Visuals::DrawProjectile(Weapon* ent) {
+	if (!ent)
+		return;
+
+	vec2_t screen;
+	vec3_t origin = ent->GetAbsOrigin();
+	if (!render::WorldToScreen(origin, screen))
+		return;
+
+	Color col = g_menu.main.visuals.proj_color.get();
+	col.a() = 0xb4;
+
+	auto dist_world = g_cl.m_local->m_vecOrigin().dist_to(origin);
+	if (dist_world > 150.f) {
+		col.a() *= std::clamp((750.f - (dist_world - 200.f)) / 750.f, 0.f, 1.f);
+	}
+
+	// If the distance is greater than 50 feet, do not render the warning.
+	if (dist_world / 12 > 50.f) // 1 foot = 12 units
+		return;
+
+	// Draw decoy.
+	if (ent->is(HASH("CDecoyProjectile")))
+		render::esp_small.string(screen.x, screen.y, col, XOR("decoy"), render::ALIGN_CENTER);
+
+	// Draw molotov.
+	else if (ent->is(HASH("CMolotovProjectile")))
+		render::esp_small.string(screen.x, screen.y, col, XOR("molotov"), render::ALIGN_CENTER);
+
+	// Draw frag grenade.
+	else if (ent->is(HASH("CBaseCSGrenadeProjectile"))) {
+		const model_t* model = ent->GetModel();
+		if (model) {
+			std::string name{ ent->GetModel()->m_name };
+
+			if (name.find(XOR("flashbang")) != std::string::npos)
+				render::esp_small.string(screen.x, screen.y, col, XOR("flashbang"), render::ALIGN_CENTER);
+
+			else if (name.find(XOR("fraggrenade")) != std::string::npos) {
+				float distance = g_cl.m_local->m_vecOrigin().dist_to(origin) / 12;
+
+				float percent = ((ent->m_flSpawnTime_Grenade() + 1.5f) - g_csgo.m_globals->m_curtime) / 1.5f;
+				int alpha_damage = 0;
+
+				if (distance <= 20) {
+					alpha_damage = 255 - 255 * (distance / 20);
+				}
+
+				int dist = (((origin - g_cl.m_local->m_vecOrigin()).length_sqr()) * 0.0625) * 0.001;
+				render::circle(screen.x, screen.y - 10, 30, 180, { 0, 0, 0, 239 });  // Alpha set to 127 for 50% opacity.
+				render::circle(screen.x, screen.y - 10, 30, 180, Color(255, 0, 0, alpha_damage)); // Adjust alpha_damage for 50% opacity.
+				render::grenade_warning_big.string(screen.x, screen.y - 35, Color(173, 95, 83, 255), XOR("!"), render::ALIGN_CENTER);
+				render::grenade_warning_small.string(screen.x, screen.y, colors::white, tfm::format(XOR("%i ft"), dist), render::ALIGN_CENTER);
+			}
+		}
+	}
+
+	// Draw inferno.
+	else if (ent->is(HASH("CInferno"))) {
+		const double spawn_time = *(float*)(uintptr_t(ent) + 0x20);
+		const double factor = ((spawn_time + 7.031) - g_csgo.m_globals->m_curtime) / 7.031;
+		Color col_timer = g_menu.main.visuals.proj_range_color.get();
+		if (spawn_time > 0.f && g_menu.main.visuals.proj.get()) {
+			// Render background and timer colored bar.
+			float radius = 144.f;
+			//render::round_rect(screen.x - 13 + 1, screen.y + 9, 26, 4, 2, Color(0, 0, 0, col.a()));
+			//render::round_rect(screen.x - 13 + 2, screen.y + 9 + 1, 24 * factor, 2, 2, Color(col_timer.r(), col_timer.g(), col_timer.b(), col.a()));
+
+			// Render the circle.
+			//render::WorldCircleOutline(origin, radius, 1.f, col);
+
+			// Render timer in seconds and title text.
+			//render::menu.string(screen.x - 13 + 26 * factor, screen.y + 7, col, tfm::format(XOR("%.1f"), (spawn_time + 7.031) - g_csgo.m_globals->m_curtime), render::ALIGN_CENTER);
+			//render::menu.string(screen.x, screen.y, col, XOR("!"), render::ALIGN_CENTER);
+
+			// Draw grenade warning (similar to frag grenade).
+			float distance = g_cl.m_local->m_vecOrigin().dist_to(origin) / 12;
+			int alpha_damage = 0;
+
+			if (distance <= 20) {
+				alpha_damage = 255 - 255 * (distance / 20);
+			}
+
+			int dist = (((origin - g_cl.m_local->m_vecOrigin()).length_sqr()) * 0.0625) * 0.001;
+
+
+			render::circle(screen.x, screen.y - 10, 30, 180, { 0, 0, 0, 239 });  // Alpha set to 127 for 50% opacity.
+			render::circle(screen.x, screen.y - 10, 30, 180, Color(255, 0, 0, alpha_damage)); // Adjust alpha_damage for 50% opacity.
+
+			render::grenade_warning_big.string(screen.x, screen.y - 35, Color(173, 95, 83, 255), XOR("!"), render::ALIGN_CENTER);
+
+
+			render::grenade_warning_small.string(screen.x, screen.y, colors::white, tfm::format(XOR("%i ft"), dist), render::ALIGN_CENTER);
+
+		}
+	}
+
+	// Draw smoke grenade (if needed).
+
+	// Draw other projectile types as per your requirements.
 }
 
 void Visuals::AutopeekIndicator() {

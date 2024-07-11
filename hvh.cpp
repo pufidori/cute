@@ -739,7 +739,7 @@ void HVH::DoRealAntiAim() {
 			}
 
 
-			if (g_cl.m_hit_floor && g_menu.main.antiaim.body_yaw_fake.get())
+			if (g_cl.m_hit_floor && g_menu.main.antiaim.body_yaw_fake.get() && !(g_cl.m_buttons & IN_JUMP))
 				g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat( 135, 225 );
 
 		}
