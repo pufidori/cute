@@ -1158,10 +1158,10 @@ void Aimbot::find() {
 		//calculate aim angle.
 		math::VectorAngles(best.pos - g_cl.m_shoot_pos, m_angle);
 
-		// vec3_t new_shoot_pos{ UpdateShootPosition(m_angle.x) };
+		vec3_t new_shoot_pos{ UpdateShootPosition(m_angle.x) };
 
 		// re-calculate aim angle.
-		// math::VectorAngles(best.pos - new_shoot_pos, m_angle);
+		math::VectorAngles(best.pos - new_shoot_pos, m_angle);
 
 
 		// set member vars.

@@ -818,63 +818,46 @@ void Movement::NullVelocity() {
 }*/
 
 void Movement::AutoStop() {
-	if (g_cl.m_weapon_id == ZEUS)
+	if (!g_cl.m_weapon_info)
 		return;
 
+	if (!g_cl.m_weapon) // sanity check
+		return;
+
+	if (!g_cl.m_local || !g_cl.m_processing)
+		return;
+
+	if (!g_menu.main.aimbot.quick_stop.get() || !g_aimbot.m_stop)
+		return;
+
+	Weapon* wpn = g_cl.m_local->GetActiveWeapon();
+
+	if (!wpn)
+		return;
+
+	WeaponInfo* wpn_data = wpn->GetWpnData();
 
 
-	if (g_aimbot.m_stop && g_cl.m_ground) {
+	if (!wpn_data)
+		return;
 
-		auto ac_standing = [&]() -> const float
-			{
-				const auto max_speed = g_cl.m_weapon->m_zoomLevel() > 0 ? g_cl.m_weapon->GetWpnData()->m_max_player_speed_alt : g_cl.m_weapon->GetWpnData()->m_max_player_speed;
-				return max_speed / 3.f;
-			};
+	bool full_stop = !g_menu.main.aimbot.quick_stop_mode.get(0);
+	float max_speed = std::floor(0.25f * (g_cl.m_local->m_bIsScoped() ? wpn_data->m_max_player_speed_alt : wpn_data->m_max_player_speed));
 
+	if (full_stop || g_cl.m_weapon_id == WEAPON_ZEUS || !(g_cl.m_flags & FL_ONGROUND))
+		max_speed = 25.f;
 
-		float speed = g_cl.m_local->m_vecVelocity().length_2d();
-		if (speed <= ac_standing()) { return; }
-		float mSpeed = (g_cl.m_weapon->m_zoomLevel() == 0 ? g_cl.m_weapon->GetWpnData()->m_max_player_speed : g_cl.m_weapon->GetWpnData()->m_max_player_speed_alt) * 0.1f;
-		if (mSpeed > speed) { return; }
+	if (g_cl.m_local->m_vecVelocity().length_2d() < max_speed) {
 
-		ang_t dir;
-		math::VectorAngles(g_cl.m_local->m_vecVelocity(), dir);
-		dir.y = g_cl.m_view_angles.y - dir.y;
-
-		vec3_t forward;
-		math::AngleVectors(dir, &forward);
-		vec3_t new_dir = forward * -speed;
-
-		g_cl.m_cmd->m_forward_move = new_dir.x;
-		g_cl.m_cmd->m_side_move = new_dir.y;
-
-		//if (g_cl.m_local->m_vecVelocity().length() > 15.f) {
-		//	vec3_t Velocity = g_cl.m_local->m_vecVelocity();
-
-		//	static float Speed = 450.f;
-
-		//	ang_t Direction;
-		//	ang_t RealView = g_cl.m_cmd->m_view_angles;
-
-		//	math::VectorAngles(Velocity, Direction);
-		//	Direction.y = RealView.y - Direction.y;
-
-		//	vec3_t Forward;
-		//	math::AngleVectors(Direction, &Forward);
-		//	vec3_t NegativeDirection = Forward * -Speed;
-
-		//	g_cl.m_cmd->m_forward_move = NegativeDirection.x;
-		//	g_cl.m_cmd->m_side_move = NegativeDirection.y;
-		//}
-		//else {
-		//	g_cl.m_cmd->m_forward_move = 0.f;
-		//	g_cl.m_cmd->m_side_move = 0.f;
-		//}
+		if (full_stop)
+			g_cl.m_cmd->m_forward_move = g_cl.m_cmd->m_side_move = 0.f;
+		else
+			ClampMovementSpeed(max_speed);
 	}
-	else
-		g_aimbot.m_stop = false;
+	else {
+		NullVelocity();
+	}
 }
-
 
 void Movement::FakeWalk( ) {
 	vec3_t velocity{ g_cl.m_local->m_vecVelocity( ) };
