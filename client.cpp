@@ -71,10 +71,18 @@ void Client::DrawHUD() {
 
 	else if (g_menu.main.misc.watermark1.get() == 1) {
 
+		// get time.
+		time_t t = std::time(nullptr);
+		std::ostringstream time_stream;
+		time_stream << std::put_time(std::localtime(&t), ("%H:%M:%S"));
+
 		// get round trip time in milliseconds.
 		int ms = std::max(0, (int)std::round(g_cl.m_latency * 1000.f));
 
-		std::string text = tfm::format(XOR("cute.vip"));
+		// get tickrate.
+		int rate = (int)std::round(1.f / g_csgo.m_globals->m_interval);
+
+		std::string text = tfm::format(XOR("cute.vip | ms:%i | %s "), ms, time_stream.str().c_str());
 		render::FontSize_t size = render::hud.size(text);
 
 		// background.
@@ -404,6 +412,8 @@ void Client::OnPaint() {
 	DrawHUD();
 	KillFeed();
 	SpotifyDisplay();
+
+	g_visuals.IndicateAngles();
 
 	events::player_say;
 

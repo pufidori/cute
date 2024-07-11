@@ -34,7 +34,7 @@ void render::init( ) {
 	cs         = Font(XOR("Counter-Strike"), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	hud31 = Font(XOR("Tahoma"), 13, FW_NORMAL, FONTFLAG_DROPSHADOW);
 	indicator  = Font( XOR( "Verdana" ), 26, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
-	indicator2 = Font( XOR( "Bahnschrift" ), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
+	indicator2 = Font( XOR( "Bahnschrift" ), 35, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	console    = Font( XOR( "Lucida Console" ), 10, FW_DONTCARE, FONTFLAG_DROPSHADOW);
 	manualaa   = Font( XOR( "Acta Symbols W95 Arrows" ), 16, FW_NORMAL, FONTFLAG_ANTIALIAS);
 	output     = Font(XOR("Lucida Sans Unicode"), 12, FW_NORMAL, FONTFLAG_DROPSHADOW);

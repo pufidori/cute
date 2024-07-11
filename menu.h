@@ -265,7 +265,8 @@ public:
 	Checkbox      fakelag_silent_aim;
 	Checkbox      allow_land;
 	Slider        landangle;
-	Checkbox      draw_angles;
+	//Checkbox      draw_angles;
+	Checkbox	  draw_angles;
 	Slider		  landlen;
 	Slider        fakelag_fluct_amt;
 	Slider        fakelag_fluct_ticks;
@@ -517,6 +518,9 @@ public:
 
 		fakelag_silent_aim.setup(XOR("(!MRX)anti-onshot"), XOR("fakelag_silent_aim"));
 		RegisterElement(&fakelag_silent_aim, 1);
+
+		draw_angles.setup(XOR("draw angles"), XOR("draw_angles"));
+		RegisterElement(&draw_angles, 1);
 
 		allow_land.setup(XOR("allow landing animation"), XOR("allow_land"));
 		RegisterElement(&allow_land, 1);
@@ -1200,13 +1204,13 @@ public:
 		FogOverride.setup(XOR("Override fog"), XOR("FogOverride"));
 		RegisterElement(&FogOverride);
 
-		FogColor.setup("color", XOR("FogColor"), colors::burgundy);
+		FogColor.setup("color", XOR("FogColor"), colors::light_blue);
 		RegisterElement(&FogColor);
 
-		FogStart.setup(XOR("Start"), XOR("Fog start"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"u"));
+		FogStart.setup(XOR("Start"), XOR("Fog start"), 0.f, 2500.f, false, 0, 100.f, 5.f, XOR(L"u"));
 		RegisterElement(&FogStart);
 
-		FogEnd.setup(XOR("End"), XOR("Fog end"), 0.f, 2500.f, false, 0, 100.f, 1.f, XOR(L"u"));
+		FogEnd.setup(XOR("End"), XOR("Fog end"), 0.f, 2500.f, false, 0, 2500.f, 5.f, XOR(L"u"));
 		RegisterElement(&FogEnd);
 
 		Fogdensity.setup(XOR("Density"), XOR("Fog density"), 0.f, 100.f, false, 0, 100.f, 1.f, XOR(L"%"));
@@ -1222,7 +1226,7 @@ public:
 		thirdperson.SetToggleCallback(callbacks::ToggleThirdPerson);
 		RegisterElement(&thirdperson, 1);
 
-		thirdperson_distance.setup(XOR(" "), XOR("thirdperson_distance"), 50.f, 300.f, false, 0, 150.f, 1.f, XOR(L"u"));
+		thirdperson_distance.setup(XOR(" "), XOR("thirdperson_distance"), 50.f, 300.f, false, 0, 150.f, 5.f, XOR(L"u"));
 		RegisterElement(&thirdperson_distance, 1);
 
 		disableteam.setup(XOR("disable rendering of teammates"), XOR("disableteam"));
@@ -2595,8 +2599,8 @@ public:
 		watermark1.setup("watermark", XOR("watermark1"),
 			{
 				XOR("cute"),
-				XOR("clean"),
-				XOR("moneybot")
+				XOR("sup"),
+				XOR("moneygay")
 			}, true);
 		RegisterElement(&watermark1, 1);
 
@@ -2761,9 +2765,11 @@ public:
 
 public:
 	void init( ) {
-		Colorpicker::init( );
 
 		main.init( );
+
+		Colorpicker::init();
+
 		g_gui.RegisterForm( &main, VK_INSERT );
 	}
 };

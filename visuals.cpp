@@ -700,7 +700,7 @@ void Visuals::PenetrationCrosshair() {
 		final_color = colors::transparent_green;
 
 	else
-		final_color = colors::transparent_red;
+		final_color = colors::white;
 
 	// todo - dex; use fmt library to get damage string here?
 	//             draw damage string?
@@ -1821,7 +1821,6 @@ void Visuals::DrawPlantedC4() {
 	}
 }
 
-
 bool Visuals::GetPlayerBoxRect(Player* player, Rect& box) {
 	vec3_t pos{ player->GetAbsOrigin() };
 	vec3_t top = pos + vec3_t(0, 0, player->GetCollideable()->OBBMaxs().z);
@@ -2352,8 +2351,8 @@ void Visuals::IndicateAngles()
 
 		if (render::WorldToScreen(real_pos, draw_tmp))
 		{
-			render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 0, 255, 0, 255 });
-			render::esp_small.string(draw_tmp.x, draw_tmp.y, { 0, 255, 0, 255 }, "FAKE", render::ALIGN_LEFT);
+			render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 185, 225, 115, 255 });
+			render::esp_small.string(draw_tmp.x, draw_tmp.y, { 185, 225, 115, 255 }, "FAKE", render::ALIGN_LEFT);
 		}
 
 		if (g_menu.main.antiaim.fake_yaw.get())
@@ -2362,8 +2361,8 @@ void Visuals::IndicateAngles()
 
 			if (render::WorldToScreen(fake_pos, draw_tmp))
 			{
-				render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 255, 0, 0, 255 });
-				render::esp_small.string(draw_tmp.x, draw_tmp.y, { 255, 0, 0, 255 }, "REAL", render::ALIGN_LEFT);
+				render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 255, 110, 185, 255 });
+				render::esp_small.string(draw_tmp.x, draw_tmp.y, { 255, 110, 185, 255 }, "REAL", render::ALIGN_LEFT);
 			}
 		}
 
@@ -2375,8 +2374,8 @@ void Visuals::IndicateAngles()
 
 			if (render::WorldToScreen(lby_pos, draw_tmp))
 			{
-				render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 255, 255, 255, 255 });
-				render::esp_small.string(draw_tmp.x, draw_tmp.y, { 255, 255, 255, 255 }, "LBY", render::ALIGN_LEFT);
+				render::line(tmp.x, tmp.y, draw_tmp.x, draw_tmp.y, { 160, 170, 255, 255 });
+				render::esp_small.string(draw_tmp.x, draw_tmp.y, { 160, 170, 255, 255 }, "LBY", render::ALIGN_LEFT);
 			}
 		}
 	}
