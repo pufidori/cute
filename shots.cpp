@@ -378,11 +378,11 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				++data->m_stand_move_idx;
 				curr_mode_miss = data->m_stand_move_idx;
 			}
-			else if (mode == Resolver::Modes::RESOLVE_UNKNOWM) {
+			else if (mode == Resolver::Modes::RESOLVE_NONE) {
 				++data->m_stand_no_move_idx;
 				curr_mode_miss = data->m_stand_no_move_idx;
 			}
-			else if (mode == Resolver::Modes::RESOLVE_BODY) {
+			else if (mode == Resolver::Modes::RESOLVE_LBY) {
 				++data->m_body_idx;
 				curr_mode_miss = data->m_body_idx;
 			}
@@ -390,7 +390,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				++data->m_air_idx;
 				curr_mode_miss = data->m_air_idx;
 			}
-			else if (mode == Resolver::Modes::RESOLVE_LBY_UPDATE) {
+			else if (mode == Resolver::Modes::RESOLVE_LBY) {
 
 				// increment lby pred miss
 				++data->m_body_pred_idx;
@@ -409,7 +409,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				data->m_missed_back = true;
 
 			// if mode isnt lby nor walk
-			if (mode != Resolver::Modes::RESOLVE_BODY
+			if (mode != Resolver::Modes::RESOLVE_LBY
 				&& mode != Resolver::Modes::RESOLVE_WALK) {
 
 				const float diff = std::abs(math::AngleDiff(shot.m_record->m_body, shot.m_record->m_eye_angles.y));
@@ -423,9 +423,9 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 
 			++data->m_missed_shots;
 
-			if (mode == Resolver::Modes::RESOLVE_WALK)
+			if (mode == Resolver::Modes::RESOLVE_NONE)
 				g_notify.add(XOR("miss: extrapolation\n"));
-			else if (mode != Resolver::Modes::RESOLVE_NONE)
+			else if (mode != Resolver::Modes::RESOLVE_LBY)
 				g_notify.add(XOR("miss: resolver error\n"));
 		}
 		else

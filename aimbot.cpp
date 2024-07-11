@@ -391,7 +391,7 @@ void AimPlayer::handle_animations(LagRecord* record) {
 
 	// reset fakewalk state.
 	record->m_fake_flick = false;
-	record->m_mode = Resolver::Modes::RESOLVE_DISABLED;
+	record->m_mode = Resolver::Modes::RESOLVE_NONE;
 	record->m_resolver_mode = XOR("NONE");
 	record->m_extrapolated = record->m_broke_lc = false;
 	record->m_ground_for_two_ticks = record->m_flags & FL_ONGROUND;
@@ -707,7 +707,7 @@ void AimPlayer::SetupHitboxes(LagRecord* record, bool history) {
 
 	if (m_prefer_body) {
 
-		if (g_menu.main.aimbot.prefer_baim_disablers.get(0) && record->m_mode == Resolver::Modes::RESOLVE_FLICK)
+		if (g_menu.main.aimbot.prefer_baim_disablers.get(0))
 			m_prefer_body = false;
 
 		if (g_menu.main.aimbot.prefer_baim_disablers.get(1) && record->m_mode == Resolver::Modes::RESOLVE_WALK)
@@ -975,6 +975,36 @@ void Aimbot::think() {
 	apply();
 }
 
+bool ispeeking() {
+	ang_t view_angles;
+	g_csgo.m_engine->GetViewAngles(view_angles);
+	vec3_t forward;
+	math::AngleVectors(view_angles, &forward);
+
+	vec3_t target_direction = g_aimbot.m_target->GetAbsOrigin() - g_cl.m_local->GetAbsOrigin();
+	//math::VectorAngles(target_direction = targetdirection);
+
+	float angle_diff = abs(view_angles.y - target_direction.y);
+	if (angle_diff > 45.0f) 
+		return false;
+
+	return true;
+}
+
+bool shouldstop() {
+
+	if (!g_cl.m_weapon_fire)
+		return false;
+
+	if (!g_aimbot.m_target)
+		return false;
+
+	if (!ispeeking())
+		return false;
+
+	return true;
+}
+
 void Aimbot::find() {
 	struct BestTarget_t { Player* player{}; vec3_t pos{}; float damage{}; int hitbox{}; int hitgroup{}; LagRecord* record{}; };
 
@@ -1110,21 +1140,13 @@ void Aimbot::find() {
 
 	const bool ground = (g_cl.m_flags & FL_ONGROUND) && g_cl.m_local->m_fFlags() & FL_ONGROUND;
 
-
-
-
 	const bool found_target = best.player && best.record && best.damage > 0;
 
 	// set autostop shit.
-	// set autostop shit.
-	if (found_target || m_found_hit && g_menu.main.aimbot.quick_stop_mode.get(4)) {
-		if (ground && g_menu.main.aimbot.quick_stop.get()) {
 
-			if (g_cl.m_weapon_fire || g_menu.main.aimbot.quick_stop_mode.get(1) && g_cl.m_player_fire)
-				m_stop = true;
-
-		}
-	}
+	if (ground && g_menu.main.aimbot.autostop.get())
+		if (g_cl.m_weapon_fire && g_cl.m_player_fire)
+			m_stop = true;
 
 	// verify our target and set needed data->
 	if (found_target) {
@@ -1207,9 +1229,6 @@ bool Aimbot::CheckHitchance(Player* player, int hitbox, const ang_t& angle) {
 	constexpr int   SEED_MAX = 255;
 	const float accurate_speed = std::floor((g_cl.m_local->m_bIsScoped() ? g_cl.m_weapon_info->m_max_player_speed_alt : g_cl.m_weapon_info->m_max_player_speed) * 0.33f);
 
-	// force accuracy
-	if (g_menu.main.aimbot.quick_stop_mode.get(2) && g_cl.m_local->m_vecVelocity().length_2d() >= accurate_speed)
-		return false;
 
 	vec3_t     start{ g_cl.m_shoot_pos }, end, fwd, right, up, dir, wep_spread;
 	float      inaccuracy, spread;
@@ -1269,13 +1288,6 @@ bool Aimbot::CheckHitchance(Player* player, int hitbox, const ang_t& angle) {
 
 		if (did_hit && out.m_damage > 0.f)
 			++current_hits;
-	}
-
-	if (!(g_cl.m_flags & FL_ONGROUND)
-		&& g_menu.main.aimbot.quick_stop.get()
-		&& g_menu.main.aimbot.quick_stop_mode.get(3)  // in air
-		&& current_hits >= SEED_MAX * (g_menu.main.aimbot.quick_stop_air_sens.get() / 100.f)) { // min accuracy before autostopping
-		m_stop_air = true;
 	}
 
 	m_hit_chance = (current_hits / SEED_MAX) * HITCHANCE_MAX;
@@ -1506,7 +1518,7 @@ bool AimPlayer::GetBestAimPosition(vec3_t& aim, float& damage, int& hitbox, int&
 		pen = true;
 	}
 
-	bool prefer_center = g_menu.main.aimbot.quick_stop.get() && g_menu.main.aimbot.quick_stop_mode.get(3) && !(g_cl.m_flags & FL_ONGROUND);
+	bool prefer_center = !(g_cl.m_flags & FL_ONGROUND);
 
 	// write all data of this record l0l.
 	record->cache();

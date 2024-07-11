@@ -184,11 +184,7 @@ bool callbacks::IsCustomLby() {
 }
 
 bool callbacks::IsAstopOn() {
-	return g_menu.main.aimbot.quick_stop.get();
-}
-
-bool callbacks::IsInAirAstop() {
-	return g_menu.main.aimbot.quick_stop_mode.get(3);
+	return g_menu.main.aimbot.autostop.get();
 }
 
 bool callbacks::IsNightMode() {

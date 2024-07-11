@@ -40,8 +40,8 @@ public:
 	void DrawHUD();
 	void ClanTag();
 	void Skybox();
-	void SpotifyDisplay();
 	void UpdateInformation();
+	void SpotifyDisplay();
 	void MouseFix(CUserCmd* cmd);
 	void SetAngles();
 	void OnCreateMove();

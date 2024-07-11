@@ -155,7 +155,7 @@ public:
     // modelled after 'CConPanel::DrawNotify' and 'CConPanel::ShouldDraw'
     void think() {
         int y{ 5 };
-        int size{ render::output.m_size.m_height + 1 };
+        int size{ render::menu_shade.m_size.m_height + 1 };
         float max_x_offset = 8.0f;  // The target x position
 
         // Update lifetimes and positions.
@@ -188,8 +188,8 @@ public:
 
             float left = notify->m_time;
 
-            render::FontSize_t text_size = render::output.size(notify->m_text);
-            render::FontSize_t prefix_size = render::output.size("[cute] ");
+            render::FontSize_t text_size = render::menu_shade.size(notify->m_text);
+            render::FontSize_t prefix_size = render::menu_shade.size("[cute] ");
 
             // Fade out effect.
             if (left < .5f) {
@@ -209,8 +209,8 @@ public:
 
             // Render the notification with smooth entry.
             int x = static_cast<int>(notify->m_x_offset);
-            render::output.string(x, y, colors::pink, "[cute] ");
-            render::output.string(x + prefix_size.m_width + 1, y, color, notify->m_text);
+            render::menu_shade.string(x, y, colors::pink, "[cute] ");
+            render::menu_shade.string(x + prefix_size.m_width + 1, y, color, notify->m_text);
 
             y += size;
         }

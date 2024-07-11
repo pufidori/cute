@@ -1,6 +1,4 @@
 #include "includes.h"
-#include <windows.h>
-#include <psapi.h>
 
 Client g_cl{ };
 char username[33] = "\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x90";
@@ -36,7 +34,9 @@ void Client::UnlockHiddenConvars()
 	}
 }
 
-	void Client::DrawHUD() {
+void Client::DrawHUD() {
+
+	if (g_menu.main.misc.watermark1.get() == 0) {
 
 		// Colors
 		const auto col_background = Color(15, 15, 15, 200);
@@ -67,6 +67,47 @@ void Client::UnlockHiddenConvars()
 
 		// Draw text
 		render::menu_shade.string(m_width - 14, 14, { 255, 175, 220, 255 }, text, render::ALIGN_RIGHT);
+	}
+
+	else if (g_menu.main.misc.watermark1.get() == 1) {
+
+		// get round trip time in milliseconds.
+		int ms = std::max(0, (int)std::round(g_cl.m_latency * 1000.f));
+
+		std::string text = tfm::format(XOR("cute.vip"));
+		render::FontSize_t size = render::hud.size(text);
+
+		// background.
+		render::rect_filled(m_width - size.m_width - 20, 10, size.m_width + 10, size.m_height + 2, { 240, 110, 140, 130 });
+
+		// text.
+		render::hud.string(m_width - 15, 10, { 240, 160, 180, 250 }, text, render::ALIGN_RIGHT);
+	}
+
+	else if (g_menu.main.misc.watermark1.get() == 2) {
+		// get time.
+		time_t t = std::time(nullptr);
+		std::ostringstream time;
+		time << std::put_time(std::localtime(&t), ("%H:%M:%S"));
+
+		// get round trip time in milliseconds.
+		int ms = std::max(0, (int)std::round(g_cl.m_latency * 1000.f));
+
+		// get tickrate.
+		int rate = (int)std::round(1.f / g_csgo.m_globals->m_interval);
+		//auto nci = g_csgo.m_engine->GetNetChannelInfo();
+	//	char latency_str[32];
+
+		std::string text = tfm::format(XOR("cute.vip | lt: 1.2f + 1.5f |"));
+
+		render::FontSize_t size = render::hud.size(text);
+
+		// background.
+		//render::rect_filled(m_width - size.m_width - 20, 10, size.m_width + 10, size.m_height + 2, { 240, 110, 140, 130 });
+
+		// text.
+		render::hud31.string(m_width - 8, 6, { 255, 255, 255, 255 }, text, render::ALIGN_RIGHT);
+	}
 }
 
 void Client::KillFeed( ) {
@@ -288,7 +329,7 @@ void Client::Skybox()
 	fog_destiny->SetValue(destiny); 
 }
 
-//UHH WHAT
+//Spotify shit
 void Client::SpotifyDisplay() {
 
 	if (!g_menu.main.misc.whitelist.get())
@@ -312,8 +353,8 @@ void Client::SpotifyDisplay() {
 		const auto sane_filename = std::wstring{ filename };
 
 		int pos_y = 2;
-		if (g_menu.main.misc.whitelist.get())
-			pos_y = 19;
+		if (g_menu.main.misc.watermark1.get())
+			pos_y = 35;
 		else
 			pos_y = pos_y;
 
@@ -363,8 +404,6 @@ void Client::OnPaint() {
 	DrawHUD();
 	KillFeed();
 	SpotifyDisplay();
-
-	g_visuals.IndicateAngles();
 
 	events::player_say;
 

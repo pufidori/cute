@@ -28,12 +28,11 @@ public:
 	Checkbox      hitchance_in_air;
 	Slider        in_air_hitchance;
 	Checkbox	  correct;
-	MultiDropdown correct_opt;
+	//MultiDropdown correct_opt;
 	Dropdown      fakelag_correction;
-	Checkbox	  quick_stop;
-	MultiDropdown quick_stop_mode;
+	Checkbox	  autostop;
 	Dropdown      delay_shot_center;
-	Slider		  quick_stop_air_sens;
+	//Slider		  auto_stop_air_sens;
 	Checkbox      prefer_baim;
 	MultiDropdown prefer_baim_disablers;
 	Checkbox      debugaim;
@@ -140,17 +139,8 @@ public:
 		fakelag_correction.setup(XOR("fake-lag correction"), XOR("fakelag_correction"), { XOR("off"), XOR("low"), XOR("high") });
 		RegisterElement(&fakelag_correction, 1);
 
-		quick_stop.setup(XOR("quick stop"), XOR("quick_stop"));
-		RegisterElement(&quick_stop, 1);
-
-		quick_stop_mode.setup(XOR(""), XOR("quick_stop_mode"), { "slow motion", "between shots", "force accuracy", "in air", "early" }, false);
-		quick_stop_mode.AddShowCallback(callbacks::IsAstopOn);
-		RegisterElement(&quick_stop_mode, 1);
-
-		quick_stop_air_sens.setup("", XOR("quick_stop_air_sens"), 10.f, 100.f, false, 0, 30.f, 1.f, XOR(L"%"));
-		quick_stop_air_sens.AddShowCallback(callbacks::IsInAirAstop);
-		quick_stop_air_sens.AddShowCallback(callbacks::IsAstopOn);
-		RegisterElement(&quick_stop_air_sens, 1);
+		autostop.setup(XOR("automatic stop"), XOR("autostop"));
+		RegisterElement(&autostop, 1);
 
 		// delay shot for damage
 		delay_shot_center.setup(XOR("center delay"), XOR("delay_shot_center"), { XOR("off"), XOR("normal"), XOR("high") });
@@ -2437,6 +2427,7 @@ public:
 	Dropdown config;
 	Keybind  key1;
 	Keybind  key2;
+	Dropdown watermark1;
 	Keybind  key3;
 	Keybind  key4;
 	Keybind  key5;
@@ -2586,6 +2577,14 @@ public:
 		sync.setup(XOR("animation sync"), XOR("sync"));
 		RegisterElement(&sync, 1);
 
+		watermark1.setup("watermark", XOR("watermark1"),
+			{
+				XOR("cute"),
+				XOR("clean"),
+				XOR("moneybot")
+			}, true);
+		RegisterElement(&watermark1, 1);
+
 		killsay.setup(XOR("killsay"), XOR("killsay"));
 		RegisterElement(&killsay, 1);
 
@@ -2599,7 +2598,7 @@ public:
 		RegisterElement(&menu_color, 1);
 
 		dumper.setup(XOR("listen to voice data"), XOR("vcdatadbg"));
-		RegisterElement(&dumper, 1);
+		RegisterElement(&dumper, 1); 
 
 		motion_blur.setup(XOR("motion blur strength"), XOR("motion_blur"), 0.f, 100.f, true, 0, 0.f, 1.f, XOR(L"x"));
 		RegisterElement(&motion_blur, 1);	

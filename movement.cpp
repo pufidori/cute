@@ -734,46 +734,91 @@ void Movement::NullVelocity() {
 }
 
 void Movement::AutoStop() {
-	if (!g_cl.m_weapon_info)
+	if (g_input.GetKeyState(g_menu.main.misc.fakewalk.get()))
 		return;
 
-	if (!g_cl.m_weapon) // sanity check
+	if (!g_cl.m_local || !g_cl.m_processing || !g_aimbot.m_stop)
 		return;
 
-	if (!g_cl.m_local || !g_cl.m_processing)
-		return;
-	
-	if ( !g_menu.main.aimbot.quick_stop.get() || !g_aimbot.m_stop )
-		return;
+	g_aimbot.m_stop = false;
 
-	Weapon* wpn = g_cl.m_local->GetActiveWeapon();
-
-	if (!wpn)
+	if (!(g_cl.m_local->m_fFlags() & FL_ONGROUND))
 		return;
 
-	WeaponInfo* wpn_data = wpn->GetWpnData();
+	Weapon* m_weapon = g_cl.m_local->GetActiveWeapon();
 
-
-	if (!wpn_data)
+	if (!m_weapon)
 		return;
 
-	bool full_stop = !g_menu.main.aimbot.quick_stop_mode.get(0);
-	float max_speed = std::floor( 0.25f * (g_cl.m_local->m_bIsScoped() ? wpn_data->m_max_player_speed_alt : wpn_data->m_max_player_speed) );
+	WeaponInfo* m_weapon_info = m_weapon->GetWpnData();
 
-	if( full_stop || g_cl.m_weapon_id == WEAPON_ZEUS || !( g_cl.m_flags & FL_ONGROUND ) )
-		max_speed = 25.f;
+	if (!m_weapon_info)
+		return;
 
-	if (g_cl.m_local->m_vecVelocity().length_2d() < max_speed) {
+	float max_speed = m_weapon->m_zoomLevel() == 0 ? m_weapon_info->m_max_player_speed : m_weapon_info->m_max_player_speed_alt;
 
-		if( full_stop )
-			g_cl.m_cmd->m_forward_move = g_cl.m_cmd->m_side_move = 0.f;
-		else
-			ClampMovementSpeed(max_speed);
+	vec3_t velocity = g_cl.m_local->m_vecVelocity();
+	velocity.z = 0.0f;
+	float speed = velocity.length_2d();
+
+	auto finalwishspeed = std::min(max_speed, 250.f);
+	const auto ducking =
+		g_cl.m_cmd->m_buttons & IN_DUCK ||
+		g_cl.m_local->m_flDuckAmount() > 0.0f ||
+		g_cl.m_local->m_fFlags() & FL_DUCKING;
+
+	bool slow_down_to_fast_nigga{};
+	static ConVar* sv_accelerate_use_weapon_speed = g_csgo.m_cvar->FindVar(HASH("sv_accelerate_use_weapon_speed"));
+
+	if (m_weapon && sv_accelerate_use_weapon_speed->GetInt() != 0) {
+		const auto item_index = m_weapon->m_iItemDefinitionIndex();
+		if (m_weapon->m_zoomLevel() > 0 &&
+			(item_index == 11 || item_index == 38 || item_index == 9 || item_index == 8 || item_index == 39 || item_index == 40))
+			slow_down_to_fast_nigga = (max_speed * 0.52f) < 110.f;
+
+		if (!ducking || slow_down_to_fast_nigga)
+			finalwishspeed *= std::min(1.f, max_speed / 250.f);
+	}
+
+	if (ducking && !slow_down_to_fast_nigga)
+		finalwishspeed *= 0.33f;
+
+	finalwishspeed =
+		((g_csgo.m_globals->m_interval * g_csgo.sv_accelerate->GetFloat()) * finalwishspeed) *
+		g_cl.m_local->m_surfaceFriction();
+
+	// @popugapopugay wow thanks yougame biz :hert:
+	if (speed > max_speed * 0.25f) {
+		ang_t direction;
+		ang_t real_view;
+
+		math::VectorAngles(velocity, direction);
+		g_csgo.m_engine->GetViewAngles(real_view);
+
+		direction.y = real_view.y - direction.y;
+
+		vec3_t forward;
+		math::AngleVectors(direction, &forward);
+
+		static auto cl_forwardspeed = g_csgo.m_cvar->FindVar(HASH("cl_forwardspeed"));
+		static auto cl_sidespeed = g_csgo.m_cvar->FindVar(HASH("cl_sidespeed"));
+
+		auto negative_forward_speed = -cl_forwardspeed->GetFloat();
+		auto negative_side_speed = -cl_sidespeed->GetFloat();
+
+		auto negative_forward_direction = forward * negative_forward_speed;
+		auto negative_side_direction = forward * negative_side_speed;
+
+		g_cl.m_cmd->m_forward_move = negative_forward_direction.x;
+		g_cl.m_cmd->m_side_move = negative_side_direction.y;
 	}
 	else {
-		NullVelocity();
+		ClampMovementSpeed(max_speed * 0.25f);
 	}
 }
+
+
+
 
 void Movement::FakeWalk( ) {
 	vec3_t velocity{ g_cl.m_local->m_vecVelocity( ) };

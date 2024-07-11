@@ -51,7 +51,7 @@ namespace callbacks {
 	bool IsDelayShot();
 	bool IsPFBOn();
 	bool IsAstopOn();
-	bool IsInAirAstop();
+//	bool IsInAirAstop();
 	void ConfigLoad3( );
 	void ConfigLoad4( );
 	void ConfigLoad5( );

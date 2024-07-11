@@ -63,11 +63,14 @@ namespace render {
 	extern Font esp_other;
 	extern Font hud;
 	extern Font cs;
+	extern Font hud31;
 	extern Font indicator;
 	extern Font indicator2;
 	extern Font console;
 	extern Font manualaa;
 	extern Font output;
+	extern Font grenade_warning_big;
+	extern Font grenade_warning_small;
 
 	void init( );
 	bool WorldToScreen( const vec3_t& world, vec2_t& screen );

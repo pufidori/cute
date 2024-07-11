@@ -749,14 +749,15 @@ std::string to_string_with_precision(const T a_value, const int n = 3)
 }
 
 void Visuals::DrawProjectile(Weapon* ent) {
+	if (!ent)
+		return;
+
 	vec2_t screen;
 	vec3_t origin = ent->GetAbsOrigin();
 	if (!render::WorldToScreen(origin, screen))
 		return;
 
 	Color col = g_menu.main.visuals.proj_color.get();
-	auto moly_color = Color(255, 0, 0);
-	auto smoke_color = Color(58, 214, 252);
 	col.a() = 0xb4;
 
 	auto dist_world = g_cl.m_local->m_vecOrigin().dist_to(origin);
@@ -764,74 +765,85 @@ void Visuals::DrawProjectile(Weapon* ent) {
 		col.a() *= std::clamp((750.f - (dist_world - 200.f)) / 750.f, 0.f, 1.f);
 	}
 
+	// If the distance is greater than 50 feet, do not render the warning.
+	if (dist_world / 12 > 50.f) // 1 foot = 12 units
+		return;
 
-	// draw decoy.
+	// Draw decoy.
 	if (ent->is(HASH("CDecoyProjectile")))
-		render::menu.string(screen.x, screen.y, col, XOR("decoy"), render::ALIGN_CENTER);
+		render::esp_small.string(screen.x, screen.y, col, XOR("decoy"), render::ALIGN_CENTER);
 
-	// draw molotov.
+	// Draw molotov.
 	else if (ent->is(HASH("CMolotovProjectile")))
-		render::menu.string(screen.x, screen.y, col, XOR("molotov"), render::ALIGN_CENTER);
+		render::esp_small.string(screen.x, screen.y, col, XOR("molotov"), render::ALIGN_CENTER);
 
+	// Draw frag grenade.
 	else if (ent->is(HASH("CBaseCSGrenadeProjectile"))) {
 		const model_t* model = ent->GetModel();
-
 		if (model) {
-			// grab modelname.
 			std::string name{ ent->GetModel()->m_name };
 
 			if (name.find(XOR("flashbang")) != std::string::npos)
-				render::menu.string(screen.x, screen.y, col, XOR("flashbang"), render::ALIGN_CENTER);
+				render::esp_small.string(screen.x, screen.y, col, XOR("flashbang"), render::ALIGN_CENTER);
 
 			else if (name.find(XOR("fraggrenade")) != std::string::npos) {
+				float distance = g_cl.m_local->m_vecOrigin().dist_to(origin) / 12;
 
-				// grenade range.
-					//render::sphere( origin, 350.f, 5.f, 1.f, g_menu.main.visuals.proj_range_color.get( ) );
+				float percent = ((ent->m_flSpawnTime_Grenade() + 1.5f) - g_csgo.m_globals->m_curtime) / 1.5f;
+				int alpha_damage = 0;
 
-				render::menu.string(screen.x, screen.y, col, XOR("he grenade"), render::ALIGN_CENTER);
+				if (distance <= 20) {
+					alpha_damage = 255 - 255 * (distance / 20);
+				}
+
+				int dist = (((origin - g_cl.m_local->m_vecOrigin()).length_sqr()) * 0.0625) * 0.001;
+				render::circle(screen.x, screen.y - 10, 30, 180, { 0, 0, 0, 239 });  // Alpha set to 127 for 50% opacity.
+				render::circle(screen.x, screen.y - 10, 30, 180, Color(255, 0, 0, alpha_damage)); // Adjust alpha_damage for 50% opacity.
+				render::grenade_warning_big.string(screen.x, screen.y - 35, Color(173, 95, 83, 255), XOR("!"), render::ALIGN_CENTER);
+				render::grenade_warning_small.string(screen.x, screen.y, colors::white, tfm::format(XOR("%i ft"), dist), render::ALIGN_CENTER);
 			}
 		}
 	}
-	// find classes.
-	else if (ent->is(HASH("CInferno"))) {
 
+	// Draw inferno.
+	else if (ent->is(HASH("CInferno"))) {
 		const double spawn_time = *(float*)(uintptr_t(ent) + 0x20);
 		const double factor = ((spawn_time + 7.031) - g_csgo.m_globals->m_curtime) / 7.031;
 		Color col_timer = g_menu.main.visuals.proj_range_color.get();
 		if (spawn_time > 0.f && g_menu.main.visuals.proj.get()) {
-			// render our bg then timer colored bar
+			// Render background and timer colored bar.
 			float radius = 144.f;
-			render::round_rect(screen.x - 13 + 1, screen.y + 9, 26, 4, 2, Color(0, 0, 0, col.a()));
-			render::round_rect(screen.x - 13 + 2, screen.y + 9 + 1, 24 * factor, 2, 2, Color(col_timer.r(), col_timer.g(), col_timer.b(), col.a()));
+			//render::round_rect(screen.x - 13 + 1, screen.y + 9, 26, 4, 2, Color(0, 0, 0, col.a()));
+			//render::round_rect(screen.x - 13 + 2, screen.y + 9 + 1, 24 * factor, 2, 2, Color(col_timer.r(), col_timer.g(), col_timer.b(), col.a()));
 
-			// render the circle
-			render::WorldCircleOutline(origin, radius, 1.f, moly_color);
-			
+			// Render the circle.
+			//render::WorldCircleOutline(origin, radius, 1.f, col);
 
-			// render our timer in seconds and our title text
-			render::menu.string(screen.x - 13 + 26 * factor, screen.y + 7, col, tfm::format(XOR("%.1f"), (spawn_time + 7.031) - g_csgo.m_globals->m_curtime), render::ALIGN_CENTER);
-			render::menu.string(screen.x, screen.y, col, XOR("molotov"), render::ALIGN_CENTER);
+			// Render timer in seconds and title text.
+			//render::menu.string(screen.x - 13 + 26 * factor, screen.y + 7, col, tfm::format(XOR("%.1f"), (spawn_time + 7.031) - g_csgo.m_globals->m_curtime), render::ALIGN_CENTER);
+			//render::menu.string(screen.x, screen.y, col, XOR("!"), render::ALIGN_CENTER);
+
+			float distance = g_cl.m_local->m_vecOrigin().dist_to(origin) / 12;
+			int alpha_damage = 0;
+
+			if (distance <= 20) {
+				alpha_damage = 255 - 255 * (distance / 20);
+			}
+
+			int dist = (((origin - g_cl.m_local->m_vecOrigin()).length_sqr()) * 0.0625) * 0.001;
+
+
+			render::circle(screen.x, screen.y - 10, 30, 180, { 0, 0, 0, 239 });  
+			render::circle(screen.x, screen.y - 10, 30, 180, Color(255, 0, 0, alpha_damage));
+
+			render::grenade_warning_big.string(screen.x, screen.y - 35, Color(173, 95, 83, 255), XOR("!"), render::ALIGN_CENTER);
+
+
+			render::grenade_warning_small.string(screen.x, screen.y, colors::white, tfm::format(XOR("%i ft"), dist), render::ALIGN_CENTER);
+
 		}
 	}
 
-	else if (ent->is(HASH("CSmokeGrenadeProjectile"))) {
-		float radius = 144.f;	
-		const float spawn_time = game::TICKS_TO_TIME(ent->m_nSmokeEffectTickBegin());
-		const double factor = ((spawn_time + 18.041) - g_csgo.m_globals->m_curtime) / 18.041;
-		Color col_timer = g_menu.main.visuals.proj_range_color.get();
-		if (spawn_time > 0.f && g_menu.main.visuals.proj_range.get()) {
-			// render our bg then timer colored bar
-			render::round_rect(screen.x - 13 + 1, screen.y + 9, 26, 4, 2, Color(0, 0, 0, col.a()));
-			render::round_rect(screen.x - 13 + 2, screen.y + 9 + 1, 24 * factor, 2, 2, Color(col_timer.r(), col_timer.g(), col_timer.b(), col.a()));
-
-			// render the circle
-			render::WorldCircleOutline(origin, radius, 1.f, smoke_color);
-
-			// render our timer in seconds and our title text
-			render::menu.string(screen.x - 13 + 26 * factor, screen.y + 7, col, tfm::format(XOR("%.1f"), (spawn_time + 18.04125) - g_csgo.m_globals->m_curtime), render::ALIGN_CENTER);
-			render::menu.string(screen.x, screen.y, col, XOR("smoke"), render::ALIGN_CENTER);
-		}
-	}
 }
 
 void Visuals::AutopeekIndicator() {
@@ -1381,7 +1393,7 @@ void Visuals::DrawPlayer( Player* player ) {
 				LagRecord* current = data->m_records.front().get();
 
 				Color clr = Color(255, 255, 255, low_alpha);
-				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_FLICK) {
+				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_LBY) {
 					clr = Color(155, 210, 100, low_alpha);
 				}
 
@@ -1438,11 +1450,11 @@ void Visuals::DrawPlayer( Player* player ) {
 
 		if (data && data->m_records.size() && enemy && g_menu.main.aimbot.correct.get()) {
 			LagRecord* current = data->m_records.front().get();
-			if (current->m_mode == Resolver::Modes::RESOLVE_BODY)
+			if (current->m_mode == Resolver::Modes::RESOLVE_LBY)
 				flags.push_back({ XOR("lby"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
 				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_PREFLICK)
+			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY)
 				flags.push_back({ XOR("predict"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
 				flags.push_back({ XOR("no move"), { 255,255,255, low_alpha } });

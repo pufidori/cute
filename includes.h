@@ -40,6 +40,9 @@ using ulong_t = unsigned long;
 #include <shlobj.h>
 #include <filesystem>
 #include <streambuf>
+#include "windows.h"
+#include <psapi.h>
+#pragma comment(lib, "Psapi.lib")
 
 // our custom wrapper.
 #include "unique_vector.h"
