@@ -46,6 +46,8 @@ public:
 	void SetAngles();
 	void OnCreateMove();
 	void KillFeed();
+	void UpdateLocal();
+	void UpdateAnimations();
 	void MotionBlur();
 
 	void OnPaint();

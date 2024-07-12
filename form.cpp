@@ -28,11 +28,18 @@ void Form::draw( ) {
 	}
 
 	// lbgt line
-	render::gradient1337(m_x + 7, m_y + 7, m_width / 2 - 7, 1, { 99, 160, 200, m_alpha }, { 179, 102, 181, m_alpha });
-	render::gradient1337(m_x + (m_width / 2), m_y + 7, m_width / 2 - 7, 1, { 179, 102, 181, m_alpha }, { 230, 217, 100, m_alpha });
+	//render::gradient1337(m_x + 7, m_y + 7, m_width / 2 - 7, 1, { 99, 160, 200, m_alpha }, { 179, 102, 181, m_alpha });
+	//render::gradient1337(m_x + (m_width / 2), m_y + 7, m_width / 2 - 7, 1, { 179, 102, 181, m_alpha }, { 230, 217, 100, m_alpha });
 
-	render::gradient1337(m_x + 7, m_y + 7 + 1, m_width / 2 - 7, 1, { 49, 79, 99, m_alpha }, { 89, 50, 90, m_alpha });
-	render::gradient1337(m_x + (m_width / 2), m_y + 7 + 1, m_width / 2 - 7, 1, { 89, 50, 90, m_alpha }, { 114, 108, 49, m_alpha });
+	//render::gradient1337(m_x + 7, m_y + 7 + 1, m_width / 2 - 7, 1, { 49, 79, 99, m_alpha }, { 89, 50, 90, m_alpha });
+	//render::gradient1337(m_x + (m_width / 2), m_y + 7 + 1, m_width / 2 - 7, 1, { 89, 50, 90, m_alpha }, { 114, 108, 49, m_alpha });
+
+    //cute line :3
+    render::gradient1337(m_x + 7, m_y + 7, m_width / 2 - 7, 1, { 189, 207, 253, m_alpha }, { 253, 189, 202, m_alpha });
+    render::gradient1337(m_x + (m_width / 2), m_y + 7, m_width / 2 - 7, 1, { 253, 189, 202, m_alpha }, { 189, 207, 253, m_alpha });
+    render::gradient1337(m_x + 7, m_y + 7 + 1, m_width / 2 - 7, 1, { 189, 207, 253, m_alpha }, { 253, 189, 202, m_alpha });
+    render::gradient1337(m_x + (m_width / 2), m_y + 7 + 1, m_width / 2 - 7, 1, { 253, 189, 202, m_alpha }, { 189, 207, 253, m_alpha });
+
 
 	// border.
 	render::rect(m_x, m_y, m_width, m_height, { 5, 5, 5, m_alpha });

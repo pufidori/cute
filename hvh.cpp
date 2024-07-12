@@ -739,8 +739,31 @@ void HVH::DoRealAntiAim() {
 			}
 
 
-			if (g_cl.m_hit_floor && g_menu.main.antiaim.body_yaw_fake.get() && !(g_cl.m_buttons & IN_JUMP))
-				g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat( 135, 225 );
+			//if (g_cl.m_hit_floor && g_menu.main.antiaim.body_yaw_fake.get())
+				//g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat( 135, 225 );
+
+			struct QAngle {
+				float x, y, z;
+
+				QAngle() : x(0), y(0), z(0) {}
+				QAngle(float x, float y, float z) : x(x), y(y), z(z) {}
+
+				// Other methods for QAngle if needed.
+			};
+
+			if (g_cl.m_hit_floor && g_menu.main.antiaim.body_yaw_fake.get()) {
+				// Store the original view angles.
+				ang_t original_view_angles = g_cl.m_cmd->m_view_angles;
+
+				// Calculate the random yaw offset.
+				float yaw_offset = g_csgo.RandomFloat(135, 225);
+
+				// Apply the yaw offset to the command angles (affecting hitbox calculation).
+				g_cl.m_cmd->m_view_angles.y += yaw_offset;
+
+				// Restore the original view angles to prevent visual changes.
+				g_cl.m_cmd->m_view_angles = original_view_angles;
+			}
 
 		}
 	}
@@ -848,9 +871,9 @@ void HVH::DoFakeAntiAim() {
 		break;
 		//gucci gang
 	case 9:
-		g_cl.m_cmd->m_view_angles.y = m_direction + 75.6f + std::fmod(g_csgo.m_globals->m_curtime * 360.f, 360.f);
+		g_cl.m_cmd->m_view_angles.y = m_direction + 75.6f + std::fmod(g_csgo.m_globals->m_curtime * 300.f, 300.f);
 
-		g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat(-180, 180);
+		g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat(-150, 150);
 
 
 

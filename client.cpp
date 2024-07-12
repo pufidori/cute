@@ -15,7 +15,7 @@ ulong_t __stdcall Client::init(void* arg) {
 	g_notify.add(tfm::format(XOR("Welcome.\n")));
 	g_notify.add(tfm::format(XOR("cute.vip by fruitydevteam\n")));
 	g_notify.add(tfm::format(XOR("made with love <3\n")));
-	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__"\n")));
+	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__". \n")));
 	g_cl.UnlockHiddenConvars();
 
 	return 1;
@@ -189,12 +189,9 @@ void Client::ClanTag()
 			is_freeze_period = false;
 			return;
 		}
-
-		is_freeze_period = true;
-
-		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
-			switch (int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
-			case 0: SetClanTag(XOR("         c")); break;
+		//old tag here
+		/*
+					case 0: SetClanTag(XOR("         c")); break;
 			case 1: SetClanTag(XOR("        cu")); break;
 			case 2: SetClanTag(XOR("       cut")); break;
 			case 3: SetClanTag(XOR("      cute")); break;
@@ -212,6 +209,27 @@ void Client::ClanTag()
 			case 15:SetClanTag(XOR("ip        ")); break;
 			case 16:SetClanTag(XOR("p         ")); break;
 			case 17:SetClanTag(XOR("          ")); break;
+		*/
+		is_freeze_period = true;
+
+		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
+			switch (int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
+			case 0: SetClanTag(XOR("cute.vip")); break;
+			case 1: SetClanTag(XOR("Cute.vip")); break;
+			case 2: SetClanTag(XOR("Cute.viP")); break;
+			case 3: SetClanTag(XOR("CUte.viP")); break;
+			case 4: SetClanTag(XOR("CUte.vIP")); break;
+			case 5: SetClanTag(XOR("CUTe.vIP")); break;
+			case 6: SetClanTag(XOR("CUTe.VIP")); break;
+			case 7: SetClanTag(XOR("CUTE.VIP")); break;
+			case 8: SetClanTag(XOR("CUTE.VIp")); break;
+			case 9: SetClanTag(XOR("cUTE.VIp")); break;
+			case 10:SetClanTag(XOR("cUTE.Vip")); break;
+			case 11:SetClanTag(XOR("cuTE.Vip")); break;
+			case 12:SetClanTag(XOR("cutE.Vip")); break;
+			case 13:SetClanTag(XOR("cute.Vip")); break;
+			case 14:SetClanTag(XOR("cutE.vip")); break;
+			case 15:SetClanTag(XOR("cute.vip")); break;
 			default:;
 			}
 			iPrevFrame = int(g_csgo.m_globals->m_curtime * 2.6) % 35;
@@ -769,6 +787,29 @@ void Client::UpdateInformation() {
 		return;
 	}
 
+	enum pose_params
+	{
+		strafe_yaw,
+		stand,
+		lean_yaw,
+		speed,
+		ladder_yaw,
+		ladder_speed,
+		jump_fall,
+		move_yaw,
+		move_blend_crouch,
+		move_blend_walk,
+		move_blend_run,
+		body_yaw,
+		body_pitch,
+		aim_blend_stand_idle,
+		aim_blend_stand_walk,
+		aim_blend_stand_run,
+		aim_blend_courch_idle,
+		aim_blend_crouch_walk,
+		death_yaw
+	};
+
 	CCSGOPlayerAnimState* state = g_cl.m_local->m_PlayerAnimState();
 	if (!state)
 		return;
@@ -863,10 +904,27 @@ void Client::UpdateInformation() {
 		// remove body lean; also inair foot fix
 		if (g_menu.main.misc.bodeeeelean.get()) {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
+			m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
 		}
-		//below is something i want to do in the future, dk if it is possible but, in air static legs.
-		//g_cl.m_local->m_flPoseParameter()[PoseParam::JUMP_FALL] = 1.0f;
 
+		if (g_menu.main.misc.god.get()) {
+			m_backup_layers[1].m_weight = g_cl.m_layers[1].m_weight = 0.f;
+			m_backup_layers[2].m_weight = g_cl.m_layers[2].m_weight = 0.f;
+			m_backup_layers[3].m_weight = g_cl.m_layers[3].m_weight = 0.f;
+			m_backup_layers[4].m_weight = g_cl.m_layers[4].m_weight = 0.f;
+			m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
+			m_backup_layers[6].m_weight = g_cl.m_layers[6].m_weight = 0.f;
+			m_backup_layers[7].m_weight = g_cl.m_layers[7].m_weight = 0.f;
+			m_backup_layers[8].m_weight = g_cl.m_layers[8].m_weight = 0.f;
+			m_backup_layers[9].m_weight = g_cl.m_layers[9].m_weight = 0.f;
+			m_backup_layers[10].m_weight = g_cl.m_layers[10].m_weight = 0.f;
+			m_backup_layers[11].m_weight = g_cl.m_layers[11].m_weight = 0.f;
+			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
+		}
+
+		//below is something i want to do in the future, dk if it is possible but, in air static legs.
+		
+		g_cl.m_local->m_flPoseParameter()[pose_params::jump_fall] = 1.0f;
 
 		// call original, bypass hook.
 		g_hooks.m_bUpdatingCSALP = true;

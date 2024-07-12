@@ -226,8 +226,6 @@ float Resolver::GetAwayAngle(LagRecord* record) {
 	return away.y;
 }
 
-
-
 void Resolver::MatchShot(AimPlayer* data, LagRecord* record) {
 
 	Weapon* wpn = data->m_player->GetActiveWeapon();

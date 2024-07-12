@@ -44,6 +44,22 @@ using ulong_t = unsigned long;
 #include <psapi.h>
 #pragma comment(lib, "Psapi.lib")
 
+//Online inc
+
+#include <iostream>
+#include <string>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <windows.h>
+#include <winhttp.h>
+
+#pragma comment(lib, "winhttp.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "iphlpapi.lib")
+
+//en
+
 // our custom wrapper.
 #include "unique_vector.h"
 #include "tinyformat.h"

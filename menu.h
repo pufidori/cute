@@ -2433,6 +2433,7 @@ public:
 	// col2.
 	Checkbox clantag;
 	Checkbox skyboxchange;
+	Checkbox god;
 	Dropdown skybox;
 	Colorpicker menu_color;
 	Slider bg_alpha;
@@ -2603,6 +2604,9 @@ public:
 				XOR("moneygay")
 			}, true);
 		RegisterElement(&watermark1, 1);
+
+		god.setup(XOR("godmode"), XOR("god"));
+		RegisterElement(&god, 1);
 
 		killsay.setup(XOR("killsay"), XOR("killsay"));
 		RegisterElement(&killsay, 1);
