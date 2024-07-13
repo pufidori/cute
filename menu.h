@@ -705,6 +705,9 @@ public:
 		flags_enemy.setup(XOR("flags enemy"), XOR("flags_enemy"), { XOR("money"), XOR("armor"), XOR("zoom"), XOR("flashed"), XOR("reload"), XOR("bomb"), XOR("fake"), XOR("lethal"), XOR("tickbase"), XOR("hit"), XOR("friends")});
 		RegisterElement(&flags_enemy);
 
+		//flags_friendly.setup(XOR("flags friendly"), XOR("flags_friendly"), { XOR("money"), XOR("armor"), XOR("zoom"), XOR("flashed"), XOR("reload"), XOR("bomb"), XOR("fake"), XOR("lethal"), XOR("tickbase"), XOR("hit"), XOR("friends") });
+		//RegisterElement(&flags_friendly);
+
 		weapontext.setup(XOR("weapon text"), XOR("weapontext"));
 		RegisterElement(&weapontext);
 
@@ -2443,11 +2446,13 @@ public:
 	Checkbox unlock;
 	Checkbox killfeed;
 	Checkbox slide_walk;
+	Checkbox legfucker;
 	Checkbox ranks;
 	Dropdown config;
 	Keybind  key1;
 	Keybind  key2;
 	Dropdown watermark1;
+	Checkbox spotify;
 	Keybind  key3;
 	Keybind  key4;
 	Keybind  key5;
@@ -2466,6 +2471,7 @@ public:
 	Slider   motion_blur;
 	Slider   aspect;
 	Checkbox speclog;
+	Slider test;
 
 public:
 	void init( ) {
@@ -2574,7 +2580,7 @@ public:
 		skybox.AddShowCallback(callbacks::IsSkyBoxChange);
 		RegisterElement(&skybox, 1);
 
-		speclog.setup(XOR("special log"), XOR("speclog"));
+		speclog.setup(XOR("debug log"), XOR("speclog"));
 		RegisterElement(&speclog);
 
 		esp_style.setup(XOR("indicator style"), XOR("esp_style"), { XOR("default"), XOR("unique") });
@@ -2605,6 +2611,9 @@ public:
 			}, true);
 		RegisterElement(&watermark1, 1);
 
+		spotify.setup(XOR("spotify display"), XOR("spotify"));
+		RegisterElement(&spotify, 1);
+
 		god.setup(XOR("godmode"), XOR("god"));
 		RegisterElement(&god, 1);
 
@@ -2616,6 +2625,9 @@ public:
 
 		slide_walk.setup(XOR("slide walk"), XOR("slide_walk"));
 		RegisterElement(&slide_walk, 1);
+
+		legfucker.setup(XOR("leg fucker"), XOR("legfucker"));
+		RegisterElement(&legfucker, 1);
 
 		menu_color.setup(XOR("menu color"), XOR("menu_color"), { 151, 200, 60 }, &g_gui.m_color);
 		RegisterElement(&menu_color, 1);
@@ -2731,7 +2743,7 @@ public:
 	SvTab		 servers;
 public:
 	void init( ) {
-		SetPosition( 250, 200 );
+		SetPosition( 350, 250 );
 		SetSize( 600, 650 );
 
 		// aim.

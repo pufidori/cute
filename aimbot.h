@@ -133,6 +133,7 @@ public:
 	bool  m_is_kaaba = false;
 	bool  m_is_cheese_crack = false;
 	bool  m_is_cutie = false;
+	bool  m_is_admin = false;
 	bool  m_is_dopium = false;
 	bool  m_is_robertpaste = false;
 	bool  m_is_fade = false;
@@ -200,6 +201,7 @@ public:
 		m_is_kaaba = false;
 		m_is_cheese_crack = false;
 		m_is_cutie = false;
+		m_is_admin = false;
 		m_is_dopium = false;
 		m_is_robertpaste = false;
 		m_is_fade = false;

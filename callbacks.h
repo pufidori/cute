@@ -45,6 +45,7 @@ namespace callbacks {
 	bool backgroundindicalphawhatever();
 	bool autobuyon();
     void ToggleKillfeed( );
+	//void isgod();
 	void SaveHotkeys( );
 	void ConfigLoad1( );
 	void ConfigLoad2( );

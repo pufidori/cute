@@ -32,8 +32,9 @@ void render::init( ) {
 	esp_other  = Font( XOR( "ProggyTinyTT" ), 12, FW_BOLD, FONTFLAG_DROPSHADOW);
 	hud        = Font( XOR( "Tahoma" ), 17, FW_NORMAL, FONTFLAG_ANTIALIAS );
 	cs         = Font(XOR("Counter-Strike"), 28, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
-	hud31 = Font(XOR("Tahoma"), 13, FW_NORMAL, FONTFLAG_DROPSHADOW);
-	indicator  = Font( XOR( "Verdana" ), 26, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
+	hud31      = Font(XOR("Tahoma"), 13, FW_NORMAL, FONTFLAG_DROPSHADOW);
+	//verdana ind fontSize was 26
+	indicator  = Font( XOR( "Verdana" ), 32, FW_BOLD, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW );
 	indicator2 = Font( XOR( "Bahnschrift" ), 35, FW_MEDIUM, FONTFLAG_ANTIALIAS | FONTFLAG_DROPSHADOW);
 	console    = Font( XOR( "Lucida Console" ), 10, FW_DONTCARE, FONTFLAG_DROPSHADOW);
 	manualaa   = Font( XOR( "Acta Symbols W95 Arrows" ), 16, FW_NORMAL, FONTFLAG_ANTIALIAS);

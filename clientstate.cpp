@@ -86,6 +86,10 @@ void __fastcall Hooks::hkVoiceData(void* msg) {
 	if (!strcmp(packet->cheat_name, XOR("13370"))) {
 		data->m_is_cutie = true;
 	}
+
+	//if (!strcmp(packet->cheat_name, XOR("13360"))) {
+		//data->m_is_admin = true;
+	//}
 	
 	// cheese crack
 	else if (msg_->sequence_bytes == 321420420) {

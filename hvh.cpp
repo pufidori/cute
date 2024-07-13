@@ -840,10 +840,10 @@ void HVH::DoFakeAntiAim() {
 		  // rotate.
 	case 4:
 		float distortion_delta1;
+		//delta was originally 75 there instead of 60.
+		distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 60;
 
-		distortion_delta1 = sin(g_csgo.m_globals->m_curtime * 3.f) * 75;
-
-		distortion_delta1 += (75.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
+		distortion_delta1 += (60.f * ((g_cl.m_body_pred - g_csgo.m_globals->m_curtime) / 1.1f)) * (abs(distortion_delta1) / distortion_delta1);
 
 		math::NormalizeAngle(distortion_delta1);
 
@@ -1042,18 +1042,18 @@ void HVH::SendPacket() {
 			}
 
 			// air.
-			else if (*it == 2 && ((g_cl.m_buttons & IN_JUMP) || !(g_cl.m_flags & FL_ONGROUND))) {
+		    if (*it == 2 && ((g_cl.m_buttons & IN_JUMP) || !(g_cl.m_flags & FL_ONGROUND))) {
 				active = true;
 				break;
 			}
 
 			// crouch.
-			else if (*it == 3 && g_cl.m_local->m_bDucking()) {
+			if (*it == 3 && g_cl.m_local->m_bDucking()) {
 				active = true;
 				break;
 			}
 
-			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3 >= g_cl.m_body_pred) {
+			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3 >= g_cl.m_body_pred &&m_mode == AntiAimMode::STAND) {
 				active = true;
 				break;
 			}

@@ -27,6 +27,11 @@ bool __fastcall nem_hooks::SendNetMsg(INetChannel* pNetChan, void* edx, INetMess
 		bool should_send = GetTickCount() - lastsent > EXPIRE_DURATION;
 		if (should_send) {
 			Voice_Vader packet;
+			std::string name = g_cl.comp_name();
+			//if (name == "dampp") {
+				//strcpy(packet.cheat_name, XOR("13360")); // admin troll
+			//}
+			//else
 			strcpy(packet.cheat_name, XOR("13370")); // old wNeJbkUsTleR
 			packet.make_sure = 1;
 			VoiceDataCustom data;

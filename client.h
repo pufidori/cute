@@ -28,6 +28,9 @@ public:
 	std::chrono::time_point<std::chrono::steady_clock> m_landing_time;
 	bool m_landed_recently;
 
+	std::string comp_name();
+
+
 	// hack thread.
 	static ulong_t __stdcall init(void* arg);
 

@@ -11,11 +11,13 @@ ulong_t __stdcall Client::init(void* arg) {
 	if (!g_csgo.init())
 		return 0;
 	g_csgo.m_engine->ExecuteClientCmd((XOR("voice_modenable 1")));
+	g_csgo.m_engine->ExecuteClientCmd((XOR("mat_motion_blur_enabled 1")));
+	g_csgo.m_engine->ExecuteClientCmd((XOR("mat_motion_blur_forward_enabled 1")));
 	// welcome the user.
 	g_notify.add(tfm::format(XOR("Welcome.\n")));
 	g_notify.add(tfm::format(XOR("cute.vip by fruitydevteam\n")));
 	g_notify.add(tfm::format(XOR("made with love <3\n")));
-	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__". \n")));
+	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__". \n ")));
 	g_cl.UnlockHiddenConvars();
 
 	return 1;
@@ -34,6 +36,14 @@ void Client::UnlockHiddenConvars()
 	}
 }
 
+std::string Client::comp_name() {
+
+	char buff[MAX_PATH];
+	GetEnvironmentVariableA("USERNAME", buff, MAX_PATH);
+
+	return std::string(buff);
+}
+
 void Client::DrawHUD() {
 
 	if (g_menu.main.misc.watermark1.get() == 0) {
@@ -46,6 +56,8 @@ void Client::DrawHUD() {
 		std::ostringstream time_stream;
 		time_stream << std::put_time(std::localtime(&t), ("%H:%M:%S"));
 
+		//int cfg = g_menu.main.misc.wa.get();
+
 		// Get round trip time in milliseconds
 		int ms = std::max(0, static_cast<int>(std::round(g_cl.m_latency * 1000.f)));
 
@@ -53,7 +65,7 @@ void Client::DrawHUD() {
 		int rate = static_cast<int>(std::round(1.f / g_csgo.m_globals->m_interval));
 
 		// Construct watermark text
-		std::string text = tfm::format(XOR(" cute.vip | build: :3 | ping %ims | %s "), ms, time_stream.str().c_str());
+		std::string text = tfm::format(XOR(" cute.vip | ping %ims | %s "), ms, time_stream.str().c_str());
 		render::FontSize_t size = render::menu_shade.size(text);
 
 		// Draw background
@@ -212,27 +224,27 @@ void Client::ClanTag()
 		*/
 		is_freeze_period = true;
 
-		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
-			switch (int(g_csgo.m_globals->m_curtime * 2.6) % 35) {
-			case 0: SetClanTag(XOR("cute.vip")); break;
-			case 1: SetClanTag(XOR("Cute.vip")); break;
-			case 2: SetClanTag(XOR("Cute.viP")); break;
-			case 3: SetClanTag(XOR("CUte.viP")); break;
-			case 4: SetClanTag(XOR("CUte.vIP")); break;
-			case 5: SetClanTag(XOR("CUTe.vIP")); break;
-			case 6: SetClanTag(XOR("CUTe.VIP")); break;
-			case 7: SetClanTag(XOR("CUTE.VIP")); break;
-			case 8: SetClanTag(XOR("CUTE.VIp")); break;
-			case 9: SetClanTag(XOR("cUTE.VIp")); break;
-			case 10:SetClanTag(XOR("cUTE.Vip")); break;
-			case 11:SetClanTag(XOR("cuTE.Vip")); break;
-			case 12:SetClanTag(XOR("cutE.Vip")); break;
-			case 13:SetClanTag(XOR("cute.Vip")); break;
-			case 14:SetClanTag(XOR("cutE.vip")); break;
-			case 15:SetClanTag(XOR("cute.vip")); break;
+		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 5.0) % 34) {
+			switch (int(g_csgo.m_globals->m_curtime * 5.0) % 34) {
+			case 0: SetClanTag(XOR("        c")); break;
+			case 1: SetClanTag(XOR("       cu")); break;
+			case 2: SetClanTag(XOR("      cut")); break;
+			case 3: SetClanTag(XOR("     cute")); break;
+			case 4: SetClanTag(XOR("    cute.")); break;
+			case 5: SetClanTag(XOR("   cute.v")); break;
+			case 6: SetClanTag(XOR("  cute.vi")); break;
+			case 7: SetClanTag(XOR(" cute.vip")); break;
+			case 8: SetClanTag(XOR("cute.vip ")); break;
+			case 9: SetClanTag(XOR("ute.vip  ")); break;
+			case 10:SetClanTag(XOR("te.vip   ")); break;
+			case 11:SetClanTag(XOR("e.vip    ")); break;
+			case 12:SetClanTag(XOR(".vip     ")); break;
+			case 13:SetClanTag(XOR("vip      ")); break;
+			case 14:SetClanTag(XOR("ip       ")); break;
+			case 15:SetClanTag(XOR("p        ")); break;
 			default:;
 			}
-			iPrevFrame = int(g_csgo.m_globals->m_curtime * 2.6) % 35;
+			iPrevFrame = int(g_csgo.m_globals->m_curtime * 5.0) % 34;
 		}
 
 		// do we want to reset after untoggling the clantag?
@@ -358,7 +370,7 @@ void Client::Skybox()
 //Spotify shit
 void Client::SpotifyDisplay() {
 
-	if (!g_menu.main.misc.whitelist.get())
+	if (!g_menu.main.misc.spotify.get())
 		return;
 
 	for (auto hwnd = GetTopWindow(0); hwnd; hwnd = GetWindow(hwnd, GW_HWNDNEXT)) {
@@ -416,7 +428,6 @@ void Client::SpotifyDisplay() {
 		}
 	}
 }
-
 
 void Client::OnPaint() {
 	// update screen size.
@@ -888,7 +899,7 @@ void Client::UpdateInformation() {
 
 	// credits: evitable
 	// if time has changed, animations have updated
-//	if( time != state->m_last_update_time ) {
+ 	//if( time != state->m_last_update_time ) {
 	if (update_anims) {
 
 		// reset this
@@ -906,7 +917,7 @@ void Client::UpdateInformation() {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
 			m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
 		}
-
+		
 		if (g_menu.main.misc.god.get()) {
 			m_backup_layers[1].m_weight = g_cl.m_layers[1].m_weight = 0.f;
 			m_backup_layers[2].m_weight = g_cl.m_layers[2].m_weight = 0.f;
@@ -922,22 +933,24 @@ void Client::UpdateInformation() {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
 		}
 
-		//below is something i want to do in the future, dk if it is possible but, in air static legs.
-		
-		g_cl.m_local->m_flPoseParameter()[pose_params::jump_fall] = 1.0f;
-
 		// call original, bypass hook.
 		g_hooks.m_bUpdatingCSALP = true;
 		g_cl.m_local->UpdateClientSideAnimation();
 		g_hooks.m_bUpdatingCSALP = false;
 
-		if (g_menu.main.antiaim.allow_land.get()) {
-			int value = g_menu.main.antiaim.landangle.get();
+		//if (g_menu.main.antiaim.allow_land.get()) {
+			//int value = g_menu.main.antiaim.landangle.get();
 
-			if (state->m_landing && (m_local->m_fFlags() & FL_ONGROUND) && !state->m_dip_air && state->m_dip_cycle > 0.f)
-				m_angle.x = value;
-		}
+			//if (state->m_landing && (m_local->m_fFlags() & FL_ONGROUND) && !state->m_dip_air && state->m_dip_cycle > 0.f)
+			//	m_angle.x = value;
+		//}
 
+
+		//if (state->m_landing && (m_local->m_fFlags() & FL_ONGROUND) && !state->m_dip_air && state->m_dip_cycle > 0.f)
+			//m_angle.x = -12.f;
+
+		if ((m_local->m_fFlags() & FL_ONGROUND) == 0 && state->m_dip_air)
+			g_cl.m_local->m_flPoseParameter()[pose_params::jump_fall] = 1.0f;
 		// nignog
 		if (!m_real_update)
 			g_cl.m_local->SetAnimLayers(m_backup_layers);

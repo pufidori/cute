@@ -332,10 +332,6 @@ void events::player_death(IGameEvent* evt) {
 	if (g_menu.main.misc.killsay.get()) {
 		if (g_cl.m_local->index() == attacker && g_cl.m_local->index() != index) {
 
-			//if (g_menu.main.misc.farts.get()) {
-				//g_csgo.m_engine->ExecuteClientCmd(XOR(""));
-			//}
-
 			switch (rand() % 50) {
 			case 0:
 				g_csgo.m_engine->ExecuteClientCmd(XOR("say im so cute"));
@@ -343,8 +339,151 @@ void events::player_death(IGameEvent* evt) {
 			case 1:
 				g_csgo.m_engine->ExecuteClientCmd(XOR("say cute tap"));
 				break;
+			case 2:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say oops, too cute for you"));
+				break;
+			case 3:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say aww, did I hurt your feelings?"));
+				break;
+			case 4:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say stay mad, I'm adorable"));
+				break;
+			case 5:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say too cute to handle"));
+				break;
+			case 6:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness overload!"));
+				break;
+			case 7:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness strikes again"));
+				break;
+			case 8:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say did the cuteness blind you?"));
+				break;
+			case 9:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say whoops, my bad! Too cute!"));
+				break;
+			case 10:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say can't handle my cuteness"));
+				break;
+			case 11:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cute but deadly"));
+				break;
+			case 12:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie on the loose!"));
+				break;
+			case 13:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness got you down?"));
+				break;
+			case 14:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say better luck against someone less cute"));
+				break;
+			case 15:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cute and lethal"));
+				break;
+			case 16:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness > your skill"));
+				break;
+			case 17:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say too cute to lose"));
+				break;
+			case 18:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness reigns supreme"));
+				break;
+			case 19:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say you've been cutied"));
+				break;
+			case 20:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie power!"));
+				break;
+			case 21:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say feeling cute, might frag again"));
+				break;
+			case 22:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say did my cuteness distract you?"));
+				break;
+			case 23:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say too cute for this game"));
+				break;
+			case 24:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness overload incoming"));
+				break;
+			case 25:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say oh no, too cute to handle"));
+				break;
+			case 26:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness wins"));
+				break;
+			case 27:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say sorry, I'm just too cute"));
+				break;
+			case 28:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness strikes again!"));
+				break;
+			case 29:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie pie strikes"));
+				break;
+			case 30:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say my cuteness is too strong"));
+				break;
+			case 31:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cute but still deadly"));
+				break;
+			case 32:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness always wins"));
+				break;
+			case 33:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say can't resist the cuteness"));
+				break;
+			case 34:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say I'm too cute for this!"));
+				break;
+			case 35:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness wins again"));
+				break;
+			case 36:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie attack!"));
+				break;
+			case 37:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie fragged you"));
+				break;
+			case 38:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness victory"));
+				break;
+			case 39:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say I'm cute and dangerous"));
+				break;
+			case 40:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say too cute, sorry"));
+				break;
+			case 41:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness attack"));
+				break;
+			case 42:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say too cute to fail"));
+				break;
+			case 43:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cutie coming through"));
+				break;
+			case 44:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness got you?"));
+				break;
+			case 45:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say I'm just too cute"));
+				break;
+			case 46:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say can't beat the cuteness"));
+				break;
+			case 47:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness domination"));
+				break;
+			case 48:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say cuteness reigns"));
+				break;
+			case 49:
+				g_csgo.m_engine->ExecuteClientCmd(XOR("say stay cute, stay winning"));
+				break;
 			}
-
 		}
 	}
 }

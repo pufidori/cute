@@ -463,7 +463,6 @@ void Movement::AutoPeek(CUserCmd* cmd, float wish_yaw) {
 	}
 }
 
-
 void Movement::accelerate(const CUserCmd& cmd, const vec3_t& wishdir, const float wishspeed, vec3_t& velocity, float acceleration) {
 	const auto cur_speed = velocity.dot(wishdir);
 
@@ -837,7 +836,6 @@ void Movement::AutoStop() {
 
 	WeaponInfo* wpn_data = wpn->GetWpnData();
 
-
 	if (!wpn_data)
 		return;
 
@@ -847,14 +845,23 @@ void Movement::AutoStop() {
 	if (full_stop || g_cl.m_weapon_id == WEAPON_ZEUS || !(g_cl.m_flags & FL_ONGROUND))
 		max_speed = 25.f;
 
+	// Check if we need to stop completely or slow down
 	if (g_cl.m_local->m_vecVelocity().length_2d() < max_speed) {
-
-		if (full_stop)
-			g_cl.m_cmd->m_forward_move = g_cl.m_cmd->m_side_move = 0.f;
-		else
+		if (full_stop) {
+			// Full stop, set movement commands to zero
+			g_cl.m_cmd->m_forward_move = 0.f;
+			g_cl.m_cmd->m_side_move = 0.f;
+			// Apply brake by reversing the movement direction
+			g_cl.m_cmd->m_forward_move -= g_cl.m_local->m_vecVelocity().x * g_cl.m_local->m_surfaceFriction() * 20.f;
+			g_cl.m_cmd->m_side_move -= g_cl.m_local->m_vecVelocity().y * g_cl.m_local->m_surfaceFriction() * 20.f;
+		}
+		else {
+			// Clamp movement speed to max_speed
 			ClampMovementSpeed(max_speed);
+		}
 	}
 	else {
+		// Apply braking force to nullify the velocity
 		NullVelocity();
 	}
 }
@@ -931,38 +938,71 @@ void Movement::FakeWalk( ) {
 }
 
 void Movement::MoonWalk(CUserCmd* cmd) {
+	// Check if the player is on a ladder
 	if (g_cl.m_local->m_MoveType() == MOVETYPE_LADDER)
 		return;
 
 	// slide walk
 	g_cl.m_cmd->m_buttons |= IN_BULLRUSH;
 
-	if (g_menu.main.misc.slide_walk.get()) {
-		if (cmd->m_side_move < 0.f)
-		{
+	// Check if the "legfucker" setting is enabled
+	if (g_menu.main.misc.legfucker.get()) {
+		// Get current time (assuming there's a function to get the current game time in seconds)
+		float currentTime = g_csgo.m_globals->m_curtime;
+
+		// Check if it's time to toggle
+		if (currentTime > m_nextToggleTime) {
+			// Toggle slide walk state
+			m_toggleState = !m_toggleState;
+
+			// Set the next toggle time (adjust the interval as needed, e.g., 0.1 seconds)
+			m_nextToggleTime = currentTime + 0.1f;
+		}
+
+		// Apply the slide walk effect based on the toggle state
+		if (m_toggleState) {
+			if (cmd->m_side_move < 0.f) {
+				cmd->m_buttons |= IN_MOVERIGHT;
+				cmd->m_buttons &= ~IN_MOVELEFT;
+			}
+
+			if (cmd->m_side_move > 0.f) {
+				cmd->m_buttons |= IN_MOVELEFT;
+				cmd->m_buttons &= ~IN_MOVERIGHT;
+			}
+
+			if (cmd->m_forward_move > 0.f) {
+				cmd->m_buttons |= IN_BACK;
+				cmd->m_buttons &= ~IN_FORWARD;
+			}
+
+			if (cmd->m_forward_move < 0.f) {
+				cmd->m_buttons |= IN_FORWARD;
+				cmd->m_buttons &= ~IN_BACK;
+			}
+		}
+	}
+	else if (g_menu.main.misc.slide_walk.get()) {  // Original slide walk logic
+		if (cmd->m_side_move < 0.f) {
 			cmd->m_buttons |= IN_MOVERIGHT;
 			cmd->m_buttons &= ~IN_MOVELEFT;
 		}
 
-		if (cmd->m_side_move > 0.f)
-		{
+		if (cmd->m_side_move > 0.f) {
 			cmd->m_buttons |= IN_MOVELEFT;
 			cmd->m_buttons &= ~IN_MOVERIGHT;
 		}
 
-		if (cmd->m_forward_move > 0.f)
-		{
+		if (cmd->m_forward_move > 0.f) {
 			cmd->m_buttons |= IN_BACK;
 			cmd->m_buttons &= ~IN_FORWARD;
 		}
 
-		if (cmd->m_forward_move < 0.f)
-		{
+		if (cmd->m_forward_move < 0.f) {
 			cmd->m_buttons |= IN_FORWARD;
 			cmd->m_buttons &= ~IN_BACK;
 		}
 	}
-
 }
 
 void Movement::FastStop() {

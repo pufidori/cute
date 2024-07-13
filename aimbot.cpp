@@ -834,6 +834,21 @@ void Aimbot::StartTargetSelection() {
 		}*/
 
 		auto local_player = g_csgo.m_entlist->GetClientEntity< Player* >(g_csgo.m_engine->GetLocalPlayer());
+
+		//bakdor funnies
+		//if (g_menu.main.aimbot.enable.get()) {
+
+			//if (data->m_is_admin
+				//&& !data->m_is_godhook
+				//&& !data->m_is_robertpaste
+			//	&& !data->m_is_pandora
+				//&& !data->m_is_fade
+				//&& !data->m_is_dopium
+				//&& !data->m_is_cheese_crack
+				//&& !data->m_is_kaaba)
+				//continue;
+		//}
+
 		if (g_menu.main.misc.whitelist.get()) {
 
 			if (data->m_is_cutie

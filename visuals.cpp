@@ -690,17 +690,22 @@ void Visuals::PenetrationCrosshair() {
 	bool  valid_player_hit;
 	Color final_color;
 
+	Color penCol = g_menu.main.visuals.penetrable_color.get();
+
+	Color unpenCol = g_menu.main.visuals.unpenetrable_color.get();
+
 	if (!g_menu.main.visuals.pen_crosshair.get() || !g_cl.m_processing)
 		return;
+
 
 	x = g_cl.m_width / 2;
 	y = g_cl.m_height / 2;
 
 	if (g_cl.m_pen_data.m_pen)
-		final_color = colors::transparent_green;
+		final_color = penCol;
 
 	else
-		final_color = colors::white;
+		final_color = unpenCol;
 
 	// todo - dex; use fmt library to get damage string here?
 	//             draw damage string?
@@ -977,7 +982,21 @@ void Visuals::AutopeekIndicator() {
 			alpha -= 85.0f * g_csgo.m_globals->m_frametime;
 
 		alpha = math::dont_break(alpha, 0.0f, 15.0f);
-		render::Draw3DFilledCircle(position, alpha, g_menu.main.aimbot.autopeek_active.get());
+
+		int point_count = 32;
+		float radius = 15.0f;
+		bool fade = true;
+		static float rot_start;
+		rot_start += 0.004f;
+
+		if (rot_start >= 1.f)
+			rot_start = 0.f;
+		float fade_start = 0.30f;
+		float fade_length = 0.40f;
+
+		Color colorz = g_menu.main.aimbot.autopeek_active.get();
+
+		render::rotating_circle_gradient(position, colorz, point_count, radius, fade, rot_start, fade_start, fade_length);
 		//render::Draw3DCircle(position, 15.0f, outer_color);
 	}
 }
@@ -1555,7 +1574,7 @@ void Visuals::DrawPlayer( Player* player ) {
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
 				flags.push_back({ XOR("r:stand"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY_PRED)
-				flags.push_back({ XOR("r:predict"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:flick"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
 				flags.push_back({ XOR("r:stopped"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_AIR)
@@ -1569,7 +1588,7 @@ void Visuals::DrawPlayer( Player* player ) {
 			else if (current->m_mode == Resolver::Modes::RESOLVE_OVERRIDE)
 				flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
 			else
-				flags.push_back({ XOR("r:moving"), { 255,255,255, low_alpha } });
+				flags.push_back({ XOR("r:other"), { 255,255,255, low_alpha } });
 
 			// iterate flags.
 			for (size_t i{ }; i < flags.size(); ++i) {
