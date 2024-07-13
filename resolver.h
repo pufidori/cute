@@ -12,8 +12,8 @@ public:
 		RESOLVE_STOPPED_MOVING,
 		RESOLVE_NO_DATA,
 		RESOLVE_DATA,
-		RESOLVE_OVERRIDE,
-		RESOLVE_NETWORK
+		RESOLVE_OVERRIDE
+		//RESOLVE_NETWORK
 	};
 
 
@@ -25,7 +25,7 @@ public:
 	void ResolveOverride(AimPlayer* data, LagRecord* record, Player* player);
 
 	void OnBodyUpdate(Player* player, float value);
-	bool IsValidPosition(const vec3_t& position);
+	//bool IsValidPosition(const vec3_t& position);
 	float GetAwayAngle(LagRecord* record);
 
 	void MatchShot(AimPlayer* data, LagRecord* record);

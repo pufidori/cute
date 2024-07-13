@@ -1660,8 +1660,8 @@ void Visuals::DrawPlayer( Player* player ) {
 				flags.push_back({ XOR("r:none"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_WALK)
 				flags.push_back({ XOR("r:walk"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_NETWORK)
-				flags.push_back({ XOR("r:net"), { 255,255,255, low_alpha } });
+			//else if (current->m_mode == Resolver::Modes::RESOLVE_NETWORK)
+			//	flags.push_back({ XOR("r:net"), { 255,255,255, low_alpha } });
 			else if (current->m_mode == Resolver::Modes::RESOLVE_OVERRIDE)
 				flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
 			else

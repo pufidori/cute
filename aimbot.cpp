@@ -986,7 +986,7 @@ void Aimbot::think() {
 	apply();
 }
 
-bool ispeeking() {
+static bool ispeeking() {
 	ang_t view_angles;
 	g_csgo.m_engine->GetViewAngles(view_angles);
 	vec3_t forward;
@@ -1002,7 +1002,7 @@ bool ispeeking() {
 	return true;
 }
 
-bool shouldstop() {
+static bool shouldstop() {
 
 	if (!g_cl.m_weapon_fire)
 		return false;

@@ -191,25 +191,25 @@ LagRecord* Resolver::FindLastRecord(AimPlayer* data) {
 }
 
 void Resolver::OnBodyUpdate(Player* player, float value) {
-	AimPlayer* data = &g_aimbot.m_players[player->index() - 1];
+	//AimPlayer* data = &g_aimbot.m_players[player->index() - 1];
 
 	// set data.
-	data->m_old_sim = data->m_body;
-	data->m_body = value;
+	//data->m_old_sim = data->m_body;
+	//data->m_body = value;
 
-	if (player->m_vecVelocity().length_2d() > 0.1f || !(player->m_fFlags() & FL_ONGROUND)) {
-		data->m_body_proxy_updated = false;
-		data->m_body_proxy_old = value;
-		data->m_body_proxy = value;
-		return;
-	}
-
+	//if (player->m_vecVelocity().length_2d() > 0.1f || !(player->m_fFlags() & FL_ONGROUND)) {
+	//	data->m_body_proxy_updated = false;
+	//	data->m_body_proxy_old = value;
+	//	data->m_body_proxy = value;
+	//	return;
+//	}
+//
 	// lol
-	if (fabsf(math::AngleDiff(value, data->m_body_proxy)) >= 15.f) {
-		data->m_body_proxy_old = data->m_body_proxy;
-		data->m_body_proxy = value;
-		data->m_body_proxy_updated = true;
-	}
+//	if (fabsf(math::AngleDiff(value, data->m_body_proxy)) >= 15.f) {
+	//	data->m_body_proxy_old = data->m_body_proxy;
+	//	data->m_body_proxy = value;
+	//	data->m_body_proxy_updated = true;
+//	}
 }
 
 float Resolver::GetAwayAngle(LagRecord* record) {
@@ -660,13 +660,13 @@ void Resolver::ResolveStand(AimPlayer* data, LagRecord* record) {
 	if (!nearest_entity)
 		return;
 
-	if ((data->m_is_cheese_crack || data->m_is_kaaba) && data->m_network_index <= 1) {
-		record->m_eye_angles.y = data->m_networked_angle;
-		record->m_resolver_color = { 155, 210, 100 };
-		record->m_resolver_mode = "NETWORKED";
-		record->m_mode = Modes::RESOLVE_NETWORK;
-		return;
-	}
+	//if ((data->m_is_cheese_crack || data->m_is_kaaba) && data->m_network_index <= 1) {
+		//record->m_eye_angles.y = data->m_networked_angle;
+		//record->m_resolver_color = { 155, 210, 100 };
+	//	record->m_resolver_mode = "NETWORKED";
+	//	record->m_mode = Modes::RESOLVE_NETWORK;
+	//	return;
+	//}
 
 	const float away = GetAwayAngle(record);
 

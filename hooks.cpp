@@ -146,7 +146,7 @@ void Body_proxy(CRecvProxyData* data, Address ptr, Address out) {
 		Player* player = ptr.as< Player* >();
 
 		// store data about the update.
-		g_resolver.OnBodyUpdate(player, data->m_Value.m_Float);
+	//	g_resolver.OnBodyUpdate(player, data->m_Value.m_Float);
 	}
 
 	// call original proxy.
