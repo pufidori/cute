@@ -601,8 +601,8 @@ public:
 	// col2.
 	Checkbox skeleton;
 	Colorpicker   skeleton_enemy;
-	Checkbox skeletonS;
-	Colorpicker   skeletonSC;
+	//Checkbox skeletonS;
+	//Colorpicker   skeletonSC;
 	MultiDropdown rainbow_visuals;
 	Checkbox glow;
 	Colorpicker   glow_enemy;
@@ -2426,6 +2426,7 @@ public:
 	Keybind fakewalk;
 	Dropdown buy1;
 	Dropdown buy2;
+	Checkbox hitmarker2;
 	MultiDropdown buy3;
 	Checkbox      weaponpurchases;
 	Checkbox      logdamagedealt;
@@ -2538,6 +2539,9 @@ public:
 
 		zeusbot.setup(XOR("zeusbot"), XOR("zeusbot"));
 		RegisterElement(&zeusbot);
+
+		hitmarker2.setup(XOR("og hitmarker"), XOR("hitmarker2"));
+		RegisterElement(&hitmarker2);
 
 		enablefakewalk.setup(XOR("slow motion"), XOR("enablefakewalk"));
 		RegisterElement(&enablefakewalk);

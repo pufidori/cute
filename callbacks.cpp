@@ -84,9 +84,9 @@ bool callbacks::skeleton() {
 	return g_menu.main.players.skeleton.get();
 }
 
-bool callbacks::skeletonS() {
-	return g_menu.main.players.skeletonS.get();
-}
+//bool callbacks::skeletonS() {
+	//return g_menu.main.players.skeletonS.get();
+//}
 
 bool callbacks::outofpov() {
 	return g_menu.main.players.offscreen.get();

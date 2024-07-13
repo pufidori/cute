@@ -256,6 +256,83 @@ void Visuals::hitmarker_world() {
 
 }
 
+void Visuals::Hitmarker2() {
+
+	static auto cross = g_csgo.m_cvar->FindVar(HASH("weapon_debug_spread_show"));
+	cross->SetValue(g_menu.main.visuals.force_xhair.get() && !g_cl.m_local->m_bIsScoped() ? 3 : 0);
+	if (!g_menu.main.misc.hitmarker2.get())
+		return;
+
+	if (g_csgo.m_globals->m_curtime > m_hit_end)
+		return;
+
+	if (m_hit_duration <= 0.f)
+		return;
+
+	float complete = (g_csgo.m_globals->m_curtime - m_hit_start) / m_hit_duration;
+	int x = g_cl.m_width,
+		y = g_cl.m_height,
+		alpha = (1.f - complete) * 240;
+
+	constexpr int line{ 6 };
+
+	/*render::line( x - line, y - line, x - ( line / 4 ), y - ( line / 4 ), { 200, 200, 200, alpha } );
+	render::line( x - line, y + line, x - ( line / 4 ), y + ( line / 4 ), { 200, 200, 200, alpha } );
+	render::line( x + line, y + line, x + ( line / 4 ), y + ( line / 4 ), { 200, 200, 200, alpha } );
+	render::line( x + line, y - line, x + ( line / 4 ), y - ( line / 4 ), { 200, 200, 200, alpha } );*/
+	//render::line(x / 2 - 10, y / 2 - 10, x / 2 - 5, y / 2 - 5, { 200, 200, 200, alpha });
+	//render::line(x / 2 - 10, y / 2 + 10, x / 2 - 5, y / 2 + 5, { 200, 200, 200, alpha });
+	//render::line(x / 2 + 5, y / 2 - 5, x / 2 + 10, y / 2 - 10, { 200, 200, 200, alpha });
+	//render::line(x / 2 + 5, y / 2 + 5, x / 2 + 10, y / 2 + 10, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 6, y / 2 + 6, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 7, y / 2 + 7, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 8, y / 2 + 8, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 9, y / 2 + 9, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 10, y / 2 + 10, 1, 1, { 200, 200, 200, alpha });
+
+	render::rect_filled(x / 2 - 6, y / 2 - 6, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 7, y / 2 - 7, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 8, y / 2 - 8, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 9, y / 2 - 9, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 10, y / 2 - 10, 1, 1, { 200, 200, 200, alpha });
+
+	render::rect_filled(x / 2 - 6, y / 2 + 6, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 7, y / 2 + 7, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 8, y / 2 + 8, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 9, y / 2 + 9, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 - 10, y / 2 + 10, 1, 1, { 200, 200, 200, alpha });
+
+	render::rect_filled(x / 2 + 6, y / 2 - 6, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 7, y / 2 - 7, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 8, y / 2 - 8, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 9, y / 2 - 9, 1, 1, { 200, 200, 200, alpha });
+	render::rect_filled(x / 2 + 10, y / 2 - 10, 1, 1, { 200, 200, 200, alpha });
+
+	// damage indicator above head
+	std::string out = tfm::format(XOR("%i\n"), g_shots.iHitDmg);
+
+	for (int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i) {
+		Player* player = g_csgo.m_entlist->GetClientEntity< Player* >(i);
+
+		if (render::WorldToScreen(g_shots.iPlayermins, g_shots.iPlayerbottom) && render::WorldToScreen(g_shots.iPlayermaxs, g_shots.iPlayertop))
+		{
+			// get the esp box info >_<
+			Rect box;
+			box.h = g_shots.iPlayerbottom.y - g_shots.iPlayertop.y;
+			box.w = box.h / 2.f;
+			box.x = g_shots.iPlayerbottom.x - (box.w / 2.f);
+			box.y = g_shots.iPlayerbottom.y - box.h;
+
+			// text damage
+			if (!g_shots.iHeadshot)
+				render::indicator.string(box.x + box.w / 2, box.y - render::esp.m_size.m_height - 10, { 255, 0, 0, alpha }, out, render::ALIGN_CENTER);
+
+			if (g_shots.iHeadshot == true)
+				render::indicator.string(box.x + box.w / 2, box.y - render::esp.m_size.m_height - 20, { 30, 180, 30, alpha }, "HEADSHOT", render::ALIGN_CENTER);
+		}
+	}
+}
+
 void Visuals::NoSmoke() {
 
 	if (!smoke1)
@@ -2103,20 +2180,10 @@ void Visuals::DrawSkeleton(Player* player, int opacity) {
 	const model_t* model;
 	studiohdr_t* hdr;
 	mstudiobone_t* bone;
-	int parent;
-	BoneArray matrix[128];
-	vec3_t bone_pos, parent_pos;
-	vec2_t bone_pos_screen, parent_pos_screen;
-
-	// Determine if the player is the local player
-	bool is_local = (player == g_cl.m_local);
-
-	// Check if skeleton rendering is toggled on for the respective player
-	if (is_local && !g_menu.main.players.skeletonS.get())
-		return;
-
-	if (!is_local && !g_menu.main.players.skeleton_enemy.get())
-		return;
+	int           parent;
+	BoneArray     matrix[128];
+	vec3_t        bone_pos, parent_pos;
+	vec2_t        bone_pos_screen, parent_pos_screen;
 
 	// get player's model.
 	model = player->GetModel();
@@ -2130,6 +2197,9 @@ void Visuals::DrawSkeleton(Player* player, int opacity) {
 
 	// get bone matrix.
 	if (!player->SetupBones(matrix, 128, BONE_USED_BY_ANYTHING, g_csgo.m_globals->m_curtime))
+		return;
+
+	if (player->dormant())
 		return;
 
 	for (int i{ }; i < hdr->m_num_bones; ++i) {
@@ -2147,12 +2217,12 @@ void Visuals::DrawSkeleton(Player* player, int opacity) {
 		matrix->get_bone(bone_pos, i);
 		matrix->get_bone(parent_pos, parent);
 
-		// Determine the color based on if the player is local or enemy
-		Color clr = is_local ? g_menu.main.players.skeletonSC.get() : g_menu.main.players.skeleton_enemy.get();
+		Color clr = player->enemy(g_cl.m_local) ? g_menu.main.players.skeleton_enemy.get() : g_menu.main.players.skeleton.get();
+		clr.a() = opacity;
 
 		// world to screen both the bone parent bone then draw.
 		if (render::WorldToScreen(bone_pos, bone_pos_screen) && render::WorldToScreen(parent_pos, parent_pos_screen))
-			render::line(bone_pos_screen.x, bone_pos_screen.y, parent_pos_screen.x, parent_pos_screen.y, determine_clr(player, clr, opacity).malpha(clr.a()));
+			render::line(bone_pos_screen.x, bone_pos_screen.y, parent_pos_screen.x, parent_pos_screen.y, clr);
 	}
 }
 

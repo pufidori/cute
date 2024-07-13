@@ -156,6 +156,7 @@ public:
 	void hitmarker_world( );
 	void NoSmoke( );
 	void think( );
+    void Hitmarker2();
 	void Spectators( );
 	void StatusIndicators( );
 	void ImpactData();
