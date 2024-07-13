@@ -937,6 +937,7 @@ void Movement::FakeWalk( ) {
 	}
 }
 
+
 void Movement::MoonWalk(CUserCmd* cmd) {
 	// Check if the player is on a ladder
 	if (g_cl.m_local->m_MoveType() == MOVETYPE_LADDER)
@@ -955,8 +956,8 @@ void Movement::MoonWalk(CUserCmd* cmd) {
 			// Toggle slide walk state
 			m_toggleState = !m_toggleState;
 
-			// Set the next toggle time (adjust the interval as needed, e.g., 0.1 seconds)
-			m_nextToggleTime = currentTime + 0.1f;
+			// Set the next toggle time (adjust the interval as needed, e.g., 0.05 seconds for faster toggling)
+			m_nextToggleTime = currentTime + 0.05f;
 		}
 
 		// Apply the slide walk effect based on the toggle state
@@ -979,6 +980,28 @@ void Movement::MoonWalk(CUserCmd* cmd) {
 			if (cmd->m_forward_move < 0.f) {
 				cmd->m_buttons |= IN_FORWARD;
 				cmd->m_buttons &= ~IN_BACK;
+			}
+		}
+		else {
+			// Ensure buttons are reset when toggle state is off to return legs to normal
+			if (cmd->m_side_move < 0.f) {
+				cmd->m_buttons &= ~IN_MOVERIGHT;
+				cmd->m_buttons |= IN_MOVELEFT;
+			}
+
+			if (cmd->m_side_move > 0.f) {
+				cmd->m_buttons &= ~IN_MOVELEFT;
+				cmd->m_buttons |= IN_MOVERIGHT;
+			}
+
+			if (cmd->m_forward_move > 0.f) {
+				cmd->m_buttons &= ~IN_BACK;
+				cmd->m_buttons |= IN_FORWARD;
+			}
+
+			if (cmd->m_forward_move < 0.f) {
+				cmd->m_buttons &= ~IN_FORWARD;
+				cmd->m_buttons |= IN_BACK;
 			}
 		}
 	}
