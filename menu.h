@@ -601,6 +601,8 @@ public:
 	// col2.
 	Checkbox skeleton;
 	Colorpicker   skeleton_enemy;
+	Checkbox skeletonS;
+	Colorpicker   skeletonSC;
 	MultiDropdown rainbow_visuals;
 	Checkbox glow;
 	Colorpicker   glow_enemy;
@@ -2626,7 +2628,7 @@ public:
 		slide_walk.setup(XOR("slide walk"), XOR("slide_walk"));
 		RegisterElement(&slide_walk, 1);
 
-		legfucker.setup(XOR("leg fucker"), XOR("legfucker"));
+		legfucker.setup(XOR("jeffrey eminem step"), XOR("legfucker"));
 		RegisterElement(&legfucker, 1);
 
 		menu_color.setup(XOR("menu color"), XOR("menu_color"), { 151, 200, 60 }, &g_gui.m_color);

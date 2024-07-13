@@ -911,11 +911,12 @@ void Client::UpdateInformation() {
 		// set the nointerp flag.
 		if (!g_menu.main.misc.interpolation.get())
 			g_cl.m_local->m_fEffects() |= EF_NOINTERP;
-
+		CCSGOPlayerAnimState* anim_state = m_player->m_PlayerAnimState();
 		// remove body lean; also inair foot fix
 		if (g_menu.main.misc.bodeeeelean.get()) {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
 			m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
+		//	0.f, anim_state->m_foot_yaw, 0.f;
 		}
 		
 		if (g_menu.main.misc.god.get()) {

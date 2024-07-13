@@ -333,12 +333,12 @@ public:
 	void StripAttack();
 	void think();
 	void find();
-	bool CanHit(vec3_t start, vec3_t end, LagRecord* record, int box, bool in_shot, BoneArray* bones);
+	//bool CanHit(vec3_t start, vec3_t end, LagRecord* record, int box, bool in_shot, BoneArray* bones);
 	bool CheckHitchance(Player* player, int hitbox, const ang_t& angle);
 	void apply();
 	void NoSpread();
 	bool CanHitRecordHead(LagRecord* record);
-	std::string TranslateResolverMode(int iMode);
+	//std::string TranslateResolverMode(int iMode);
 	void StartTargetSelection();
 	void FinishTargetSelection();
 	// knifebot.

@@ -946,66 +946,20 @@ void Movement::MoonWalk(CUserCmd* cmd) {
 	// slide walk
 	g_cl.m_cmd->m_buttons |= IN_BULLRUSH;
 
-	// Check if the "legfucker" setting is enabled
-	if (g_menu.main.misc.legfucker.get()) {
-		// Get current time (assuming there's a function to get the current game time in seconds)
-		float currentTime = g_csgo.m_globals->m_curtime;
+	// Get current time (assuming there's a function to get the current game time in seconds)
+	float currentTime = g_csgo.m_globals->m_curtime;
 
-		// Check if it's time to toggle
-		if (currentTime > m_nextToggleTime) {
-			// Toggle slide walk state
-			m_toggleState = !m_toggleState;
+	// Check if it's time to toggle
+	if (currentTime > m_nextToggleTime) {
+		// Toggle slide walk state
+		m_toggleState = ~m_toggleState;
 
-			// Set the next toggle time (adjust the interval as needed, e.g., 0.05 seconds for faster toggling)
-			m_nextToggleTime = currentTime + 0.05f;
-		}
-
-		// Apply the slide walk effect based on the toggle state
-		if (m_toggleState) {
-			if (cmd->m_side_move < 0.f) {
-				cmd->m_buttons |= IN_MOVERIGHT;
-				cmd->m_buttons &= ~IN_MOVELEFT;
-			}
-
-			if (cmd->m_side_move > 0.f) {
-				cmd->m_buttons |= IN_MOVELEFT;
-				cmd->m_buttons &= ~IN_MOVERIGHT;
-			}
-
-			if (cmd->m_forward_move > 0.f) {
-				cmd->m_buttons |= IN_BACK;
-				cmd->m_buttons &= ~IN_FORWARD;
-			}
-
-			if (cmd->m_forward_move < 0.f) {
-				cmd->m_buttons |= IN_FORWARD;
-				cmd->m_buttons &= ~IN_BACK;
-			}
-		}
-		else {
-			// Ensure buttons are reset when toggle state is off to return legs to normal
-			if (cmd->m_side_move < 0.f) {
-				cmd->m_buttons &= ~IN_MOVERIGHT;
-				cmd->m_buttons |= IN_MOVELEFT;
-			}
-
-			if (cmd->m_side_move > 0.f) {
-				cmd->m_buttons &= ~IN_MOVELEFT;
-				cmd->m_buttons |= IN_MOVERIGHT;
-			}
-
-			if (cmd->m_forward_move > 0.f) {
-				cmd->m_buttons &= ~IN_BACK;
-				cmd->m_buttons |= IN_FORWARD;
-			}
-
-			if (cmd->m_forward_move < 0.f) {
-				cmd->m_buttons &= ~IN_FORWARD;
-				cmd->m_buttons |= IN_BACK;
-			}
-		}
+		// Set the next toggle time (adjust the interval as needed, e.g., 0.1 seconds)
+		m_nextToggleTime = currentTime + 0.25f;
 	}
-	else if (g_menu.main.misc.slide_walk.get()) {  // Original slide walk logic
+
+	// Apply the slide walk effect based on the toggle state
+	if (m_toggleState) {
 		if (cmd->m_side_move < 0.f) {
 			cmd->m_buttons |= IN_MOVERIGHT;
 			cmd->m_buttons &= ~IN_MOVELEFT;

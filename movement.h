@@ -18,6 +18,10 @@ public:
 	vec3_t start_position = vec3_t(0.0f, 0.0f, 0.0f);
 	bool   fired_shot = false;
 
+	int m_toggleState = 0;
+	float m_nextToggleTime = 0.0f;
+
+
 public:
 	void JumpRelated( );
 	void Strafe( );
@@ -34,8 +38,6 @@ public:
 	void modify_move(CUserCmd cmd, vec3_t velocity);
 	void predict_move(const CUserCmd cmd, vec3_t velocity);
 
-	int m_toggleState = 0;
-	float m_nextToggleTime = 0.0f;
 	void MoonWalk(CUserCmd* cmd);
 
 	void FakeWalk( );

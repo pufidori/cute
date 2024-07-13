@@ -14,6 +14,7 @@ namespace callbacks {
 	bool nameon();
 	bool weaponiconon();
 	bool skeleton();
+	bool skeletonS();
 	bool outofpov();
 	bool soundesp();
 	bool lbytimeron();

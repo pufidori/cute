@@ -1561,7 +1561,7 @@ void Visuals::DrawPlayer( Player* player ) {
 
 			if (*it == 10) {
 
-				if ( data->m_is_cutie || data->m_uses_cutie)
+				if (data->m_is_cutie)
 					flags.push_back({ "cute", { 206, 139, 255, low_alpha} });
 
 			}
@@ -2103,10 +2103,20 @@ void Visuals::DrawSkeleton(Player* player, int opacity) {
 	const model_t* model;
 	studiohdr_t* hdr;
 	mstudiobone_t* bone;
-	int           parent;
-	BoneArray     matrix[128];
-	vec3_t        bone_pos, parent_pos;
-	vec2_t        bone_pos_screen, parent_pos_screen;
+	int parent;
+	BoneArray matrix[128];
+	vec3_t bone_pos, parent_pos;
+	vec2_t bone_pos_screen, parent_pos_screen;
+
+	// Determine if the player is the local player
+	bool is_local = (player == g_cl.m_local);
+
+	// Check if skeleton rendering is toggled on for the respective player
+	if (is_local && !g_menu.main.players.skeletonS.get())
+		return;
+
+	if (!is_local && !g_menu.main.players.skeleton_enemy.get())
+		return;
 
 	// get player's model.
 	model = player->GetModel();
@@ -2137,11 +2147,12 @@ void Visuals::DrawSkeleton(Player* player, int opacity) {
 		matrix->get_bone(bone_pos, i);
 		matrix->get_bone(parent_pos, parent);
 
-		Color clr = player->enemy(g_cl.m_local) ? g_menu.main.players.skeleton_enemy.get() : g_menu.main.players.skeleton_enemy.get();
+		// Determine the color based on if the player is local or enemy
+		Color clr = is_local ? g_menu.main.players.skeletonSC.get() : g_menu.main.players.skeleton_enemy.get();
 
 		// world to screen both the bone parent bone then draw.
 		if (render::WorldToScreen(bone_pos, bone_pos_screen) && render::WorldToScreen(parent_pos, parent_pos_screen))
-			render::line(bone_pos_screen.x, bone_pos_screen.y, parent_pos_screen.x, parent_pos_screen.y, determine_clr(player, clr, opacity).malpha(g_menu.main.players.skeleton_enemy.get().a()));
+			render::line(bone_pos_screen.x, bone_pos_screen.y, parent_pos_screen.x, parent_pos_screen.y, determine_clr(player, clr, opacity).malpha(clr.a()));
 	}
 }
 
