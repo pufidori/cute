@@ -837,7 +837,7 @@ void HVH::DoFakeAntiAim() {
 		break;
 	}
 
-		  // rotate.
+		  // distortion fake yaw.
 	case 4:
 		float distortion_delta1;
 		//delta was originally 75 there instead of 60.
@@ -862,20 +862,26 @@ void HVH::DoFakeAntiAim() {
 		g_cl.m_cmd->m_view_angles.y = m_direction + m_last_fake;
 		break;
 
-		// soy
+		// alice
 	case 8:
 		// set base to opposite of direction.
 		g_cl.m_cmd->m_view_angles.y = m_direction + 90.f + std::fmod(g_csgo.m_globals->m_curtime * 1.f, 180.f);
 
 		g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat(-69, 69);
 		break;
-		//gucci gang
+		//nigga balls88
 	case 9:
 		g_cl.m_cmd->m_view_angles.y = m_direction + 75.6f + std::fmod(g_csgo.m_globals->m_curtime * 300.f, 300.f);
 
 		g_cl.m_cmd->m_view_angles.y += g_csgo.RandomFloat(-150, 150);
+		break;
 
+		//real rotate.
+	case 10:
 
+		g_cl.m_cmd->m_view_angles.y = m_direction + 360.f + std::fmod(g_csgo.m_globals->m_curtime * 360.f, 360.f);
+
+		break;
 
 	default:
 		break;
@@ -1052,8 +1058,8 @@ void HVH::SendPacket() {
 				active = true;
 				break;
 			}
-
-			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.55f >= g_cl.m_body_pred && m_mode == AntiAimMode::STAND) {
+			//lby
+			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3f >= g_cl.m_body_pred && m_mode == AntiAimMode::STAND) {
 				active = true;
 				break;
 			}

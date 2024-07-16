@@ -489,9 +489,9 @@ void AimPlayer::handle_animations(LagRecord* record) {
 
 	// set anim vel to corrected velocity
 	record->m_anim_velocity = record->m_velocity;
-
+	bool bot = (game::IsFakePlayer);
 	// ghetto check to see if thye're fakelagging or not
-	if (g_menu.main.aimbot.correct.get()) // !bot && 
+	if (g_menu.main.aimbot.correct.get() && !bot)
 		g_resolver.ResolveAngles(m_player, record);
 
 	this->m_player->m_vecOrigin() = record->m_origin;
@@ -1198,7 +1198,8 @@ void Aimbot::find() {
 
 
 		// if we can scope.
-		bool can_scope = !g_cl.m_local->m_bIsScoped() && (g_cl.m_weapon_id == AUG || g_cl.m_weapon_id == SG553 || g_cl.m_weapon_type == WEAPONTYPE_SNIPER_RIFLE);
+		//bool can_scope = !g_cl.m_local->m_bIsScoped() && (g_cl.m_weapon_id == AUG || g_cl.m_weapon_id == SG553 || g_cl.m_weapon_type == WEAPONTYPE_SNIPER_RIFLE);
+		bool can_scope = !g_cl.m_local->m_bIsScoped() && (g_cl.m_weapon_type == WEAPONTYPE_SNIPER_RIFLE);
 
 		if (can_scope && ground) {
 			// always.

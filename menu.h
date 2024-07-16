@@ -486,7 +486,7 @@ public:
 		RegisterElement(&body_yaw_fake);
 
 		// col2.
-		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("opposite"), XOR("jitter"), XOR("rotate"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("nigga balls88") });
+		fake_yaw.setup(XOR("fake yaw"), XOR("fake_yaw"), { XOR("off"), XOR("default"), XOR("opposite"), XOR("jitter"), XOR("distortion"), XOR("random"), XOR("local view"), XOR("lby match"), XOR("alice"), XOR("nigga balls88"), XOR("rotate") });
 		RegisterElement(&fake_yaw, 1);
 
 		fake_relative.setup("", XOR("fake_relative"), -90.f, 90.f, false, 0, 0.f, 5.f, XOR(L"°"));
@@ -1025,7 +1025,7 @@ public:
 	Colorpicker        nightcolor;
 	Checkbox      transparent_props;
 	Slider		  transparent_props_amount;
-	//Colorpicker   propscolor;
+	Colorpicker   propscolor;
 	Colorpicker   ambient_color;
 	Slider ambient_alpha;
 	Slider        walls_amount;
@@ -1205,9 +1205,9 @@ public:
 		nightcolor.AddShowCallback(callbacks::IsNightMode);
 		RegisterElement(&nightcolor, 1);
 
-		//propscolor.setup("props color", XOR("propscolor"), { 128, 128, 128 });
-		//propscolor.SetCallback(Visuals::ModulateWorld);
-		//RegisterElement(&propscolor, 1);
+		propscolor.setup("props color", XOR("propscolor"), { 128, 128, 128 });
+		propscolor.SetCallback(Visuals::ModulateWorld);
+		RegisterElement(&propscolor, 1);
 
 		ambient_color.setup("ambient color", XOR("ambient_color"), { 25, 25, 25 });
 		ambient_color.AddShowCallback(callbacks::isambient);

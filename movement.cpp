@@ -940,7 +940,7 @@ void Movement::MoonWalk(CUserCmd* cmd) {
 		m_toggleState = ~m_toggleState;
 
 		// Set the next toggle time (adjust the interval as needed, e.g., 0.1 seconds)
-		m_nextToggleTime = currentTime + 0.15f;
+		m_nextToggleTime = currentTime + 0.1f;
 	}
 
 	// Apply the slide walk effect based on the toggle state

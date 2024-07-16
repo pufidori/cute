@@ -24,7 +24,7 @@ void Visuals::ModulateWorld() {
 	// night
 
 	Color col = g_menu.main.visuals.nightcolor.get();
-	//Color col2 = g_menu.main.visuals.propscolor.get();
+	Color col2 = g_menu.main.visuals.propscolor.get();
 
 	if (g_menu.main.visuals.world.get(0)) {
 		for (const auto& w : world)
@@ -37,8 +37,8 @@ void Visuals::ModulateWorld() {
 		}
 
 		for (const auto& p : props)
-			//p->ColorModulate(col2.r() / 255.f, col2.g() / 255.f, col2.b() / 255.f);
-			p->ColorModulate(col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+			p->ColorModulate(col2.r() / 255.f, col2.g() / 255.f, col2.b() / 255.f);
+			//p->ColorModulate(col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
 		g_csgo.LoadNamedSky(XOR("sky_csgo_night02"));
 	}
 

@@ -830,6 +830,7 @@ void Client::UpdateInformation() {
 	// null out incorrect data
 	g_cl.m_local->some_ptr() = nullptr;
 
+	//here may lie a bug
 	if (g_csgo.m_input->CAM_IsThirdPerson())
 		*reinterpret_cast<ang_t*>(uintptr_t(g_cl.m_local) + 0x31C4 + 0x4) = m_real_angle; // cancer.
 
@@ -898,8 +899,8 @@ void Client::UpdateInformation() {
 		// remove body lean; also inair foot fix
 		if (g_menu.main.misc.bodeeeelean.get()) {
 			m_backup_layers[12].m_weight = g_cl.m_layers[12].m_weight = 0.f;
-			m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
-		//	0.f, anim_state->m_foot_yaw, 0.f;
+			g_cl.m_local->m_flPoseParameter()[pose_params::jump_fall] = 0.0f;
+			//m_backup_layers[5].m_weight = g_cl.m_layers[5].m_weight = 0.f;
 		}
 		
 		if (g_menu.main.misc.god.get()) {
@@ -932,9 +933,6 @@ void Client::UpdateInformation() {
 
 		//if (state->m_landing && (m_local->m_fFlags() & FL_ONGROUND) && !state->m_dip_air && state->m_dip_cycle > 0.f)
 			//m_angle.x = -12.f;
-
-		if ((m_local->m_fFlags() & FL_ONGROUND) == 0 && state->m_dip_air)
-			g_cl.m_local->m_flPoseParameter()[pose_params::jump_fall] = 1.0f;
 		// nignog
 		if (!m_real_update)
 			g_cl.m_local->SetAnimLayers(m_backup_layers);
