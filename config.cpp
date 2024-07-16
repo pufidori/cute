@@ -14,10 +14,10 @@ void Config::init( ) {
 		return;
 
 	// append our subdir.
-	g_winapi.PathAppendA((char*)m_path.c_str(), "C:\\cute");
+	g_winapi.PathAppendA((char*)m_path.c_str(), "C:\\Fruityhook");
 
 	// create folder if not present.
-	g_winapi.CreateDirectoryA("C:\\cute", 0);
+	g_winapi.CreateDirectoryA("C:\\Fruityhook", 0);
 
 	// we found the path.
 	// and we managed to create our subdir.

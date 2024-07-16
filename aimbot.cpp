@@ -599,7 +599,7 @@ void AimPlayer::on_data_update(Player* player) {
 	// update player ptr if required.
 	// reset player if changed.
 	if (m_player != player) {
-		m_uses_cutie = false;
+		m_uses_fruity = false;
 		m_has_whitelist_on = false;
 		m_last_rate = m_last_cycle = -1.f;
 		m_records.clear();
@@ -664,7 +664,7 @@ void AimPlayer::OnRoundStart(Player* player) {
 	m_moved = false;
 	m_last_time = m_last_rate = m_last_cycle = -1.f;
 	m_change_stored = 0;
-	m_uses_cutie = false;
+	m_uses_fruity = false;
 	m_has_whitelist_on = false;
 	m_last_prev_ground = true;
 	m_last_prev_ladder = false;
@@ -822,7 +822,7 @@ void Aimbot::StartTargetSelection() {
 		// force whitelist
 		/*if (g_menu.main.misc.whitelist.get()) {
 
-			if (data->m_is_cute
+			if (data->m_is_Fruityhook
 				&& !data->m_is_godhook
 				&& !data->m_is_robertpaste
 				&& !data->m_is_pandora
@@ -851,7 +851,7 @@ void Aimbot::StartTargetSelection() {
 
 		if (g_menu.main.misc.whitelist.get()) {
 
-			if (data->m_is_cutie
+			if (data->m_is_fruity
 				&& !data->m_is_godhook
 				&& !data->m_is_robertpaste
 				&& !data->m_is_pandora
@@ -983,7 +983,8 @@ void Aimbot::think() {
 		return StripAttack();
 
 	// finally set data when shooting.
-	apply();
+	vec3_t aim;
+	apply(aim);
 }
 
 static bool ispeeking() {
@@ -1661,7 +1662,7 @@ bool AimPlayer::GetBestAimPosition(vec3_t& aim, float& damage, int& hitbox, int&
 	return false;
 }
 
-void Aimbot::apply() {
+void Aimbot::apply(const vec3_t& aim) {
 	bool attack, attack2;
 
 	// attack states.
@@ -1694,8 +1695,16 @@ void Aimbot::apply() {
 			g_cl.m_cmd->m_view_angles = m_angle;
 
 			// if not silent aim, apply the viewangles.
-			if (!g_menu.main.aimbot.silent.get())
+			//if (!g_menu.main.aimbot.silent.get())
+				//g_csgo.m_engine->SetViewAngles(m_angle);
+			bool is_adaptive_silent_enabled = g_menu.main.aimbot.adaptive_silent.get() && g_menu.main.aimbot.silent.get();
+			float current_fov = math::GetFOV(g_cl.m_view_angles, g_cl.m_shoot_pos, aim);
+			float configured_fov = g_menu.main.aimbot.fovs.get();
+			bool is_within_fov = current_fov > configured_fov;
+			if (is_adaptive_silent_enabled && !is_within_fov) {
 				g_csgo.m_engine->SetViewAngles(m_angle);
+			}
+
 
 			if (g_menu.main.aimbot.debugaim.get())
 				g_visuals.DrawHitboxMatrix(m_record, g_menu.main.aimbot.debugaim_color.get(), 3.f, g_menu.main.aimbot.debugaim_mode.get());

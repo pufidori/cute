@@ -6,6 +6,9 @@ public:
 	Checkbox	  enable;
 	Slider        target_limit;
 	Checkbox	  silent;
+	Checkbox	  adaptive_silent;
+	Slider		  fov_amount;
+	Slider		  fovs;
 	MultiDropdown hitbox;
 	MultiDropdown multipoint;
 	Slider		  head_scale;
@@ -73,6 +76,14 @@ public:
 		silent.setup(XOR("silent aim"), XOR("silent"));
 		RegisterElement(&silent);
 
+		adaptive_silent.setup(XOR("adaptive silent"), XOR("adaptive_silent"));
+		adaptive_silent.AddShowCallback(callbacks::isSilent);
+		RegisterElement(&adaptive_silent);
+
+		fovs.setup("", XOR("fovs"), 1.f, 180.f, false, 0, 180.f, 5.f, XOR(L"°"));
+		fovs.AddShowCallback(callbacks::isSilent);
+		RegisterElement(&fovs);
+
 		hitchance.setup(XOR("hitchance"), XOR("hitchance"));
 		RegisterElement(&hitchance);
 
@@ -89,14 +100,14 @@ public:
 		accuracy_boost_amt.AddShowCallback(callbacks::IsAccuracyBoostOn);
 		RegisterElement(&accuracy_boost_amt);
 
-		hitchance_in_air.setup(XOR("in air hitchance"), XOR("custom_in_air_hitchance"));
-		hitchance_in_air.AddShowCallback(callbacks::IsHitchanceOn);
-		RegisterElement(&hitchance_in_air);
+		//hitchance_in_air.setup(XOR("in air hitchance"), XOR("custom_in_air_hitchance"));
+		//hitchance_in_air.AddShowCallback(callbacks::IsHitchanceOn);
+		//RegisterElement(&hitchance_in_air);
 
-		in_air_hitchance.setup("in air hitchance", XOR("in_air_hitchance"), 1.f, 100.f, false, 0, 50.f, 1.f, XOR(L"%"));
-		in_air_hitchance.AddShowCallback(callbacks::IsHitchancAireOn);
-		in_air_hitchance.AddShowCallback(callbacks::IsHitchanceOn);
-		RegisterElement(&in_air_hitchance);
+		//in_air_hitchance.setup("in air hitchance", XOR("in_air_hitchance"), 1.f, 100.f, false, 0, 50.f, 1.f, XOR(L"%"));
+		//in_air_hitchance.AddShowCallback(callbacks::IsHitchancAireOn);
+		//in_air_hitchance.AddShowCallback(callbacks::IsHitchanceOn);
+		//RegisterElement(&in_air_hitchance);
 
 		minimal_damage.setup(XOR("minimum damage"), XOR("minimal_damage"), 1.f, 126.f, true, 0, 40.f, 1.f);
 		RegisterElement(&minimal_damage);
@@ -1014,7 +1025,7 @@ public:
 	Colorpicker        nightcolor;
 	Checkbox      transparent_props;
 	Slider		  transparent_props_amount;
-	Colorpicker   propscolor;
+	//Colorpicker   propscolor;
 	Colorpicker   ambient_color;
 	Slider ambient_alpha;
 	Slider        walls_amount;
@@ -1194,9 +1205,9 @@ public:
 		nightcolor.AddShowCallback(callbacks::IsNightMode);
 		RegisterElement(&nightcolor, 1);
 
-		propscolor.setup("props color", XOR("propscolor"), { 128, 128, 128 });
-		propscolor.SetCallback(Visuals::ModulateWorld);
-		RegisterElement(&propscolor, 1);
+		//propscolor.setup("props color", XOR("propscolor"), { 128, 128, 128 });
+		//propscolor.SetCallback(Visuals::ModulateWorld);
+		//RegisterElement(&propscolor, 1);
 
 		ambient_color.setup("ambient color", XOR("ambient_color"), { 25, 25, 25 });
 		ambient_color.AddShowCallback(callbacks::isambient);
@@ -2435,6 +2446,7 @@ public:
 	Slider		  fake_latency_amt;
 	Keybind       secondary_fake_latency;
 	Slider		  secondary_fake_latency_amt;
+	Checkbox      hitmarker3D;
 
 	// col2.
 	Checkbox clantag;
@@ -2543,6 +2555,9 @@ public:
 		hitmarker2.setup(XOR("og hitmarker"), XOR("hitmarker2"));
 		RegisterElement(&hitmarker2);
 
+		hitmarker3D.setup(XOR("3D hitmarker"), XOR("hitmarker3D"));
+		RegisterElement(&hitmarker3D);
+
 		enablefakewalk.setup(XOR("slow motion"), XOR("enablefakewalk"));
 		RegisterElement(&enablefakewalk);
 
@@ -2611,7 +2626,7 @@ public:
 
 		watermark1.setup("watermark", XOR("watermark1"),
 			{
-				XOR("cute"),
+				XOR("Fruityhook"),
 				XOR("sup"),
 				XOR("moneygay")
 			}, true);

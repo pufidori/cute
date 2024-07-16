@@ -104,7 +104,7 @@ public:
 	int m_ff_index;
 
 	bool m_has_whitelist_on;
-	bool m_uses_cutie;
+	bool m_uses_fruity;
 	bool m_should_target;
 	float m_last_duration_in_air;
 	float m_last_jump_fall;
@@ -132,7 +132,7 @@ public:
 	float m_networked_angle = 1337.f;
 	bool  m_is_kaaba = false;
 	bool  m_is_cheese_crack = false;
-	bool  m_is_cutie = false;
+	bool  m_is_fruity = false;
 	bool  m_is_admin = false;
 	bool  m_is_dopium = false;
 	bool  m_is_robertpaste = false;
@@ -189,7 +189,7 @@ public:
 		m_moved = false;
 		m_change_stored = 0;
 		m_last_time = m_last_rate = m_last_cycle = -1.f;
-		m_uses_cutie = false;
+		m_uses_fruity = false;
 		m_has_whitelist_on = false;
 		m_missed_invertfs = false;
 		m_missed_back = false;
@@ -200,7 +200,7 @@ public:
 
 		m_is_kaaba = false;
 		m_is_cheese_crack = false;
-		m_is_cutie = false;
+		m_is_fruity = false;
 		m_is_admin = false;
 		m_is_dopium = false;
 		m_is_robertpaste = false;
@@ -335,7 +335,7 @@ public:
 	void find();
 	//bool CanHit(vec3_t start, vec3_t end, LagRecord* record, int box, bool in_shot, BoneArray* bones);
 	bool CheckHitchance(Player* player, int hitbox, const ang_t& angle);
-	void apply();
+	void apply(const vec3_t& aim);
 	void NoSpread();
 	bool CanHitRecordHead(LagRecord* record);
 	//std::string TranslateResolverMode(int iMode);

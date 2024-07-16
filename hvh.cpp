@@ -100,7 +100,7 @@ void HVH::AutoDirection() {
 		if (!front || front->dormant() || front->immune() || !front->m_setup)
 			continue;
 
-		if (data->m_is_cutie
+		if (data->m_is_fruity
 			&& !data->m_is_godhook
 			&& !data->m_is_robertpaste
 			&& !data->m_is_pandora
@@ -1053,7 +1053,7 @@ void HVH::SendPacket() {
 				break;
 			}
 
-			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.3 >= g_cl.m_body_pred &&m_mode == AntiAimMode::STAND) {
+			else if (*it == 4 && g_csgo.m_globals->m_curtime + 0.55f >= g_cl.m_body_pred && m_mode == AntiAimMode::STAND) {
 				active = true;
 				break;
 			}

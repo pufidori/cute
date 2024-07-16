@@ -47,6 +47,7 @@ public:
 	std::vector< impact_info >              m_impacts;
 	bool                                    m_thirdperson;
 	float					                m_hit_start, m_hit_end, m_hit_duration;
+    Color                                   m_hurt_color = colors::white;
 
     // info about planted c4.
     bool        m_c4_planted;
@@ -157,6 +158,7 @@ public:
 	void NoSmoke( );
 	void think( );
     void Hitmarker2();
+    void Hitmarker3D();
 	void Spectators( );
 	void StatusIndicators( );
 	void ImpactData();

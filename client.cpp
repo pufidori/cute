@@ -5,7 +5,7 @@ char username[33] = "\x90\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0
 // init routine.
 ulong_t __stdcall Client::init(void* arg) {
 	// if not in interwebz mode, the driver will not set the username.
-	g_cl.m_user = XOR("cute");
+	g_cl.m_user = XOR("Fruity");
 
 	// stop here if we failed to acquire all the data needed from csgo.
 	if (!g_csgo.init())
@@ -15,7 +15,7 @@ ulong_t __stdcall Client::init(void* arg) {
 	g_csgo.m_engine->ExecuteClientCmd((XOR("mat_motion_blur_forward_enabled 1")));
 	// welcome the user.
 	g_notify.add(tfm::format(XOR("Welcome.\n")));
-	g_notify.add(tfm::format(XOR("cute.vip by fruitydevteam\n")));
+	g_notify.add(tfm::format(XOR("Fruityhook by fruitydevteam\n")));
 	g_notify.add(tfm::format(XOR("made with love <3\n")));
 	g_notify.add(tfm::format(XOR("build - beta " __DATE__, __TIME__". \n ")));
 	g_cl.UnlockHiddenConvars();
@@ -65,7 +65,7 @@ void Client::DrawHUD() {
 		int rate = static_cast<int>(std::round(1.f / g_csgo.m_globals->m_interval));
 
 		// Construct watermark text
-		std::string text = tfm::format(XOR(" cute.vip | ping %ims | %s "), ms, time_stream.str().c_str());
+		std::string text = tfm::format(XOR(" Fruityhook | ping %ims | %s "), ms, time_stream.str().c_str());
 		render::FontSize_t size = render::menu_shade.size(text);
 
 		// Draw background
@@ -94,7 +94,7 @@ void Client::DrawHUD() {
 		// get tickrate.
 		int rate = (int)std::round(1.f / g_csgo.m_globals->m_interval);
 
-		std::string text = tfm::format(XOR("cute.vip | ms:%i | %s "), ms, time_stream.str().c_str());
+		std::string text = tfm::format(XOR("Fruityhook | %s | rtt: %ims | Fruitytaps: %s"), time_stream.str().c_str(), ms,g_cl.fruitytaps);
 		render::FontSize_t size = render::hud.size(text);
 
 		// background.
@@ -118,7 +118,7 @@ void Client::DrawHUD() {
 		//auto nci = g_csgo.m_engine->GetNetChannelInfo();
 	//	char latency_str[32];
 
-		std::string text = tfm::format(XOR("cute.vip | lt: 1.2f + 1.5f |"));
+		std::string text = tfm::format(XOR("Fruityhook | lt: 1.2f + 1.5f |"));
 
 		render::FontSize_t size = render::hud.size(text);
 
@@ -180,10 +180,10 @@ void Client::ClanTag()
 		using SetClanTag_t = int(__fastcall*)(const char*, const char*);
 		static auto SetClanTagFn = pattern::find(g_csgo.m_engine_dll, XOR("53 56 57 8B DA 8B F9 FF 15")).as<SetClanTag_t>();
 
-		SetClanTagFn(tag.c_str(), XOR("cute.vip"));
+		SetClanTagFn(tag.c_str(), XOR("Fruityhook"));
 		};
 
-	std::string szClanTag = XOR("cute.vip");
+	std::string szClanTag = XOR("Fruityhook");
 	std::string szSuffix = XOR("");
 	static int iPrevFrame = 0;
 	static bool bReset = false;
@@ -196,55 +196,39 @@ void Client::ClanTag()
 		{
 			if (is_freeze_period)
 			{
-				SetClanTag("cute.vip");
+				SetClanTag("FeelinFruity");
 			}
 			is_freeze_period = false;
 			return;
 		}
-		//old tag here
-		/*
-					case 0: SetClanTag(XOR("         c")); break;
-			case 1: SetClanTag(XOR("        cu")); break;
-			case 2: SetClanTag(XOR("       cut")); break;
-			case 3: SetClanTag(XOR("      cute")); break;
-			case 4: SetClanTag(XOR("     cute.")); break;
-			case 5: SetClanTag(XOR("    cute.v")); break;
-			case 6: SetClanTag(XOR("   cute.vi")); break;
-			case 7: SetClanTag(XOR("  cute.vip")); break;
-			case 8: SetClanTag(XOR(" cute.vip ")); break;
-			case 9: SetClanTag(XOR("cute.vip  ")); break;
-			case 10:SetClanTag(XOR("ute.vip   ")); break;
-			case 11:SetClanTag(XOR("te.vip    ")); break;
-			case 12:SetClanTag(XOR("e.vip     ")); break;
-			case 13:SetClanTag(XOR(".vip      ")); break;
-			case 14:SetClanTag(XOR("vip       ")); break;
-			case 15:SetClanTag(XOR("ip        ")); break;
-			case 16:SetClanTag(XOR("p         ")); break;
-			case 17:SetClanTag(XOR("          ")); break;
-		*/
+
 		is_freeze_period = true;
 
-		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 5.0) % 34) {
-			switch (int(g_csgo.m_globals->m_curtime * 5.0) % 34) {
-			case 0: SetClanTag(XOR("        c")); break;
-			case 1: SetClanTag(XOR("       cu")); break;
-			case 2: SetClanTag(XOR("      cut")); break;
-			case 3: SetClanTag(XOR("     cute")); break;
-			case 4: SetClanTag(XOR("    cute.")); break;
-			case 5: SetClanTag(XOR("   cute.v")); break;
-			case 6: SetClanTag(XOR("  cute.vi")); break;
-			case 7: SetClanTag(XOR(" cute.vip")); break;
-			case 8: SetClanTag(XOR("cute.vip ")); break;
-			case 9: SetClanTag(XOR("ute.vip  ")); break;
-			case 10:SetClanTag(XOR("te.vip   ")); break;
-			case 11:SetClanTag(XOR("e.vip    ")); break;
-			case 12:SetClanTag(XOR(".vip     ")); break;
-			case 13:SetClanTag(XOR("vip      ")); break;
-			case 14:SetClanTag(XOR("ip       ")); break;
-			case 15:SetClanTag(XOR("p        ")); break;
+		if (iPrevFrame != int(g_csgo.m_globals->m_curtime * 3.6) % 19) {
+			switch (int(g_csgo.m_globals->m_curtime * 3.6) % 19) {
+			case 0:  { SetClanTag(""); break; }
+			case 1:  { SetClanTag("f"); break; }
+			case 2:  { SetClanTag("fr"); break; }
+			case 3:  { SetClanTag("fru"); break; }
+			case 4:  { SetClanTag("frui"); break; }
+			case 5:  { SetClanTag("fruit"); break; }
+			case 6:  { SetClanTag("fruity"); break; }
+			case 7:  { SetClanTag("fruityh"); break; }
+			case 8:  { SetClanTag("fruityho"); break; }
+			case 9:  { SetClanTag("fruityhoo"); break; }
+			case 10: { SetClanTag("fruityhook"); break; }
+			case 11: { SetClanTag("fruityhoo"); break; }
+			case 12: { SetClanTag("fruityho"); break; }
+			case 13: { SetClanTag("fruityh"); break; }
+			case 14: { SetClanTag("fruity"); break; }
+			case 15: { SetClanTag("fruit"); break; }
+			case 16: { SetClanTag("frui"); break; }
+			case 17: { SetClanTag("fru"); break; }
+			case 18: { SetClanTag("fr"); break; }
+			case 19: { SetClanTag("f"); break; }
 			default:;
 			}
-			iPrevFrame = int(g_csgo.m_globals->m_curtime * 5.0) % 34;
+			iPrevFrame = int(g_csgo.m_globals->m_curtime * 3.6) % 19;
 		}
 
 		// do we want to reset after untoggling the clantag?
@@ -367,7 +351,6 @@ void Client::Skybox()
 	fog_destiny->SetValue(destiny); 
 }
 
-//Spotify shit
 void Client::SpotifyDisplay() {
 
 	if (!g_menu.main.misc.spotify.get())
@@ -1094,7 +1077,7 @@ void Client::print( const std::string text, ... ) {
 	va_end( list );
 
 	// print to console.
-	g_csgo.m_cvar->ConsoleColorPrintf(g_gui.m_color, XOR( "[cute] " ) );
+	g_csgo.m_cvar->ConsoleColorPrintf(g_gui.m_color, XOR( "[Fruityhook] " ) );
 	g_csgo.m_cvar->ConsoleColorPrintf( colors::white, buf.c_str( ) );
 }
 

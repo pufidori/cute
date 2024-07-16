@@ -81,10 +81,10 @@ void __fastcall Hooks::hkVoiceData(void* msg) {
 		g_cl.print("receiving | high: %i , low: %i , seq: %i , section: %i , uncomp offset: %i \n", msg_->xuid_high, msg_->xuid_low, msg_->sequence_bytes, msg_->section_number, msg_->uncompressed_sample_offset);
 	}
 
-	// cute
+	// Fruityhook
 	// old wNeJbkUsTleR
 	if (!strcmp(packet->cheat_name, XOR("13370"))) {
-		data->m_is_cutie = true;
+		data->m_is_fruity = true;
 	}
 
 	//if (!strcmp(packet->cheat_name, XOR("13360"))) {

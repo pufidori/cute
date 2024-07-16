@@ -6,12 +6,12 @@ CustomEntityListener g_custom_entity_listener{ };;
 
 #pragma optimize("", off)
 
-void __fastcall cute::modify_eye_pos( CCSGOPlayerAnimState* ecx, std::uintptr_t edx, vec3_t& pos) {
+void __fastcall fruity::modify_eye_pos( CCSGOPlayerAnimState* ecx, std::uintptr_t edx, vec3_t& pos) {
 	// remove call from client
 	return;
 }
 
-void __fastcall cute::calc_view(void* ecx, const std::uintptr_t edx, vec3_t& eye_origin, const ang_t& eye_ang, float& z_near, float& z_far, float& fov) {
+void __fastcall fruity::calc_view(void* ecx, const std::uintptr_t edx, vec3_t& eye_origin, const ang_t& eye_ang, float& z_near, float& z_far, float& fov) {
 	if (!ecx || ecx != g_cl.m_local)
 		return orig_calc_view(ecx, edx, eye_origin, eye_ang, z_near, z_far, fov);
 
@@ -23,7 +23,7 @@ void __fastcall cute::calc_view(void* ecx, const std::uintptr_t edx, vec3_t& eye
 	return;
 }
 
-void __fastcall cute::update_client_side_anim( Player* const player, const std::uintptr_t edx) {
+void __fastcall fruity::update_client_side_anim( Player* const player, const std::uintptr_t edx) {
 	if (!player
 		|| !player->alive()
 		|| !player->networkable()
@@ -65,11 +65,11 @@ void __fastcall cute::update_client_side_anim( Player* const player, const std::
 }
 
 
-void __fastcall cute::do_extra_bones_processing( Player* const ecx, const std::uintptr_t edx, int a0, int a1, int a2, int a3, int a4, int a5) {
+void __fastcall fruity::do_extra_bones_processing( Player* const ecx, const std::uintptr_t edx, int a0, int a1, int a2, int a3, int a4, int a5) {
 	return;
 }
 
-void __fastcall cute::build_transformations( Player* ecx, void* edx, CStudioHdr* hdr, vec3_t* pos, quaternion_t* q, matrix3x4_t* cam_transform, int bone_mask, byte* computed )
+void __fastcall fruity::build_transformations( Player* ecx, void* edx, CStudioHdr* hdr, vec3_t* pos, quaternion_t* q, matrix3x4_t* cam_transform, int bone_mask, byte* computed )
 {
 	if (!ecx || ecx->index() < 1 || ecx->index() > 64)
 		return orig_build_transformations(ecx, edx, hdr, pos, q, cam_transform, bone_mask, computed);
@@ -92,7 +92,7 @@ void __fastcall cute::build_transformations( Player* ecx, void* edx, CStudioHdr*
 }
 
 
-bool __fastcall cute::should_skip_animation_frame(void* this_pointer, void* edx) {
+bool __fastcall fruity::should_skip_animation_frame(void* this_pointer, void* edx) {
 
 	// the function is only called by SetupBones so there is no need to check for return address
 	// returning false prevents copying of cached bone data
@@ -100,7 +100,7 @@ bool __fastcall cute::should_skip_animation_frame(void* this_pointer, void* edx)
 	return false;
 }
 
-void __fastcall cute::check_for_sequence_change(void* this_pointer, void* edx, void* hdr, int cur_sequence, bool force_new_sequence, bool interpolate) {
+void __fastcall fruity::check_for_sequence_change(void* this_pointer, void* edx, void* hdr, int cur_sequence, bool force_new_sequence, bool interpolate) {
 
 	// no sequence interpolation over here mate
 	// forces the animation queue to clear
@@ -109,7 +109,7 @@ void __fastcall cute::check_for_sequence_change(void* this_pointer, void* edx, v
 }
 
 
-void __fastcall cute::standard_blending_rules( Player* const ecx, const std::uintptr_t edx, CStudioHdr* const mdl_data, int a1, int a2, float a3, int mask) {
+void __fastcall fruity::standard_blending_rules( Player* const ecx, const std::uintptr_t edx, CStudioHdr* const mdl_data, int a1, int a2, float a3, int mask) {
 	if ( !ecx
 		|| ecx->index() < 1
 		|| ecx->index() > 64)
@@ -278,14 +278,14 @@ void Hooks::init( ) {
 	MH_Initialize();
 	// MH_CreateHook( pattern::find( PE::GetModule( HASH( "engine.dll" ) ), XOR( "55 8B EC 56 8B F1 8B 86 ? ? ? ? 85 C0 74 24 48 83 F8 02 77 2C 83 BE ? ? ? ? ? 8D 8E ? ? ? ? 74 06 32 C0 84 C0 EB 10 E8 ? ? ? ? 84 C0 EB 07 83 BE ? ? ? ? ? 0F 94 C0 84 C0 74 07 B0 01 5E 5D C2 0C 00" ) ), &nem_hooks::SendNetMsg, reinterpret_cast< void** >( &nem_hooks::oSendNetMsg ) );
 
-	hook( modif_eye_pos_addr,           cute::modify_eye_pos, cute::orig_modify_eye_pos);
-	hook( calc_view_addr,				cute::calc_view, cute::orig_calc_view);
-	hook( update_csa_addr,				cute::update_client_side_anim, cute::orig_update_client_side_anim);
-	hook( do_extra_bone_proc_addr,		cute::do_extra_bones_processing, cute::orig_do_extra_bones_processing);
-	hook( build_trans_addr,				cute::build_transformations, cute::orig_build_transformations);
-	hook( check_seq_change_addr,		cute::check_for_sequence_change, cute::orig_check_for_seq_change);
-	hook( skip_frame_addr,				cute::should_skip_animation_frame, cute::orig_should_skip_animation_frame);
-	hook( standard_blending_rules_addr, cute::standard_blending_rules, cute::orig_standard_blending_rules);
+	hook( modif_eye_pos_addr,           fruity::modify_eye_pos, fruity::orig_modify_eye_pos);
+	hook( calc_view_addr,				fruity::calc_view, fruity::orig_calc_view);
+	hook( update_csa_addr,				fruity::update_client_side_anim, fruity::orig_update_client_side_anim);
+	hook( do_extra_bone_proc_addr,		fruity::do_extra_bones_processing, fruity::orig_do_extra_bones_processing);
+	hook( build_trans_addr,				fruity::build_transformations, fruity::orig_build_transformations);
+	hook( check_seq_change_addr,		fruity::check_for_sequence_change, fruity::orig_check_for_seq_change);
+	hook( skip_frame_addr,				fruity::should_skip_animation_frame, fruity::orig_should_skip_animation_frame);
+	hook( standard_blending_rules_addr, fruity::standard_blending_rules, fruity::orig_standard_blending_rules);
 	MH_CreateHook(pattern::find(PE::GetModule(HASH("engine.dll")), XOR("55 8B EC 56 8B F1 8B 86 ? ? ? ? 85 C0 74 24 48 83 F8 02 77 2C 83 BE ? ? ? ? ? 8D 8E ? ? ? ? 74 06 32 C0 84 C0 EB 10 E8 ? ? ? ? 84 C0 EB 07 83 BE ? ? ? ? ? 0F 94 C0 84 C0 74 07 B0 01 5E 5D C2 0C 00")), &nem_hooks::SendNetMsg, reinterpret_cast<void**>(&nem_hooks::oSendNetMsg));
 
 	MH_EnableHook(MH_ALL_HOOKS);

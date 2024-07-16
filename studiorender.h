@@ -1,5 +1,5 @@
 #pragma once
-
+//914622396630175855
 enum LightType_t {
 	MATERIAL_LIGHT_DISABLE = 0,
 	MATERIAL_LIGHT_POINT,
@@ -184,41 +184,41 @@ public:
 class IMaterial {
 public:
 	enum indices : size_t {
-		GETNAME                 = 0,
-		GETTEXTUREGROUPNAME     = 1,
+		GETNAME = 0,
+		GETTEXTUREGROUPNAME = 1,
 		INCREMENTREFERENCECOUNT = 12,
-		ALPHAMODULATE           = 27,
-		COLORMODULATE           = 28,
-		SETFLAG                 = 29,
-		GETFLAG                 = 30
+		ALPHAMODULATE = 27,
+		COLORMODULATE = 28,
+		SETFLAG = 29,
+		GETFLAG = 30
 	};
 
-	__forceinline const char* GetName( ) {
-		return util::get_method< const char* ( __thiscall* )( void* ) >( this, GETNAME )( this );
+	__forceinline const char* GetName() {
+		return util::get_method< const char* (__thiscall*)(void*) >(this, GETNAME)(this);
 	}
 
-	__forceinline const char* GetTextureGroupName( ) {
-		return util::get_method< const char* ( __thiscall* )( void* ) >( this, GETTEXTUREGROUPNAME )( this );
+	__forceinline const char* GetTextureGroupName() {
+		return util::get_method< const char* (__thiscall*)(void*) >(this, GETTEXTUREGROUPNAME)(this);
 	}
 
-	__forceinline void IncrementReferenceCount( ) {
-		return util::get_method< void( __thiscall* )( void* ) >( this, INCREMENTREFERENCECOUNT )( this );
+	__forceinline void IncrementReferenceCount() {
+		return util::get_method< void(__thiscall*)(void*) >(this, INCREMENTREFERENCECOUNT)(this);
 	}
 
-	__forceinline void AlphaModulate( float alpha ) {
-		return util::get_method< void( __thiscall* )( void*, float ) >( this, ALPHAMODULATE )( this, alpha );
+	__forceinline void AlphaModulate(float alpha) {
+		return util::get_method< void(__thiscall*)(void*, float) >(this, ALPHAMODULATE)(this, alpha);
 	}
 
-	__forceinline void ColorModulate( float r, float g, float b ) {
-		return util::get_method< void( __thiscall* )( void*, float, float, float ) >( this, COLORMODULATE )( this, r, g, b );
+	__forceinline void ColorModulate(float r, float g, float b) {
+		return util::get_method< void(__thiscall*)(void*, float, float, float) >(this, COLORMODULATE)(this, r, g, b);
 	}
 
-	__forceinline void ColorModulate( Color col ) {
-		ColorModulate( col.r( ) / 255.f, col.g( ) / 255.f, col.b( ) / 255.f );
+	__forceinline void ColorModulate(Color col) {
+		ColorModulate(col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
 	}
 
 	__forceinline IMaterialVar* FindVar(const char* varName, bool* found, bool complain = false) {
-		return util::get_method< IMaterialVar* (__thiscall*)(void*, const char*, bool*, bool) >(this, 11)(this, varName, found, complain);
+		return util::get_method< IMaterialVar * (__thiscall*)(void*, const char*, bool*, bool) >(this, 11)(this, varName, found, complain);
 	}
 
 	IMaterialVar* find_var(const char* name)
@@ -233,12 +233,12 @@ public:
 	}
 
 
-	__forceinline void SetFlag( int fl, bool set ) {
-		return util::get_method< void( __thiscall* )( void*, int, bool ) >( this, SETFLAG )( this, fl, set );
+	__forceinline void SetFlag(int fl, bool set) {
+		return util::get_method< void(__thiscall*)(void*, int, bool) >(this, SETFLAG)(this, fl, set);
 	}
 
-	__forceinline bool GetFlag( int fl ) {
-		return util::get_method< bool( __thiscall* )( void*, int ) >( this, GETFLAG )( this, fl );
+	__forceinline bool GetFlag(int fl) {
+		return util::get_method< bool(__thiscall*)(void*, int) >(this, GETFLAG)(this, fl);
 	}
 };
 
@@ -327,9 +327,9 @@ public:
 
 	// dont use this, just a wrapper.
 	// use the one from studiorender.
-	//__forceinline void ForcedMaterialOverride( IMaterial* mat ) {
-	//	return util::get_method< void( __thiscall* )( void *, IMaterial *, int, int ) >( this, FORCEDMATERIALOVERRIDE )( this, mat, 0, 0 );
-	//}
+	_forceinline void ForcedMaterialOverride( IMaterial* mat ) {
+		return util::get_method< void( __thiscall* )( void *, IMaterial *, int, int ) >( this, FORCEDMATERIALOVERRIDE )( this, mat, 0, 0 );
+    }
 	
 	__forceinline void DrawModelExecute(IMatRenderContext* ctx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld = NULL) {
 		return util::get_method(this, DRAWMODELEXECUTE).as< void(__thiscall*)(decltype(this), IMatRenderContext*, const DrawModelState_t&, const ModelRenderInfo_t&, matrix3x4_t*)>()(this, ctx, state, pInfo, pCustomBoneToWorld);

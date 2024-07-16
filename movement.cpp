@@ -416,36 +416,22 @@ void Movement::AutoPeek(CUserCmd* cmd, float wish_yaw) {
 		else {
 			bool revolver_shoot = g_cl.m_weapon_id == REVOLVER && !g_cl.m_revolver_fire && (cmd->m_buttons & IN_ATTACK || cmd->m_buttons & IN_ATTACK2);
 
-			if (g_cl.m_old_shot)
+			if (g_input.GetKeyState(g_menu.main.aimbot.quickpeekassist.get()))
 				fired_shot = true;
 
 			if (fired_shot) {
 				vec3_t current_position = g_cl.m_local->GetAbsOrigin();
 				vec3_t difference = current_position - start_position;
 
-				if (difference.length_2d() > 5.0f) {
-					vec3_t velocity = vec3_t(difference.x * cos(wish_yaw / 180.0f * math::pi) + difference.y * sin(wish_yaw / 180.0f * math::pi), difference.y * cos(wish_yaw / 180.0f * math::pi) - difference.x * sin(wish_yaw / 180.0f * math::pi), difference.z);
+				float distance = difference.length_2d();
+				if (distance > 5.0f) {
+					float factor = std::clamp(150.0f / distance, 1.0f, 20.0f);
+					vec3_t velocity = vec3_t(difference.x * cos(wish_yaw / 180.0f * math::pi) + difference.y * sin(wish_yaw / 180.0f * math::pi),
+						difference.y * cos(wish_yaw / 180.0f * math::pi) - difference.x * sin(wish_yaw / 180.0f * math::pi),
+						difference.z);
 
-					if (difference.length_2d() < 50.0f) {
-						cmd->m_forward_move = -velocity.x * 20.0f;
-						cmd->m_side_move = velocity.y * 20.0f;
-					}
-					else if (difference.length_2d() < 100.0f) {
-						cmd->m_forward_move = -velocity.x * 10.0f;
-						cmd->m_side_move = velocity.y * 10.0f;
-					}
-					else if (difference.length_2d() < 150.0f) {
-						cmd->m_forward_move = -velocity.x * 5.0f;
-						cmd->m_side_move = velocity.y * 5.0f;
-					}
-					else if (difference.length_2d() < 250.0f) {
-						cmd->m_forward_move = -velocity.x * 2.0f;
-						cmd->m_side_move = velocity.y * 2.0f;
-					}
-					else {
-						cmd->m_forward_move = -velocity.x * 1.0f;
-						cmd->m_side_move = velocity.y * 1.0f;
-					}
+					cmd->m_forward_move = -velocity.x * factor;
+					cmd->m_side_move = velocity.y * factor;
 				}
 				else {
 					fired_shot = false;
@@ -937,7 +923,6 @@ void Movement::FakeWalk( ) {
 	}
 }
 
-
 void Movement::MoonWalk(CUserCmd* cmd) {
 	// Check if the player is on a ladder
 	if (g_cl.m_local->m_MoveType() == MOVETYPE_LADDER)
@@ -955,7 +940,7 @@ void Movement::MoonWalk(CUserCmd* cmd) {
 		m_toggleState = ~m_toggleState;
 
 		// Set the next toggle time (adjust the interval as needed, e.g., 0.1 seconds)
-		m_nextToggleTime = currentTime + 0.25f;
+		m_nextToggleTime = currentTime + 0.15f;
 	}
 
 	// Apply the slide walk effect based on the toggle state

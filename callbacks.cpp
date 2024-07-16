@@ -845,6 +845,10 @@ bool callbacks::IsOverrideDamage() {
 	return g_menu.main.aimbot.override_dmg_key.get() != -1;
 }
 
+bool callbacks::isSilent() {
+	return g_menu.main.aimbot.adaptive_silent.get();
+}
+
 bool callbacks::IsLimitTarget() {
 	return g_menu.main.aimbot.optimizations.get(0);
 }

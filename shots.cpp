@@ -188,8 +188,8 @@ void Shots::OnHurt(IGameEvent* evt) {
 	hp = evt->m_keys->FindKey(HASH("health"))->GetInt();
 
 	// setup family watermark thing
-	if (group == HITGROUP_HEAD && damage >= 100.f)
-		taps++;
+	if (m_groups[group] == "head")
+		g_cl.fruitytaps++;
 
 	// setup headshot marker
 	if (group == HITGROUP_HEAD)
@@ -382,7 +382,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				++data->m_stand_no_move_idx;
 				curr_mode_miss = data->m_stand_no_move_idx;
 			}
-			else if (mode == Resolver::Modes::RESOLVE_LBY) {
+			else if (mode == Resolver::Modes::RESOLVE_BODY) {
 				++data->m_body_idx;
 				curr_mode_miss = data->m_body_idx;
 			}
@@ -390,7 +390,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				++data->m_air_idx;
 				curr_mode_miss = data->m_air_idx;
 			}
-			else if (mode == Resolver::Modes::RESOLVE_LBY) {
+			else if (mode == Resolver::Modes::RESOLVE_BODY) {
 
 				// increment lby pred miss
 				++data->m_body_pred_idx;
@@ -409,7 +409,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 				data->m_missed_back = true;
 
 			// if mode isnt lby nor walk
-			if (mode != Resolver::Modes::RESOLVE_LBY
+			if (mode != Resolver::Modes::RESOLVE_BODY
 				&& mode != Resolver::Modes::RESOLVE_WALK) {
 
 				const float diff = std::abs(math::AngleDiff(shot.m_record->m_body, shot.m_record->m_eye_angles.y));
@@ -425,7 +425,7 @@ void Shots::OnShotMiss(ShotRecord& shot) {
 
 			if (mode == Resolver::Modes::RESOLVE_NONE)
 				g_notify.add(XOR("miss: extrapolation\n"));
-			else if (mode != Resolver::Modes::RESOLVE_LBY)
+			else if (mode != Resolver::Modes::RESOLVE_BODY)
 				g_notify.add(XOR("miss: resolver error\n"));
 		}
 		else

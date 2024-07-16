@@ -169,6 +169,7 @@ namespace callbacks {
 	bool IsOverrideDamage();
 	bool distortion();
 	bool IsLimitTarget();
+	bool isSilent();
 
 	void ToggleDMG();
 	bool ammpespon();

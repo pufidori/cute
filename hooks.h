@@ -264,7 +264,7 @@ public:
 };
 
 
-namespace cute {
+namespace fruity {
 	void __fastcall modify_eye_pos( CCSGOPlayerAnimState* ecx, std::uintptr_t edx, vec3_t& pos);
 	inline decltype(&modify_eye_pos) orig_modify_eye_pos{ };
 

@@ -24,7 +24,7 @@ void Visuals::ModulateWorld() {
 	// night
 
 	Color col = g_menu.main.visuals.nightcolor.get();
-	Color col2 = g_menu.main.visuals.propscolor.get();
+	//Color col2 = g_menu.main.visuals.propscolor.get();
 
 	if (g_menu.main.visuals.world.get(0)) {
 		for (const auto& w : world)
@@ -37,11 +37,9 @@ void Visuals::ModulateWorld() {
 		}
 
 		for (const auto& p : props)
-			p->ColorModulate(col2.r() / 255.f, col2.g() / 255.f, col2.b() / 255.f);
-
-		if (!g_menu.main.misc.skyboxchange.get()) {
-			g_csgo.LoadNamedSky(XOR("sky_csgo_night02"));
-		}
+			//p->ColorModulate(col2.r() / 255.f, col2.g() / 255.f, col2.b() / 255.f);
+			p->ColorModulate(col.r() / 255.f, col.g() / 255.f, col.b() / 255.f);
+		g_csgo.LoadNamedSky(XOR("sky_csgo_night02"));
 	}
 
 	// disable night.
@@ -59,17 +57,17 @@ void Visuals::ModulateWorld() {
 	}
 
 	// transparent props.
-		float alpha2 = g_menu.main.visuals.walls_amount.get() / 100;
-		for (const auto& w : world)
-			w->AlphaModulate(alpha2);
+	float alpha2 = g_menu.main.visuals.walls_amount.get() / 100;
+	for (const auto& w : world)
+		w->AlphaModulate(alpha2);
 
-		float alpha = g_menu.main.visuals.transparent_props_amount.get() / 100;
-		for (const auto& p : props)
-			p->AlphaModulate(alpha);
+	float alpha = g_menu.main.visuals.transparent_props_amount.get() / 100;
+	for (const auto& p : props)
+		p->AlphaModulate(alpha);
 
-		if (g_csgo.r_DrawSpecificStaticProp->GetInt() != 0) {
-			g_csgo.r_DrawSpecificStaticProp->SetValue(0);
-		}
+	if (g_csgo.r_DrawSpecificStaticProp->GetInt() != 0) {
+		g_csgo.r_DrawSpecificStaticProp->SetValue(0);
+	}
 }
 
 /*auto clean_item_name = [](const char* name) -> const char*
@@ -181,21 +179,46 @@ void Visuals::Hitmarker() {
 		y = g_cl.m_height,
 		alpha = (1.f - complete) * 240;
 
-	constexpr int a{ 4 };
-	constexpr int b{ a + 5 };
-	auto color = Color(255, 121, 221, alpha);
-
-	if (g_shots.iHeadshot)
-		color = Color(207, 255, 69, alpha);
-	else
-		color;
-
 	constexpr int line{ 6 };
+	m_hurt_color.a() = alpha;
 
-	render::line(x / 2 - b, y / 2 - b, x / 2 - a, y / 2 - a, color); // left upper
-	render::line(x / 2 - b, y / 2 + b, x / 2 - a, y / 2 + a, color); // left down
-	render::line(x / 2 + b, y / 2 + b, x / 2 + a, y / 2 + a, color); // right down
-	render::line(x / 2 + b, y / 2 - b, x / 2 + a, y / 2 - a, color); // right upper
+	render::rect_filled(x / 2 + 6, y / 2 + 6, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 7, y / 2 + 7, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 8, y / 2 + 8, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 9, y / 2 + 9, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 10, y / 2 + 10, 1, 1, { m_hurt_color });
+
+	render::rect_filled(x / 2 - 6, y / 2 - 6, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 7, y / 2 - 7, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 8, y / 2 - 8, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 9, y / 2 - 9, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 10, y / 2 - 10, 1, 1, { m_hurt_color });
+
+	render::rect_filled(x / 2 - 6, y / 2 + 6, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 7, y / 2 + 7, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 8, y / 2 + 8, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 9, y / 2 + 9, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 - 10, y / 2 + 10, 1, 1, { m_hurt_color });
+
+	render::rect_filled(x / 2 + 6, y / 2 - 6, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 7, y / 2 - 7, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 8, y / 2 - 8, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 9, y / 2 - 9, 1, 1, { m_hurt_color });
+	render::rect_filled(x / 2 + 10, y / 2 - 10, 1, 1, { m_hurt_color });
+
+	for (int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i) {
+		Player* player = g_csgo.m_entlist->GetClientEntity< Player* >(i);
+
+		if (render::WorldToScreen(g_shots.iPlayermins, g_shots.iPlayerbottom) && render::WorldToScreen(g_shots.iPlayermaxs, g_shots.iPlayertop))
+		{
+			// get the esp box info >_<
+			Rect box;
+			box.h = g_shots.iPlayerbottom.y - g_shots.iPlayertop.y;
+			box.w = box.h / 2.f;
+			box.x = g_shots.iPlayerbottom.x - (box.w / 2.f);
+			box.y = g_shots.iPlayerbottom.y - box.h;
+		}
+	}
 }
 
 void Visuals::hitmarker_world() {
@@ -491,9 +514,77 @@ void Visuals::think( ) {
 	ManualAntiAim();
 	PenetrationCrosshair( );
 	Hitmarker( );
+	Hitmarker3D( );
 	hitmarker_world( );
 	DrawPlantedC4( );
 	AutopeekIndicator();
+}
+
+void Visuals::Hitmarker3D()
+{
+
+	static auto aspect = g_csgo.m_cvar->FindVar(HASH("r_aspectratio"));
+	aspect->SetValue(g_menu.main.misc.aspect.get());
+
+	if (!g_menu.main.misc.hitmarker3D.get())
+		return;
+
+	if (hitmarkers.size() == 0)
+		return;
+
+	// draw
+	for (int i = 0; i < hitmarkers.size(); i++) {
+		vec3_t pos3D = vec3_t(hitmarkers[i].impact.x, hitmarkers[i].impact.y, hitmarkers[i].impact.z);
+		vec2_t pos2D;
+
+		if (!render::WorldToScreen(pos3D, pos2D))
+			continue;
+
+		int r = 255;
+		int g = 255;
+		int b = 255;
+
+		render::line(pos2D.x + 2, pos2D.y + 2, pos2D.x + 5, pos2D.y + 5, { r, g, b, hitmarkers[i].alpha });
+		render::line(pos2D.x - 2, pos2D.y - 2, pos2D.x - 5, pos2D.y - 5, { r, g, b, hitmarkers[i].alpha });
+		render::line(pos2D.x + 2, pos2D.y - 2, pos2D.x + 5, pos2D.y - 5, { r, g, b, hitmarkers[i].alpha });
+		render::line(pos2D.x - 2, pos2D.y + 2, pos2D.x - 5, pos2D.y + 5, { r, g, b, hitmarkers[i].alpha });
+
+		/*	render::rect_filled(pos2D.x / 2 + 6, pos2D.y / 2 + 6, 1, 1, {r, g, b, hitmarkers[i].alpha});
+			render::rect_filled(pos2D.x / 2 + 7, pos2D.y / 2 + 7, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 8, pos2D.y / 2 + 8, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 9, pos2D.y / 2 + 9, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 10, pos2D.y / 2 + 10, 1, 1, { r, g, b, hitmarkers[i].alpha });
+
+			render::rect_filled(pos2D.x / 2 - 6, pos2D.y / 2 - 6, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 7, pos2D.y / 2 - 7, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 8, pos2D.y / 2 - 8, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 9, pos2D.y / 2 - 9, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 10, pos2D.y / 2 - 10, 1, 1, { r, g, b, hitmarkers[i].alpha });
+
+			render::rect_filled(pos2D.x / 2 - 6, pos2D.y / 2 + 6, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 7, pos2D.y / 2 + 7, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 8, pos2D.y / 2 + 8, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 9, pos2D.y / 2 + 9, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 - 10, pos2D.y / 2 + 10, 1, 1, { r, g, b, hitmarkers[i].alpha });
+
+			render::rect_filled(pos2D.x / 2 + 6, pos2D.y / 2 - 6, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 7, pos2D.y / 2 - 7, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 8, pos2D.y / 2 - 8, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 9, pos2D.y / 2 - 9, 1, 1, { r, g, b, hitmarkers[i].alpha });
+			render::rect_filled(pos2D.x / 2 + 10, pos2D.y / 2 - 10, 1, 1, { r, g, b, hitmarkers[i].alpha
+		*/
+	}
+
+	// proceed
+	for (int i = 0; i < hitmarkers.size(); i++) {
+		if (hitmarkers[i].time + 1.25f <= g_csgo.m_globals->m_curtime) {
+			hitmarkers[i].alpha -= 1;
+		}
+
+		if (hitmarkers[i].alpha <= 0)
+			hitmarkers.erase(hitmarkers.begin() + i);
+	}
+
 }
 
 void Visuals::Spectators( ) {
@@ -554,7 +645,7 @@ void Visuals::StatusIndicators() {
 		return;
 
 	// compute hud size.
-	// int size = ( int )std::round( ( g_cl.m_height / 17.5f ) * g_csgo.hud_scaling->GetFloat( ) );
+    int size = ( int )std::round( ( g_cl.m_height / 17.5f ) * g_csgo.hud_scaling->GetFloat( ) );
 
 	struct Indicator_t { Color color; std::string text; };
 	std::vector< Indicator_t > indicators{ };
@@ -798,7 +889,7 @@ void Visuals::draw( Entity* ent ) {
 		g_cl.kaaba.clear();
 		g_cl.cheese.clear();
 		g_cl.dopium.clear();
-		g_cl.cutie.clear();
+		g_cl.fruity.clear();
 		g_cl.fade.clear();
 		g_cl.roberthook.clear();
 		return;
@@ -1592,7 +1683,7 @@ void Visuals::DrawPlayer( Player* player ) {
 				LagRecord* current = data->m_records.front().get();
 
 				Color clr = Color(255, 255, 255, low_alpha);
-				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_LBY) {
+				if (current->m_mode == Resolver::Modes::RESOLVE_WALK || current->m_mode == Resolver::Modes::RESOLVE_BODY) {
 					clr = Color(155, 210, 100, low_alpha);
 				}
 
@@ -1638,34 +1729,34 @@ void Visuals::DrawPlayer( Player* player ) {
 
 			if (*it == 10) {
 
-				if (data->m_is_cutie)
-					flags.push_back({ "cute", { 206, 139, 255, low_alpha} });
+				if (data->m_is_fruity)
+					flags.push_back({ "Fruity", { 206, 139, 255, low_alpha} });
 
 			}
 		}	
 
-		if (data && data->m_records.size() && enemy && g_menu.main.aimbot.correct.get()) {
-			LagRecord* current = data->m_records.front().get();
-			if (current->m_mode == Resolver::Modes::RESOLVE_LBY)
-				flags.push_back({ XOR("r:lby"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
-				flags.push_back({ XOR("r:stand"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_LBY_PRED)
-				flags.push_back({ XOR("r:flick"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
-				flags.push_back({ XOR("r:stopped"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_AIR)
-				flags.push_back({ XOR("r:air"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_NONE)
-				flags.push_back({ XOR("r:none"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_WALK)
-				flags.push_back({ XOR("r:walk"), { 255,255,255, low_alpha } });
+		//if (data && data->m_records.size() && enemy && g_menu.main.aimbot.correct.get()) {
+			//LagRecord* current = data->m_records.front().get();
+			//if (current->m_mode == Resolver::Modes::RESOLVE_BODY)
+			//	flags.push_back({ XOR("r:lby"), { 255,255,255, low_alpha } });
+			//else if (current->m_mode == Resolver::Modes::RESOLVE_STAND)
+			//	flags.push_back({ XOR("r:stand"), { 255,255,255, low_alpha } });
+		//	else if (current->m_mode == Resolver::Modes::RESOLVE_PREFLICK)
+		//		flags.push_back({ XOR("r:flick"), { 255,255,255, low_alpha } });
+		//	else if (current->m_mode == Resolver::Modes::RESOLVE_STOPPED_MOVING)
+				//flags.push_back({ XOR("r:stopped"), { 255,255,255, low_alpha } });
+		//	else if (current->m_mode == Resolver::Modes::RESOLVE_AIR)
+		//		flags.push_back({ XOR("r:air"), { 255,255,255, low_alpha } });
+		//	else if (current->m_mode == Resolver::Modes::RESOLVE_NONE)
+			//	flags.push_back({ XOR("r:none"), { 255,255,255, low_alpha } });
+	//		else if (current->m_mode == Resolver::Modes::RESOLVE_WALK)
+		//		flags.push_back({ XOR("r:walk"), { 255,255,255, low_alpha } });
 			//else if (current->m_mode == Resolver::Modes::RESOLVE_NETWORK)
 			//	flags.push_back({ XOR("r:net"), { 255,255,255, low_alpha } });
-			else if (current->m_mode == Resolver::Modes::RESOLVE_OVERRIDE)
-				flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
-			else
-				flags.push_back({ XOR("r:other"), { 255,255,255, low_alpha } });
+			//else if (current->m_mode == Resolver::Modes::RESOLVE_OVERRIDE)
+				//flags.push_back({ current->m_resolver_mode, { 255,255,255, low_alpha } });
+		//	else
+			//	flags.push_back({ XOR("r:other"), { 255,255,255, low_alpha } });
 
 			// iterate flags.
 			for (size_t i{ }; i < flags.size(); ++i) {
@@ -1673,7 +1764,7 @@ void Visuals::DrawPlayer( Player* player ) {
 				int offset = i * (render::menu.m_size.m_height) + 1;
 				render::menu.string(box.x - 1 + box.w + 3, box.y + 1 + offset - 2, f.second, f.first);
 			}
-		}
+		//}
 	}
 
 	// draw bottom bars.
@@ -2012,11 +2103,20 @@ void Visuals::DrawPlantedC4() {
 	// finally do all of our rendering.
 	is_visible = render::WorldToScreen(m_planted_c4_explosion_origin, screen_pos);
 
+	std::string bomb = m_last_bombsite.c_str();
+
 	// 'on screen (2D)'.
 	if (mode_2d) {
+		std::string timer1337 = tfm::format(XOR("%s - %.1fs"), bomb.substr(0, 1), explode_time_diff);
+
+		Color colortimer = { 135, 172, 10, 255 };
+		if (explode_time_diff < 10) colortimer = { 200, 200, 110, 255 };
+		if (explode_time_diff < 5) colortimer = { 192, 32, 17, 255 };
 
 		if (explode_time_diff > 0.f)
-			render::esp2.string(2, 65, colors::white, time_str, render::ALIGN_LEFT);
+			//render::esp2.string(2, 65, colors::white, time_str, render::ALIGN_LEFT);
+			render::indicator.string(6, 11, { 0,0, 0, 125 }, timer1337);
+		    render::indicator.string(5, 10, colortimer, timer1337);
 
 		if (g_cl.m_local->alive())
 			render::esp2.string(2, 65 + render::esp.m_size.m_height, damage_color, damage_str, render::ALIGN_LEFT);

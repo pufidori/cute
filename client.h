@@ -35,7 +35,7 @@ public:
 	static ulong_t __stdcall init(void* arg);
 
 	void UnlockHiddenConvars();
-
+	int  fruitytaps;
 	void StartMove(CUserCmd* cmd);
 	void EndMove(CUserCmd* cmd);
 	void BackupPlayers(bool restore);
@@ -49,8 +49,8 @@ public:
 	void SetAngles();
 	void OnCreateMove();
 	void KillFeed();
-	void UpdateLocal();
-	void UpdateAnimations();
+	//void UpdateLocal();
+	//void UpdateAnimations();
 	void MotionBlur();
 
 	void OnPaint();
@@ -91,7 +91,7 @@ public:
 	bool             m_real_update;
 
 	ang_t            m_real_angle;
-	bool m_update_anims;
+	bool			 m_update_anims;
 	bool             m_pressing_move;
 
 	// active weapon variables.
@@ -99,7 +99,7 @@ public:
 	int         m_weapon_id;
 	WeaponInfo* m_weapon_info;
 	int         m_weapon_type;
-	vec3_t m_unpredicted_vel;
+	vec3_t      m_unpredicted_vel;
 	bool        m_weapon_fire;
 
 	BoneArray        m_local_bones[128];
@@ -162,7 +162,7 @@ public:
 	std::vector<int> roberthook;
 	std::vector<int> fade;
 	std::vector<int> test;
-	std::vector<int> cutie;
+	std::vector<int> fruity;
 
 	bool m_enable_voice;
 
@@ -170,8 +170,8 @@ public:
 	float m_flPreviousDuckAmount = 0.0f;
 
 	// hack info.
-	std::string m_build = "cute";
-	std::string m_user = "cute";
+	std::string m_build = "Fruityhook";
+	std::string m_user = "Fruityhook";
 	bool m_hwid_found = false;
 	int id = 13370;
 

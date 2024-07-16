@@ -189,7 +189,7 @@ public:
             float left = notify->m_time;
 
             render::FontSize_t text_size = render::menu_shade.size(notify->m_text);
-            render::FontSize_t prefix_size = render::menu_shade.size("[cute] ");
+            render::FontSize_t prefix_size = render::menu_shade.size("[fruity] ");
 
             // Fade out effect.
             if (left < .5f) {
@@ -209,7 +209,7 @@ public:
 
             // Render the notification with smooth entry.
             int x = static_cast<int>(notify->m_x_offset);
-            render::menu_shade.string(x, y, colors::pink, "[cute] ");
+            render::menu_shade.string(x, y, colors::pink, "[fruity] ");
             render::menu_shade.string(x + prefix_size.m_width + 1, y, color, notify->m_text);
 
             y += size;
